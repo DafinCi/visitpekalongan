@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -31,8 +32,8 @@ export default function RootLayout({
       lang="id"
       className={`${instrumentSerif.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-canvas text-text-primary">
-        {children}
+      <body className="min-h-full flex flex-col font-sans bg-canvas text-text-primary selection:bg-accent-terracotta selection:text-white">
+        <NuqsAdapter>{children}</NuqsAdapter>
       </body>
     </html>
   );
