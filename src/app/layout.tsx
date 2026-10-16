@@ -16,7 +16,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://visitpekalongan.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "VisitPekalongan - Kurasi Cerita & Hidden Gems Pekalongan",
   description:
     "Panduan kurasi independen untuk mendokumentasikan dan memetakan hidden gems di seluruh penjuru Pekalongan, mulai dari pesisir Kota Batik hingga pegunungan Petungkriyono.",
