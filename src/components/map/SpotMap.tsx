@@ -29,6 +29,10 @@ export function SpotMap({
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
+    // Ambil API key CARTO dari environment variable jika tersedia
+    const cartoKey = process.env.NEXT_PUBLIC_CARTO_API_KEY;
+    const keyParam = cartoKey ? `?key=${cartoKey}` : "";
+
     // Titik pusat Pekalongan (antara pesisir kota dan pegunungan Petungkriyono)
     const map = new Map({
       container: mapContainerRef.current,
@@ -38,9 +42,9 @@ export function SpotMap({
           "carto-positron": {
             type: "raster",
             tiles: [
-              "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-              "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-              "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+              `https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png${keyParam}`,
+              `https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png${keyParam}`,
+              `https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png${keyParam}`,
             ],
             tileSize: 256,
             attribution:
