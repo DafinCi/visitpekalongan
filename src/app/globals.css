@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primitive Tokens - Warna Kanvas & Tanah */
+  --primitive-mori-50: #fcfaf7;
+  --primitive-mori-100: #f7f5f0;
+  --primitive-clay-50: #faf8f5;
+  --primitive-clay-100: #f2efeb;
+  --primitive-grout-200: #e8e3da;
+  --primitive-grout-300: #ddd6ca;
+  --primitive-grout-400: #c5beb2;
+
+  /* Primitive Tokens - Arang & Tipografi */
+  --primitive-charcoal-900: #242220;
+  --primitive-driftwood-600: #6e6963;
+  --primitive-driftwood-400: #9b948c;
+
+  /* Primitive Tokens - Budaya & Alam */
+  --primitive-terracotta-600: #a8472b;
+  --primitive-terracotta-raw: #c86446;
+  --primitive-terracotta-subtle: #f5eae6;
+  --primitive-sage-700: #48584a;
+  --primitive-sage-600: #5a6b5c;
+  --primitive-sage-subtle: #ecf0ec;
+  --primitive-roast-700: #73472c;
+  --primitive-roast-600: #8c5a3c;
+
+  /* Primitive Tokens - Status Fungsional */
+  --primitive-moss-700: #3e6d4b;
+  --primitive-moss-subtle: #ebf2ed;
+  --primitive-brick-700: #9e5345;
+  --primitive-brick-subtle: #f7ece9;
+
+  /* Skala Geometri Ramping */
+  --primitive-radius-xs: 2px;
+  --primitive-radius-sm: 4px;
+  --primitive-radius-md: 6px;
+  --primitive-radius-lg: 8px;
+  --primitive-radius-xl: 12px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  /* Latar Belakang & Permukaan */
+  --color-canvas: var(--primitive-mori-100);
+  --color-surface: var(--primitive-clay-50);
+  --color-surface-elevated: var(--primitive-mori-50);
+  --color-surface-pure: #ffffff;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Garis Batas */
+  --color-border: var(--primitive-grout-300);
+  --color-border-subtle: var(--primitive-grout-200);
+  --color-border-focus: var(--primitive-terracotta-600);
+
+  /* Tipografi */
+  --color-text-primary: var(--primitive-charcoal-900);
+  --color-text-muted: var(--primitive-driftwood-600);
+  --color-text-subtle: var(--primitive-driftwood-400);
+
+  /* Aksen */
+  --color-accent-terracotta: var(--primitive-terracotta-600);
+  --color-accent-terracotta-raw: var(--primitive-terracotta-raw);
+  --color-accent-sage: var(--primitive-sage-600);
+  --color-accent-roast: var(--primitive-roast-600);
+
+  /* Status */
+  --color-status-open-text: var(--primitive-moss-700);
+  --color-status-open-bg: var(--primitive-moss-subtle);
+  --color-status-closed-text: var(--primitive-brick-700);
+  --color-status-closed-bg: var(--primitive-brick-subtle);
+
+  /* Tipografi */
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  --font-sans:
+    var(--font-plus-jakarta-sans), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+
+  /* Radius Kriya */
+  --radius-card: 8px;
+  --radius-button: 6px;
+  --radius-badge: 4px;
+  --radius-drawer: 12px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--primitive-mori-100);
+  color: var(--primitive-charcoal-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
