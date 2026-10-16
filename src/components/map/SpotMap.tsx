@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Map, Marker, NavigationControl, LngLatBounds } from "maplibre-gl";
+import { Map, Marker, NavigationControl, LngLatBounds, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+
+// Tetapkan worker URL eksplisit untuk kompatibilitas Web Worker pada Next.js Turbopack
+if (typeof window !== "undefined") {
+  setWorkerUrl("/maplibre-gl-worker.mjs");
+}
 import Link from "next/link";
 import Image from "next/image";
 import { Navigation, ArrowRight, X, Sparkles, MapPin } from "lucide-react";
