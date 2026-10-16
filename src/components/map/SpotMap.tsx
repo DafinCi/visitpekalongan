@@ -33,34 +33,13 @@ export function SpotMap({
     const cartoKey = process.env.NEXT_PUBLIC_CARTO_API_KEY;
     const keyParam = cartoKey ? `?key=${cartoKey}` : "";
 
+    // Gaya vektor CARTO Positron untuk rendering WebGL ultra tajam pada layar ponsel
+    const vectorStyleUrl = `https://basemaps.cartocdn.com/gl/positron-gl-style/style.json${keyParam}`;
+
     // Titik pusat Pekalongan (antara pesisir kota dan pegunungan Petungkriyono)
     const map = new Map({
       container: mapContainerRef.current,
-      style: {
-        version: 8,
-        sources: {
-          "carto-positron": {
-            type: "raster",
-            tiles: [
-              `https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png${keyParam}`,
-              `https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png${keyParam}`,
-              `https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png${keyParam}`,
-            ],
-            tileSize: 256,
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-          },
-        },
-        layers: [
-          {
-            id: "carto-positron-layer",
-            type: "raster",
-            source: "carto-positron",
-            minzoom: 0,
-            maxzoom: 19,
-          },
-        ],
-      },
+      style: vectorStyleUrl,
       center: [109.6753, -6.95],
       zoom: 11,
       maxZoom: 18,
