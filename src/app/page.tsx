@@ -1,28 +1,30 @@
+import { Suspense } from "react";
 import { Header } from "@/components/layout/Header";
 import { EditorialMasthead } from "@/components/layout/EditorialMasthead";
 import { Footer } from "@/components/layout/Footer";
+import { SpotFeedExplorer } from "@/components/feed/SpotFeedExplorer";
+import { FeedSkeleton } from "@/components/feed/FeedSkeleton";
+import { spotRepository } from "@/lib/repositories/spot-repository";
 
-export default function Home() {
+export default async function Home() {
+  const [categories, spots] = await Promise.all([
+    spotRepository.getCategories(),
+    spotRepository.getSpots(),
+  ]);
+
   return (
     <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
-      {/* Kontainer Konten Utama (z-10 bg-canvas agar menutupi Sticky Footer di belakangnya) */}
+      {/* Konten Utama dengan z-10 bg-canvas untuk menutupi Sticky Footer di bawahnya */}
       <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
         <Header />
-        
+
         <main className="flex-1">
           <EditorialMasthead />
 
-          {/* Area Penampung Feed Kurasi (Tahap 3) */}
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="border border-dashed border-border rounded-card p-12 text-center bg-surface/30">
-              <h2 className="font-serif text-2xl text-text-primary mb-2">
-                Katalog Kurasi Siap Dirangkai
-              </h2>
-              <p className="text-xs sm:text-sm text-text-muted max-w-md mx-auto">
-                Tahap 1 (instalasi dependensi) dan Tahap 2 (Header, Masthead, Sticky Footer, dan Halaman About) telah aktif.
-              </p>
-            </div>
-          </section>
+          {/* Feed Kurasi Dibungkus Suspense Sesuai Arsitektur Next.js 16 */}
+          <Suspense fallback={<FeedSkeleton />}>
+            <SpotFeedExplorer categories={categories} allSpots={spots} />
+          </Suspense>
         </main>
       </div>
 

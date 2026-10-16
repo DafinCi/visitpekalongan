@@ -25,14 +25,20 @@ export interface OpenStatusResult {
   statusLabel: string;
 }
 
+// Tanggal acuan deterministik untuk static prerender Next.js agar build SSG stabil
+const STATIC_FALLBACK_DATE = new Date("2026-10-16T12:00:00+07:00");
+
 /**
  * Mendapatkan representasi waktu WIB (UTC+7) dalam bentuk string HH:mm dan nama hari.
  */
-function getWIBDateTime(date: Date = new Date()): {
+function getWIBDateTime(date?: Date): {
   currentDay: DayOfWeek;
   yesterdayDay: DayOfWeek;
   currentTimeString: string;
 } {
+  const targetDate =
+    date ?? (typeof window === "undefined" ? STATIC_FALLBACK_DATE : new Date());
+
   // Buat formatter zona waktu Asia/Jakarta (WIB)
   const formatter = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Jakarta",
@@ -42,7 +48,7 @@ function getWIBDateTime(date: Date = new Date()): {
     weekday: "long",
   });
 
-  const parts = formatter.formatToParts(date);
+  const parts = formatter.formatToParts(targetDate);
   const hour = parts.find((p) => p.type === "hour")?.value || "00";
   const minute = parts.find((p) => p.type === "minute")?.value || "00";
   const weekday = (parts.find((p) => p.type === "weekday")?.value || "Sunday").toLowerCase();
@@ -66,7 +72,7 @@ function getWIBDateTime(date: Date = new Date()): {
 export function calculateOpenStatus(
   schedule: WeeklyOpeningHours,
   lifecycleStatus: LifecycleStatus = "active",
-  referenceDate: Date = new Date()
+  referenceDate?: Date
 ): OpenStatusResult {
   if (lifecycleStatus === "temporarily_closed") {
     return {
@@ -82,7 +88,9 @@ export function calculateOpenStatus(
     };
   }
 
-  const { currentDay, yesterdayDay, currentTimeString } = getWIBDateTime(referenceDate);
+  const dateToEvaluate =
+    referenceDate ?? (typeof window === "undefined" ? STATIC_FALLBACK_DATE : new Date());
+  const { currentDay, yesterdayDay, currentTimeString } = getWIBDateTime(dateToEvaluate);
 
   // 1. Cek luapan shift kemarin malam yang melewati tengah malam (misal buka 19:00, tutup 02:30)
   const yesterdaySchedule = schedule[yesterdayDay];
