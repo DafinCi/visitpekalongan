@@ -1,11 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import { Compass, PlusCircle } from "lucide-react";
+import { Compass } from "lucide-react";
+import { SubmitSpotDrawer } from "@/components/community/SubmitSpotDrawer";
 
-interface HeaderProps {
-  onOpenSubmitDrawer?: () => void;
-}
-
-export function Header({ onOpenSubmitDrawer }: HeaderProps) {
+export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full bg-canvas/95 backdrop-blur-sm border-b border-border transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -41,15 +40,8 @@ export function Header({ onOpenSubmitDrawer }: HeaderProps) {
             <span>Tentang</span>
           </Link>
 
-          {/* Tombol Aksi Kontribusi Warga */}
-          <button
-            type="button"
-            onClick={onOpenSubmitDrawer}
-            className="inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium bg-surface-pure hover:bg-surface border border-border text-text-primary shadow-xs rounded-button transition-all focus-visible:outline-2 focus-visible:outline-border-focus min-h-[44px]"
-          >
-            <PlusCircle className="w-3.5 h-3.5 mr-1.5 text-accent-terracotta" aria-hidden="true" />
-            <span>Lapor Spot</span>
-          </button>
+          {/* Tombol Lapor Hidden Gem Komunitas */}
+          <SubmitSpotDrawer />
         </nav>
       </div>
     </header>
