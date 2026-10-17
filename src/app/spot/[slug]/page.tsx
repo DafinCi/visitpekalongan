@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/Header";
@@ -9,6 +10,7 @@ import { StorySection } from "@/components/detail/StorySection";
 import { FacilitiesList } from "@/components/detail/FacilitiesList";
 import { ScheduleTable } from "@/components/detail/ScheduleTable";
 import { OfflineGuideNotice } from "@/components/detail/OfflineGuideNotice";
+import { DetailSkeleton } from "@/components/detail/DetailSkeleton";
 import { spotRepository } from "@/lib/repositories/spot-repository";
 
 interface SpotPageProps {
@@ -54,7 +56,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function SpotDetailPage({ params }: SpotPageProps) {
+async function SpotDetailContent({ params }: SpotPageProps) {
   const { slug } = await params;
   const spot = await spotRepository.getSpotBySlug(slug);
 
@@ -63,20 +65,28 @@ export default async function SpotDetailPage({ params }: SpotPageProps) {
   }
 
   return (
+    <main className="flex-1 pb-16">
+      <DetailHero spot={spot} />
+      <DetailHeader spot={spot} />
+      <DetailActions spot={spot} />
+      <StorySection spot={spot} />
+      <FacilitiesList facilities={spot.facilities} />
+      <ScheduleTable schedule={spot.weeklySchedule} />
+      <OfflineGuideNotice spot={spot} />
+    </main>
+  );
+}
+
+export default function SpotDetailPage({ params }: SpotPageProps) {
+  return (
     <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
       {/* Konten Utama dengan z-10 bg-canvas untuk menutupi Sticky Reveal Footer di bawahnya */}
       <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
         <Header />
 
-        <main className="flex-1 pb-16">
-          <DetailHero spot={spot} />
-          <DetailHeader spot={spot} />
-          <DetailActions spot={spot} />
-          <StorySection spot={spot} />
-          <FacilitiesList facilities={spot.facilities} />
-          <ScheduleTable schedule={spot.weeklySchedule} />
-          <OfflineGuideNotice spot={spot} />
-        </main>
+        <Suspense fallback={<DetailSkeleton />}>
+          <SpotDetailContent params={params} />
+        </Suspense>
       </div>
 
       {/* Sticky Curtain Reveal Footer */}
@@ -84,4 +94,3 @@ export default async function SpotDetailPage({ params }: SpotPageProps) {
     </div>
   );
 }
-
