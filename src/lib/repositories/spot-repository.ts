@@ -119,6 +119,7 @@ export class LocalSpotRepository implements SpotRepository {
         },
       ],
       weeklySchedule: spot.openingHours,
+      googleMapsReviewUrl: spot.googleMapsReviewUrl,
     };
   }
 

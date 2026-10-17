@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Navigation, Share2, Check } from "lucide-react";
+import { Navigation, Share2, Check, MessageSquare, ExternalLink } from "lucide-react";
 import { SpotDetailDTO } from "@/types/spot";
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -74,6 +74,20 @@ export function DetailActions({ spot }: DetailActionsProps) {
           <Navigation className="w-4 h-4 text-canvas" aria-hidden="true" />
           <span>Buka Petunjuk Arah Google Maps</span>
         </a>
+
+        {/* Tombol Ulasan Google Maps (Hanya tampil jika listing ulasan tersedia) */}
+        {spot.googleMapsReviewUrl && (
+          <a
+            href={spot.googleMapsReviewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-text-primary bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-[48px] focus-visible:outline-2 focus-visible:outline-border-focus"
+          >
+            <MessageSquare className="w-4 h-4 text-text-muted" aria-hidden="true" />
+            <span>Ulasan Google Maps</span>
+            <ExternalLink className="w-3.5 h-3.5 text-text-muted" aria-hidden="true" />
+          </a>
+        )}
 
         {/* Tombol Instagram Akun Resmi (jika ada) */}
         {spot.instagramAccount && (

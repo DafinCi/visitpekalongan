@@ -77,6 +77,7 @@ export interface SpotEntity {
   latitude: number;
   longitude: number;
   googleMapsUrl: string;
+  googleMapsReviewUrl?: string;
   instagramAccount?: string;
   priceRange: PriceRange;
   openingHours: WeeklyOpeningHours;
@@ -137,6 +138,7 @@ export interface SpotDetailDTO extends SpotListItemDTO {
     altText?: string;
   }[];
   weeklySchedule: WeeklyOpeningHours;
+  googleMapsReviewUrl?: string;
 }
 
 // Parameter Filter URL

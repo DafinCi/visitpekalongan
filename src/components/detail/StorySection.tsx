@@ -1,4 +1,4 @@
-import { Utensils, Clock, Sparkles } from "lucide-react";
+import { Utensils, Clock, Sparkles, MessageSquare, ExternalLink } from "lucide-react";
 import { SpotDetailDTO } from "@/types/spot";
 
 interface StorySectionProps {
@@ -54,6 +54,38 @@ export function StorySection({ spot }: StorySectionProps) {
               </div>
               <p className="text-sm font-medium text-text-primary leading-relaxed">
                 {spot.bestTimeToVisit}
+              </p>
+            </div>
+          )}
+
+          {/* Kartu Ulasan Publik Google Maps vs Hidden Gem Murni */}
+          {spot.googleMapsReviewUrl ? (
+            <div className="p-5 rounded-card bg-surface-pure border border-border space-y-3">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
+                <MessageSquare className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
+                <span>Ulasan Publik & Pengunjung</span>
+              </div>
+              <p className="text-xs text-text-secondary leading-relaxed">
+                Ingin melihat foto menu makanan terkini dan ulasan ratusan pengunjung lainnya di Google Maps?
+              </p>
+              <a
+                href={spot.googleMapsReviewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-terracotta hover:underline"
+              >
+                <span>Buka ulasan di Google Maps</span>
+                <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
+            </div>
+          ) : (
+            <div className="p-5 rounded-card bg-surface-pure border border-border border-l-4 border-l-accent-sage space-y-2">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-accent-sage">
+                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Hidden Gem Belum Terjamah</span>
+              </div>
+              <p className="text-xs text-text-secondary leading-relaxed">
+                Tempat ini adalah penemuan otentik yang belum banyak diulas di peta publik. Nikmati ketenangan dan keaslian suasananya.
               </p>
             </div>
           )}
