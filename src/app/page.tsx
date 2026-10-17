@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { Header } from "@/components/layout/Header";
-import { EditorialMasthead } from "@/components/layout/EditorialMasthead";
 import { Footer } from "@/components/layout/Footer";
 import { SpotFeedExplorer } from "@/components/feed/SpotFeedExplorer";
 import { FeedSkeleton } from "@/components/feed/FeedSkeleton";
@@ -19,8 +18,6 @@ export default async function Home() {
         <Header />
 
         <main className="flex-1">
-          <EditorialMasthead />
-
           {/* Feed Kurasi Dibungkus Suspense Sesuai Arsitektur Next.js 16 */}
           <Suspense fallback={<FeedSkeleton />}>
             <SpotFeedExplorer categories={categories} allSpots={spots} />
