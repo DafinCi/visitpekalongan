@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { SpotCategory, SpotListItemDTO } from "@/types/spot";
 import { useSpotFilters } from "@/lib/hooks/useSpotFilters";
-import { SpotFilterBar } from "./SpotFilterBar";
+import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
 import { EmptyState } from "./EmptyState";
 import { FloatingViewSwitch } from "./FloatingViewSwitch";
@@ -67,8 +67,9 @@ export function SpotFeedExplorer({
 
   return (
     <div className="w-full">
-      {/* Sticky Filter Toolbar */}
-      <SpotFilterBar
+      {/* Unified Sticky Header dengan Search & Filter Pill */}
+      <Header
+        showSearch
         searchQuery={q}
         onSearchChange={setQ}
         selectedRegency={regency}

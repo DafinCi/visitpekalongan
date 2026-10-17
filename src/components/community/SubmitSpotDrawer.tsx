@@ -84,11 +84,11 @@ export function SubmitSpotDrawer() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-accent-terracotta bg-accent-terracotta/10 hover:bg-accent-terracotta/20 border border-accent-terracotta/20 rounded-button transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
+        className="inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-accent-terracotta bg-accent-terracotta/10 hover:bg-accent-terracotta/20 border border-accent-terracotta/20 rounded-button transition-colors min-h-[40px] sm:min-h-[44px] min-w-[40px] focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer shrink-0"
         aria-label="Buka formulir Lapor Hidden Gem"
       >
-        <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-        <span>Lapor Hidden Gem</span>
+        <Plus className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+        <span className="hidden sm:inline">Lapor Spot</span>
       </button>
 
       {/* Modal / Slide-over Drawer */}

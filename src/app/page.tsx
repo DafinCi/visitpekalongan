@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SpotFeedExplorer } from "@/components/feed/SpotFeedExplorer";
 import { FeedSkeleton } from "@/components/feed/FeedSkeleton";
@@ -15,8 +14,6 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
       {/* Konten Utama dengan z-10 bg-canvas untuk menutupi Sticky Footer di bawahnya */}
       <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header />
-
         <main className="flex-1">
           {/* Feed Kurasi Dibungkus Suspense Sesuai Arsitektur Next.js 16 */}
           <Suspense fallback={<FeedSkeleton />}>
