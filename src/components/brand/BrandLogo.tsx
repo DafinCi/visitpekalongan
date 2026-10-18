@@ -2,16 +2,18 @@ interface BrandLogoProps {
   className?: string;
   size?: number;
   ariaLabel?: string;
+  monochrome?: boolean;
 }
 
 /**
- * Logo Resmi VisitPekalongan: "The Heritage Compass"
- * Menggabungkan kompas penjelajahan dengan struktur geometris Batik Jlamprang khas Pekalongan.
+ * Logo Resmi VisitPekalongan: Gapura Heritage Pesisir
+ * Mengadaptasi siluet lengkung arsitektur heritage Pekalongan dengan aksen wajik terakota.
  */
 export function BrandLogo({
-  className = "w-7 h-7 text-accent-terracotta",
+  className = "w-7 h-7",
   size,
   ariaLabel = "Logo VisitPekalongan",
+  monochrome = false,
 }: BrandLogoProps) {
   return (
     <svg
@@ -24,72 +26,69 @@ export function BrandLogo({
       role="img"
       aria-label={ariaLabel}
     >
-      {/* Lingkaran Luar Berbingkai Cap Tembaga Heritage */}
-      <circle cx="24" cy="24" r="21.5" stroke="currentColor" strokeWidth="1.5" />
-      <circle
-        cx="24"
-        cy="24"
-        r="18.5"
-        stroke="currentColor"
-        strokeWidth="0.75"
-        strokeDasharray="1 2.5"
-        opacity="0.6"
+      {/* Lengkung Luar Berundak (Gapura Heritage) */}
+      <path
+        d="M 8.5 43 L 8.5 19.5 L 10.6 18.6 L 10.6 15.6 L 12.6 14.8 C 13.4 9.6 22.2 8.4 24 4.5 C 25.8 8.4 34.6 9.6 35.4 14.8 L 37.4 15.6 L 37.4 18.6 L 39.5 19.5 L 39.5 43"
+        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
+        strokeWidth="2.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
 
-      {/* 4 Arah Mata Angin Utama (Kardinal) dengan Facet Dua Nada */}
-      {/* Utara (0 Derajat) */}
-      <g transform="rotate(0 24 24)">
-        <polygon points="24,3.5 24,20 21.2,20" fill="currentColor" />
-        <polygon points="24,3.5 26.8,20 24,20" fill="currentColor" opacity="0.45" />
-      </g>
+      {/* Lengkung Tengah */}
+      <path
+        d="M 12.8 43 L 12.8 21.5 C 12.8 14.8 17.8 10.5 24 10.5 C 30.2 10.5 35.2 14.8 35.2 21.5 L 35.2 43"
+        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
 
-      {/* Timur (90 Derajat) */}
-      <g transform="rotate(90 24 24)">
-        <polygon points="24,3.5 24,20 21.2,20" fill="currentColor" />
-        <polygon points="24,3.5 26.8,20 24,20" fill="currentColor" opacity="0.45" />
-      </g>
+      {/* Lengkung Dalam Berujung Lancip (Ogee Arch) */}
+      <path
+        d="M 16.8 43 L 16.8 23.5 C 16.8 18.5 22.3 17.2 24 15.2 C 25.7 17.2 31.2 18.5 31.2 23.5 L 31.2 43"
+        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
 
-      {/* Selatan (180 Derajat) */}
-      <g transform="rotate(180 24 24)">
-        <polygon points="24,3.5 24,20 21.2,20" fill="currentColor" />
-        <polygon points="24,3.5 26.8,20 24,20" fill="currentColor" opacity="0.45" />
-      </g>
+      {/* Garis Pijakan Dasar Kiri & Kanan */}
+      <line
+        x1="6"
+        y1="43"
+        x2="19.2"
+        y2="43"
+        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+      <line
+        x1="28.8"
+        y1="43"
+        x2="42"
+        y2="43"
+        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
 
-      {/* Barat (270 Derajat) */}
-      <g transform="rotate(270 24 24)">
-        <polygon points="24,3.5 24,20 21.2,20" fill="currentColor" />
-        <polygon points="24,3.5 26.8,20 24,20" fill="currentColor" opacity="0.45" />
-      </g>
+      {/* Tiang Pancang Tengah */}
+      <line
+        x1="24"
+        y1="43"
+        x2="24"
+        y2="31.2"
+        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
+        strokeWidth="2.3"
+        strokeLinecap="butt"
+      />
 
-      {/* 4 Arah Mata Angin Menengah (Diagonal Geometris Motif Jlamprang) */}
-      {/* Timur Laut (45 Derajat) */}
-      <g transform="rotate(45 24 24)">
-        <polygon points="24,9.5 24,20.5 22,20.5" fill="currentColor" />
-        <polygon points="24,9.5 26,20.5 24,20.5" fill="currentColor" opacity="0.45" />
-      </g>
-
-      {/* Tenggara (135 Derajat) */}
-      <g transform="rotate(135 24 24)">
-        <polygon points="24,9.5 24,20.5 22,20.5" fill="currentColor" />
-        <polygon points="24,9.5 26,20.5 24,20.5" fill="currentColor" opacity="0.45" />
-      </g>
-
-      {/* Barat Daya (225 Derajat) */}
-      <g transform="rotate(225 24 24)">
-        <polygon points="24,9.5 24,20.5 22,20.5" fill="currentColor" />
-        <polygon points="24,9.5 26,20.5 24,20.5" fill="currentColor" opacity="0.45" />
-      </g>
-
-      {/* Barat Laut (315 Derajat) */}
-      <g transform="rotate(315 24 24)">
-        <polygon points="24,9.5 24,20.5 22,20.5" fill="currentColor" />
-        <polygon points="24,9.5 26,20.5 24,20.5" fill="currentColor" opacity="0.45" />
-      </g>
-
-      {/* Inti Cakra Pusat (Pusat Penjelajahan) */}
-      <circle cx="24" cy="24" r="5" fill="#FBF9F5" stroke="currentColor" strokeWidth="1.25" />
-      <circle cx="24" cy="24" r="2.2" fill="currentColor" />
+      {/* Aksen Wajik Terakota Pusat */}
+      <polygon
+        points="24,20.5 28,25 24,29.5 20,25"
+        fill={monochrome ? "currentColor" : "var(--primitive-terracotta-raw, #c86446)"}
+      />
     </svg>
   );
 }
-

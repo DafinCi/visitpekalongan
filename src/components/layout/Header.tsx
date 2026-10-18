@@ -113,7 +113,7 @@ export function Header({
                 showSearch ? "sm:gap-2" : "gap-2"
               } group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1`}
             >
-              <BrandLogo className="w-7 h-7 sm:w-8 sm:h-8 text-accent-terracotta shrink-0 group-hover:rotate-45 transition-transform duration-300" />
+              <BrandLogo className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 group-hover:scale-105 transition-transform duration-300" />
               <span
                 className={`${
                   showSearch ? "hidden sm:inline" : "inline"
