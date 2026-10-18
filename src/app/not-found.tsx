@@ -12,7 +12,10 @@ export default function NotFound() {
           <div className="max-w-lg w-full text-center space-y-6 bg-surface-pure border border-border rounded-card p-8 sm:p-12 shadow-xs">
             {/* Ikon Kompas Aksen Terakota */}
             <div className="w-16 h-16 rounded-full bg-accent-terracotta/10 border border-accent-terracotta/25 mx-auto flex items-center justify-center">
-              <Compass className="w-8 h-8 text-accent-terracotta" aria-hidden="true" />
+              <Compass
+                className="w-8 h-8 text-accent-terracotta"
+                aria-hidden="true"
+              />
             </div>
 
             {/* Kode & Judul Editorial */}
@@ -24,8 +27,8 @@ export default function NotFound() {
                 Halaman Belum Masuk Kurasi
               </h1>
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed pt-1">
-                Waduh, tempat atau halaman yang Anda tuju mungkin salah ketik atau belum
-                tercatat dalam panduan kurasi independen kami.
+                Waduh, tempat atau halaman yang Anda tuju mungkin salah ketik
+                atau belum tercatat dalam panduan kurasi independen kami.
               </p>
             </div>
 
@@ -52,4 +55,3 @@ export default function NotFound() {
     </div>
   );
 }
-
