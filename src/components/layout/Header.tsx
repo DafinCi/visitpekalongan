@@ -97,11 +97,14 @@ export function Header({
             {backUrl && (
               <Link
                 href={backUrl}
-                className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-text-primary hover:text-accent-terracotta bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-11 min-w-11 sm:min-h-10 focus-visible:outline-2 focus-visible:outline-border-focus"
+                className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-text-primary hover:text-accent-terracotta hover:bg-canvas transition-colors min-h-11 min-w-11 sm:min-h-10"
                 aria-label={backLabel}
                 title={backLabel}
               >
-                <ArrowLeft className="w-4 h-4 text-accent-terracotta" aria-hidden="true" />
+                <ArrowLeft
+                  className="w-6 h-6 sm:w-4 sm:h-5 text-accent-terracotta"
+                  aria-hidden="true"
+                />
                 <span className="hidden sm:inline">{backLabel}</span>
               </Link>
             )}

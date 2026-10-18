@@ -86,10 +86,12 @@ export function PortalIntroOverlay() {
         ? document.activeElement
         : null;
 
+    document.documentElement.classList.add("intro-active");
     appContent?.setAttribute("inert", "");
     overlayRef.current?.focus({ preventScroll: true });
 
     return () => {
+      document.documentElement.classList.remove("intro-active");
       appContent?.removeAttribute("inert");
       if (previousActive?.isConnected) {
         previousActive.focus({ preventScroll: true });

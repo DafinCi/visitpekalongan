@@ -77,4 +77,5 @@ describe("createScrollLockManager", () => {
     assert.equal(doc.documentElement.style.overflow, "auto");
     assert.equal(doc.body.style.overflow, "scroll");
   });
+
 });
