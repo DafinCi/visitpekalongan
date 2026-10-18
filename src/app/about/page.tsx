@@ -18,12 +18,11 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
-      {/* Kontainer Konten Utama */}
-      <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header backUrl="/" backLabel="Katalog" />
+    <div className="h-dvh flex flex-col bg-canvas text-text-primary overflow-hidden">
+      <Header backUrl="/" backLabel="Katalog" />
 
-        <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+      <div className="app-scroll-container flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
           {/* Judul & Pengantar */}
           <div className="space-y-4 mb-12 pb-8 border-b border-border">
             <h1 className="font-serif text-3xl sm:text-5xl text-text-primary tracking-tight leading-tight">

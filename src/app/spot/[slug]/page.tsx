@@ -124,11 +124,10 @@ async function SpotDetailContent({ params }: SpotPageProps) {
 
 export default function SpotDetailPage({ params }: SpotPageProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
-      {/* Konten Utama dengan z-10 bg-canvas untuk menutupi Sticky Reveal Footer di bawahnya */}
-      <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header backUrl="/" backLabel="Kurasi" />
+    <div className="h-dvh flex flex-col bg-canvas text-text-primary overflow-hidden">
+      <Header backUrl="/" backLabel="Kurasi" />
 
+      <div className="app-scroll-container flex-1 overflow-y-auto overflow-x-hidden min-h-0">
         <Suspense fallback={<DetailSkeleton />}>
           <SpotDetailContent params={params} />
         </Suspense>

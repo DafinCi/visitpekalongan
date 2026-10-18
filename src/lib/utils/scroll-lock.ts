@@ -28,6 +28,12 @@ export function createScrollLockManager(
       previousBodyOverflow = doc.body.style.overflow;
       doc.documentElement.style.overflow = "hidden";
       doc.body.style.overflow = "hidden";
+      if (
+        "classList" in doc.documentElement &&
+        typeof (doc.documentElement as unknown as HTMLElement).classList?.add === "function"
+      ) {
+        (doc.documentElement as unknown as HTMLElement).classList.add("scroll-locked");
+      }
     }
 
     lockCount += 1;
@@ -41,6 +47,12 @@ export function createScrollLockManager(
       if (lockCount === 0) {
         doc.documentElement.style.overflow = previousHtmlOverflow;
         doc.body.style.overflow = previousBodyOverflow;
+        if (
+          "classList" in doc.documentElement &&
+          typeof (doc.documentElement as unknown as HTMLElement).classList?.remove === "function"
+        ) {
+          (doc.documentElement as unknown as HTMLElement).classList.remove("scroll-locked");
+        }
       }
     };
   };

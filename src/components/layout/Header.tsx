@@ -90,7 +90,7 @@ export function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-canvas/95 backdrop-blur-sm border-b border-border transition-colors">
+      <header className="flex-none z-40 w-full bg-canvas/95 backdrop-blur-sm border-b border-border transition-colors">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
           {/* Sisi Kiri: Brand & Logo (dengan Tombol Kembali jika backUrl tersedia) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">

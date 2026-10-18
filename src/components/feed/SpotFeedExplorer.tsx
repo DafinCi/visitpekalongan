@@ -138,7 +138,7 @@ export function SpotFeedExplorer({
   }, [filteredSpots, visibleCount]);
 
   return (
-    <div className="w-full">
+    <div className="h-full flex flex-col w-full overflow-hidden">
       {/* Unified Sticky Header dengan Search & Filter Pill */}
       <Header
         showSearch
@@ -157,8 +157,9 @@ export function SpotFeedExplorer({
         totalFilteredSpots={statusPending ? allSpots.length : filteredSpots.length}
       />
 
-      {/* Konten Utama: Mode Daftar vs Peta */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-4">
+      {/* Konten Utama Tergulir: Scrollbar Dimulai Tepat di Bawah Header */}
+      <div className="app-scroll-container flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-4">
         {/* Toolbar Kontrol Feed: Info Hasil Kurasi & Switch Tampilan [Daftar | Peta] */}
         <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border/70">
           <div className="flex items-center gap-2">
@@ -311,6 +312,7 @@ export function SpotFeedExplorer({
           />
         )}
       </section>
+      </div>
     </div>
   );
 }

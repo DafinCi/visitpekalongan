@@ -4,10 +4,10 @@ import { Header } from "@/components/layout/Header";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
-      <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header showSearch={false} backUrl="/" backLabel="Katalog" />
+    <div className="h-dvh flex flex-col bg-canvas text-text-primary overflow-hidden">
+      <Header showSearch={false} backUrl="/" backLabel="Katalog" />
 
+      <div className="app-scroll-container flex-1 overflow-y-auto overflow-x-hidden min-h-0 flex flex-col">
         <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
           <div className="max-w-lg w-full text-center space-y-6 bg-surface-pure border border-border rounded-card p-8 sm:p-12 shadow-xs">
             {/* Ikon Kompas Aksen Terakota */}

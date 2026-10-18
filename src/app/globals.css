@@ -83,11 +83,25 @@
   --radius-drawer: 12px;
 }
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   background-color: var(--primitive-mori-100);
   color: var(--primitive-charcoal-900);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+.app-scroll-container {
+  -webkit-overflow-scrolling: touch;
+}
+
+html.scroll-locked .app-scroll-container {
+  overflow: hidden !important;
 }
 
 *::-webkit-scrollbar {
