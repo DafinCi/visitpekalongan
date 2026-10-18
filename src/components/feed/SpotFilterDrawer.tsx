@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, Sparkles, MapPin, Clock, Check, Bookmark } from "lucide-react";
+import { X, MapPin, Clock, Check, Bookmark } from "lucide-react";
 import { Regency, SpotCategory } from "@/types/spot";
 
 interface SpotFilterDrawerProps {
@@ -121,8 +121,7 @@ export function SpotFilterDrawer({
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* Bagian 1: Kategori Kurasi */}
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
+            <div className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">
               <span>Kategori Kurasi</span>
             </div>
             <div className="grid grid-cols-2 gap-2">

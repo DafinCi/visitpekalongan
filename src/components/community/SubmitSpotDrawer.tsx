@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Plus, Sparkles, CheckCircle2, ShieldCheck, Send } from "lucide-react";
+import { X, Plus, CheckCircle2, ShieldCheck, Send } from "lucide-react";
 
 interface SubmitSpotFormData {
   name: string;
@@ -111,8 +111,7 @@ export function SubmitSpotDrawer() {
             {/* Header Modal */}
             <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-border">
               <div>
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-accent-terracotta uppercase tracking-wider mb-1">
-                  <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+                <div className="text-xs font-semibold text-accent-terracotta uppercase tracking-wider mb-1">
                   <span>Kurasi Komunitas</span>
                 </div>
                 <h2 id="drawer-title" className="font-display text-2xl text-text-primary">

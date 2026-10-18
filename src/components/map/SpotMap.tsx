@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
 }
 import Link from "next/link";
 import Image from "next/image";
-import { Navigation, ArrowRight, X, Sparkles, MapPin, LocateFixed, Loader2 } from "lucide-react";
+import { Navigation, ArrowRight, X, MapPin, LocateFixed, Loader2 } from "lucide-react";
 import { SpotListItemDTO } from "@/types/spot";
 import { formatDistrict, formatPriceRange, formatRegency } from "@/lib/utils/formatters";
 import {
@@ -273,7 +273,6 @@ export function SpotMap({
           <div className="flex items-start justify-between gap-3 mb-2">
             <div>
               <div className="flex items-center gap-1.5 text-xs text-text-muted mb-1">
-                <Sparkles className="w-3 h-3 text-accent-terracotta" aria-hidden="true" />
                 <span className="font-semibold uppercase tracking-wider">{activeSpot.categoryName}</span>
                 <span>•</span>
                 <span>{formatDistrict(activeSpot.district)}</span>

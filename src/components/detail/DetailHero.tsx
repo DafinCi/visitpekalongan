@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, MapPin } from "lucide-react";
+import { ArrowLeft, MapPin } from "lucide-react";
 import { SpotDetailDTO } from "@/types/spot";
 import { formatDistrict, formatRegency } from "@/lib/utils/formatters";
 
@@ -41,8 +41,7 @@ export function DetailHero({ spot }: DetailHeroProps) {
 
         {/* Lencana Kategori & Teritori di atas Foto */}
         <div className="absolute top-4 left-4 flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-canvas/90 backdrop-blur-xs text-text-primary border border-border rounded-button shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
+          <span className="inline-flex items-center px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-canvas/90 backdrop-blur-xs text-text-primary border border-border rounded-button shadow-xs">
             <span>{spot.categoryName}</span>
           </span>
 

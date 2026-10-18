@@ -1,4 +1,4 @@
-import { Utensils, Clock, Sparkles, MessageSquare, ExternalLink } from "lucide-react";
+import { Utensils, Clock, MessageSquare, ExternalLink } from "lucide-react";
 import { SpotDetailDTO } from "@/types/spot";
 
 interface StorySectionProps {
@@ -12,8 +12,7 @@ export function StorySection({ spot }: StorySectionProps) {
         {/* Kolom Narasi Kurasi (2 kolom di layar besar) */}
         <div className="lg:col-span-2 space-y-6">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="w-4 h-4 text-accent-terracotta" aria-hidden="true" />
+            <div className="mb-2">
               <span className="text-xs uppercase tracking-widest text-accent-terracotta font-semibold">
                 Catatan Kurator
               </span>
@@ -80,8 +79,7 @@ export function StorySection({ spot }: StorySectionProps) {
             </div>
           ) : (
             <div className="p-5 rounded-card bg-surface-pure border border-border border-l-4 border-l-accent-sage space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-accent-sage">
-                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+              <div className="text-xs font-semibold uppercase tracking-wider text-accent-sage">
                 <span>Hidden Gem Belum Terjamah</span>
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
