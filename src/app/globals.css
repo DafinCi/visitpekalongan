@@ -51,7 +51,8 @@
   --color-border-subtle: var(--primitive-grout-200);
   --color-border-focus: var(--primitive-terracotta-600);
 
-  /* Tipografi */
+  /* Tipografi & Kontras */
+  --color-charcoal: var(--primitive-charcoal-900);
   --color-text-primary: var(--primitive-charcoal-900);
   --color-text-muted: var(--primitive-driftwood-600);
   --color-text-subtle: var(--primitive-driftwood-400);

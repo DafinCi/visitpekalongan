@@ -92,7 +92,7 @@ export function Header({
               href="/"
               className="flex items-baseline group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
             >
-              <span className="font-serif text-lg sm:text-2xl tracking-tight text-text-primary group-hover:text-accent-terracotta transition-colors">
+              <span className="font-serif text-base sm:text-2xl tracking-tight text-text-primary group-hover:text-accent-terracotta transition-colors">
                 VisitPekalongan
               </span>
             </Link>

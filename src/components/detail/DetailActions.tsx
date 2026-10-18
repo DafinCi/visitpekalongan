@@ -72,10 +72,11 @@ export function DetailActions({ spot }: DetailActionsProps) {
           href={spot.googleMapsIntentUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-canvas bg-accent-terracotta hover:bg-accent-terracotta/90 rounded-button shadow-sm transition-all min-h-[48px] focus-visible:outline-2 focus-visible:outline-border-focus"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold text-canvas bg-accent-terracotta hover:bg-accent-terracotta/90 rounded-button shadow-sm transition-all min-h-[48px] focus-visible:outline-2 focus-visible:outline-border-focus"
         >
           <Navigation className="w-4 h-4 text-canvas" aria-hidden="true" />
-          <span>Buka Petunjuk Arah Google Maps</span>
+          <span className="sm:hidden">Buka Rute Maps</span>
+          <span className="hidden sm:inline">Buka Petunjuk Arah Google Maps</span>
         </a>
 
         {/* Tombol Simpan Offline / Bookmark */}

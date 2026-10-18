@@ -91,30 +91,35 @@ export function SubmitSpotDrawer() {
         <span className="hidden sm:inline">Lapor Spot</span>
       </button>
 
-      {/* Modal / Slide-over Drawer */}
+      {/* Modal / Slide-over Bottom Sheet Drawer */}
       {isOpen && (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="drawer-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
         >
-          {/* Latar Belakang Redup (Backdrop) */}
+          {/* Latar Belakang Redup Tegas (Backdrop Gelap Berkualitas) */}
           <div
-            className="fixed inset-0 bg-charcoal/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-charcoal/70 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
             onClick={handleClose}
             aria-hidden="true"
           />
 
-          {/* Panel Konten Modal */}
-          <div className="relative w-full max-w-lg bg-canvas border border-border rounded-card p-6 shadow-xl z-10 my-8 max-h-[90vh] overflow-y-auto">
+          {/* Panel Konten: Bottom Sheet di Mobile, Modal di Desktop */}
+          <div className="relative w-full max-w-lg bg-canvas border-t sm:border border-border rounded-t-card sm:rounded-card shadow-2xl z-10 max-h-[92vh] sm:max-h-[90vh] flex flex-col animate-in slide-in-from-bottom duration-250 sm:zoom-in-95 overflow-hidden">
+            {/* Handle Drag Bar Dekoratif di Layar Ponsel */}
+            <div className="sm:hidden w-full flex justify-center pt-3 pb-1 shrink-0" aria-hidden="true">
+              <div className="w-12 h-1.5 rounded-full bg-border" />
+            </div>
+
             {/* Header Modal */}
-            <div className="flex items-start justify-between gap-4 mb-4 pb-3 border-b border-border">
+            <div className="flex items-start justify-between gap-4 px-5 pt-3 sm:pt-5 pb-3 border-b border-border shrink-0">
               <div>
                 <div className="text-xs font-semibold text-accent-terracotta uppercase tracking-wider mb-1">
                   <span>Kurasi Komunitas</span>
                 </div>
-                <h2 id="drawer-title" className="font-display text-2xl text-text-primary">
+                <h2 id="drawer-title" className="font-display text-xl sm:text-2xl text-text-primary">
                   Lapor Hidden Gem Pekalongan
                 </h2>
               </div>
@@ -122,12 +127,14 @@ export function SubmitSpotDrawer() {
               <button
                 type="button"
                 onClick={handleClose}
-                className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus"
+                className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer shrink-0"
                 aria-label="Tutup formulir"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            <div className="flex-1 overflow-y-auto p-5 sm:p-6">
 
             {submitted ? (
               /* State Sukses */
@@ -282,7 +289,7 @@ export function SubmitSpotDrawer() {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-xs sm:text-sm font-semibold text-canvas bg-accent-terracotta hover:bg-accent-terracotta/90 rounded-button transition-colors min-h-[48px] focus-visible:outline-2 focus-visible:outline-border-focus"
+                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-xs sm:text-sm font-semibold text-canvas bg-accent-terracotta hover:bg-accent-terracotta/90 rounded-button transition-colors min-h-[48px] focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
                   >
                     <Send className="w-4 h-4" />
                     <span>Kirim Laporan Kurator</span>
@@ -290,6 +297,7 @@ export function SubmitSpotDrawer() {
                 </div>
               </form>
             )}
+            </div>
           </div>
         </div>
       )}

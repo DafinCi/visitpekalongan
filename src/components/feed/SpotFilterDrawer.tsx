@@ -73,7 +73,7 @@ export function SpotFilterDrawer({
     >
       {/* Latar Belakang Redup (Backdrop) */}
       <div
-        className="fixed inset-0 bg-charcoal/60 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-charcoal/70 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
         onClick={onClose}
         aria-hidden="true"
       />

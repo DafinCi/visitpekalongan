@@ -7,10 +7,10 @@ import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { searchSpotsSmart } from "@/lib/utils/smart-search";
 import { calculateOpenStatus } from "@/lib/utils/opening-hours";
+import { LayoutGrid, Map } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
 import { EmptyState } from "./EmptyState";
-import { FloatingViewSwitch } from "./FloatingViewSwitch";
 import { SpotMapLazy } from "@/components/map/SpotMapLazy";
 
 interface SpotFeedExplorerProps {
@@ -96,6 +96,12 @@ export function SpotFeedExplorer({
     return result;
   }, [liveSpots, debouncedQ, category, regency, openNow, savedOnly, bookmarks]);
 
+  const activeFilterCount =
+    (category !== "all" && Boolean(category) ? 1 : 0) +
+    (regency !== null ? 1 : 0) +
+    (openNow ? 1 : 0) +
+    (savedOnly ? 1 : 0);
+
   return (
     <div className="w-full">
       {/* Unified Sticky Header dengan Search & Filter Pill */}
@@ -117,7 +123,62 @@ export function SpotFeedExplorer({
       />
 
       {/* Konten Utama: Mode Daftar vs Peta */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-4">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-4">
+        {/* Toolbar Kontrol Feed: Info Hasil Kurasi & Switch Tampilan [Daftar | Peta] */}
+        <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border/70">
+          <div className="flex items-center gap-2">
+            <p className="text-xs sm:text-sm font-medium text-text-muted">
+              Menampilkan{" "}
+              <span className="text-text-primary font-semibold">
+                {filteredSpots.length}
+              </span>{" "}
+              tempat kurasi
+            </p>
+            {activeFilterCount > 0 && (
+              <span className="hidden sm:inline-flex text-[11px] font-semibold text-accent-terracotta bg-accent-terracotta/10 px-2 py-0.5 rounded-badge border border-accent-terracotta/20">
+                {activeFilterCount} filter aktif
+              </span>
+            )}
+          </div>
+
+          {/* Switch Segmented Kontrol In-Flow */}
+          <div
+            className="flex items-center p-0.5 bg-surface-pure border border-border rounded-button"
+            role="tablist"
+            aria-label="Peralihan Tampilan"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "list"}
+              onClick={() => setView("list")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+                view === "list"
+                  ? "bg-text-primary text-canvas shadow-xs"
+                  : "text-text-muted hover:text-text-primary hover:bg-canvas"
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Daftar</span>
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "map"}
+              onClick={() => setView("map")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+                view === "map"
+                  ? "bg-text-primary text-canvas shadow-xs"
+                  : "text-text-muted hover:text-text-primary hover:bg-canvas"
+              }`}
+            >
+              <Map className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Peta</span>
+            </button>
+          </div>
+        </div>
+
         {view === "list" ? (
           filteredSpots.length > 0 ? (
             <SpotGrid spots={filteredSpots} />
@@ -141,9 +202,6 @@ export function SpotFeedExplorer({
           </div>
         )}
       </section>
-
-      {/* Floating Controller Bawah Layar */}
-      <FloatingViewSwitch currentView={view} onViewChange={setView} />
     </div>
   );
 }
