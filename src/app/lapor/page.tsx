@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ShieldCheck,
-  CheckCircle2,
-  MapPin,
-  BookOpen,
-} from "lucide-react";
+import { ArrowLeft, ShieldCheck, CheckCircle2, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";

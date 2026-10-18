@@ -7,7 +7,7 @@ import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { searchSpotsSmart } from "@/lib/utils/smart-search";
 import { calculateOpenStatus } from "@/lib/utils/opening-hours";
-import { LayoutGrid, Map } from "lucide-react";
+import { LayoutGrid, Map, ChevronDown } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
 import { EmptyState } from "./EmptyState";
@@ -102,6 +102,19 @@ export function SpotFeedExplorer({
     (openNow ? 1 : 0) +
     (savedOnly ? 1 : 0);
 
+  const PAGE_SIZE = 9;
+  const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
+
+  // Reset pagination saat filter atau query pencarian berubah
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [debouncedQ, category, regency, openNow, savedOnly]);
+
+  // Slicing data khusus untuk tampilan feed daftar/grid
+  const paginatedSpots = useMemo(() => {
+    return filteredSpots.slice(0, visibleCount);
+  }, [filteredSpots, visibleCount]);
+
   return (
     <div className="w-full">
       {/* Unified Sticky Header dengan Search & Filter Pill */}
@@ -130,7 +143,9 @@ export function SpotFeedExplorer({
             <p className="text-xs sm:text-sm font-medium text-text-muted">
               Menampilkan{" "}
               <span className="text-text-primary font-semibold">
-                {filteredSpots.length}
+                {view === "map" || filteredSpots.length <= PAGE_SIZE
+                  ? filteredSpots.length
+                  : `${Math.min(visibleCount, filteredSpots.length)} dari ${filteredSpots.length}`}
               </span>{" "}
               tempat kurasi
             </p>
@@ -181,7 +196,36 @@ export function SpotFeedExplorer({
 
         {view === "list" ? (
           filteredSpots.length > 0 ? (
-            <SpotGrid spots={filteredSpots} />
+            <>
+              <SpotGrid spots={paginatedSpots} />
+
+              {/* Tombol Muat Lebih Banyak */}
+              {visibleCount < filteredSpots.length && (
+                <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-text-primary bg-surface hover:bg-canvas border border-border hover:border-accent-terracotta rounded-button transition-colors shadow-xs min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
+                    aria-label={`Muat ${Math.min(PAGE_SIZE, filteredSpots.length - visibleCount)} tempat lagi`}
+                  >
+                    <span>Muat Lebih Banyak Tempat</span>
+                    <ChevronDown className="w-4 h-4 text-text-muted" aria-hidden="true" />
+                  </button>
+                  <p className="text-[11px] sm:text-xs text-text-muted">
+                    Menampilkan {paginatedSpots.length} dari {filteredSpots.length} tempat kurasi
+                  </p>
+                </div>
+              )}
+
+              {/* Status Akhir Kurasi jika semua sudah termuat */}
+              {visibleCount >= filteredSpots.length && filteredSpots.length > PAGE_SIZE && (
+                <div className="mt-8 sm:mt-12 text-center py-4 border-t border-border/50">
+                  <p className="text-xs text-text-muted">
+                    Seluruh {filteredSpots.length} tempat kurasi telah ditampilkan.
+                  </p>
+                </div>
+              )}
+            </>
           ) : (
             <EmptyState
               hasOpenNowFilter={openNow}

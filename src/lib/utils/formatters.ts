@@ -29,6 +29,7 @@ export function formatDistrict(district: string): string {
     wiradesa: "Wiradesa",
     kedungwuni: "Kedungwuni",
     karanganyar: "Karanganyar",
+    kesesi: "Kesesi",
   };
 
   return map[district] || district;
