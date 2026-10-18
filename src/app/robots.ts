@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://visitpekalongan.com";
+import { getBaseUrl } from "@/lib/utils/url";
 
 export default function robots(): MetadataRoute.Robots {
+  const BASE_URL = getBaseUrl();
   return {
     rules: {
       userAgent: "*",

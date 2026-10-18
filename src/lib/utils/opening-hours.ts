@@ -72,7 +72,8 @@ function getWIBDateTime(date?: Date): {
 export function calculateOpenStatus(
   schedule: WeeklyOpeningHours,
   lifecycleStatus: LifecycleStatus = "active",
-  referenceDate?: Date
+  referenceDate?: Date,
+  hasFridayPrayerBreak = false
 ): OpenStatusResult {
   if (lifecycleStatus === "temporarily_closed") {
     return {
@@ -91,6 +92,19 @@ export function calculateOpenStatus(
   const dateToEvaluate =
     referenceDate ?? (typeof window === "undefined" ? STATIC_FALLBACK_DATE : new Date());
   const { currentDay, yesterdayDay, currentTimeString } = getWIBDateTime(dateToEvaluate);
+
+  // Cek jeda ibadah Sholat Jumat (khusus hari Jumat pukul 11:30 - 13:00 WIB)
+  if (
+    hasFridayPrayerBreak &&
+    currentDay === "friday" &&
+    currentTimeString >= "11:30" &&
+    currentTimeString < "13:00"
+  ) {
+    return {
+      isOpenNow: false,
+      statusLabel: "Jeda Sholat Jumat, buka 13:00",
+    };
+  }
 
   // 1. Cek luapan shift kemarin malam yang melewati tengah malam (misal buka 19:00, tutup 02:30)
   const yesterdaySchedule = schedule[yesterdayDay];

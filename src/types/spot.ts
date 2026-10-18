@@ -62,6 +62,23 @@ export interface SpotImage {
   displayOrder: number;
 }
 
+export interface TransitLogisticsNotice {
+  lastFuelStation: {
+    name: string;
+    distanceKm: number;
+    location: string;
+    advice: string;
+  };
+  cellularSignal: {
+    status: "spotty_telkomsel" | "no_signal";
+    checkpoint: string;
+    recommendedProvider: string;
+    advice: string;
+  };
+  roadAdvice: string;
+  cashAdvice: string;
+}
+
 // Entitas Database Lengkap (Model Entity)
 export interface SpotEntity {
   id: string;
@@ -81,6 +98,7 @@ export interface SpotEntity {
   instagramAccount?: string;
   priceRange: PriceRange;
   openingHours: WeeklyOpeningHours;
+  hasFridayPrayerBreak?: boolean;
   facilities: Facility[];
   coverImageUrl: string;
   lifecycleStatus: LifecycleStatus;
@@ -88,6 +106,7 @@ export interface SpotEntity {
   isFeatured: boolean;
   createdAt: string;
   updatedAt: string;
+  logisticsNotice?: TransitLogisticsNotice;
 }
 
 // Data Transfer Object: Marker Ringan Peta (< 15 KB payload)
@@ -125,6 +144,7 @@ export interface SpotListItemDTO {
   lifecycleStatus: LifecycleStatus;
   isOpenNow: boolean;
   statusLabel: string;
+  hasFridayPrayerBreak?: boolean;
   facilities: Facility[];
   vibeTags: string[];
 }
@@ -141,6 +161,7 @@ export interface SpotDetailDTO extends SpotListItemDTO {
   }[];
   weeklySchedule: WeeklyOpeningHours;
   googleMapsReviewUrl?: string;
+  logisticsNotice?: TransitLogisticsNotice;
 }
 
 // Parameter Filter URL

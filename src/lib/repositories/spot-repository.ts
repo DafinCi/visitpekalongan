@@ -28,7 +28,12 @@ export class LocalSpotRepository implements SpotRepository {
 
     return spots.map((spot) => {
       const category = CATEGORIES.find((c) => c.id === spot.categoryId);
-      const openStatus = calculateOpenStatus(spot.openingHours, spot.lifecycleStatus);
+      const openStatus = calculateOpenStatus(
+        spot.openingHours,
+        spot.lifecycleStatus,
+        undefined,
+        spot.hasFridayPrayerBreak
+      );
 
       return {
         id: spot.id,
@@ -50,7 +55,12 @@ export class LocalSpotRepository implements SpotRepository {
 
     return spots.map((spot) => {
       const category = CATEGORIES.find((c) => c.id === spot.categoryId);
-      const openStatus = calculateOpenStatus(spot.openingHours, spot.lifecycleStatus);
+      const openStatus = calculateOpenStatus(
+        spot.openingHours,
+        spot.lifecycleStatus,
+        undefined,
+        spot.hasFridayPrayerBreak
+      );
 
       return {
         id: spot.id,
@@ -72,6 +82,7 @@ export class LocalSpotRepository implements SpotRepository {
         lifecycleStatus: spot.lifecycleStatus,
         isOpenNow: openStatus.isOpenNow,
         statusLabel: openStatus.statusLabel,
+        hasFridayPrayerBreak: spot.hasFridayPrayerBreak,
         facilities: spot.facilities,
         vibeTags: [category?.name || "", spot.regency === "kota" ? "Kota" : "Pegunungan"],
       };
@@ -88,7 +99,12 @@ export class LocalSpotRepository implements SpotRepository {
     }
 
     const category = CATEGORIES.find((c) => c.id === spot.categoryId);
-    const openStatus = calculateOpenStatus(spot.openingHours, spot.lifecycleStatus);
+    const openStatus = calculateOpenStatus(
+      spot.openingHours,
+      spot.lifecycleStatus,
+      undefined,
+      spot.hasFridayPrayerBreak
+    );
 
     return {
       id: spot.id,
@@ -108,6 +124,7 @@ export class LocalSpotRepository implements SpotRepository {
       lifecycleStatus: spot.lifecycleStatus,
       isOpenNow: openStatus.isOpenNow,
       statusLabel: openStatus.statusLabel,
+      hasFridayPrayerBreak: spot.hasFridayPrayerBreak,
       facilities: spot.facilities,
       vibeTags: [category?.name || "", spot.regency === "kota" ? "Kota" : "Pegunungan"],
       description: spot.description,
@@ -122,6 +139,7 @@ export class LocalSpotRepository implements SpotRepository {
       ],
       weeklySchedule: spot.openingHours,
       googleMapsReviewUrl: spot.googleMapsReviewUrl,
+      logisticsNotice: spot.logisticsNotice,
     };
   }
 

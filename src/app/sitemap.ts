@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 import { spotRepository } from "@/lib/repositories/spot-repository";
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://visitpekalongan.com";
+import { getBaseUrl } from "@/lib/utils/url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const BASE_URL = getBaseUrl();
   const spots = await spotRepository.getSpots();
 
   const spotUrls: MetadataRoute.Sitemap = spots.map((spot) => ({

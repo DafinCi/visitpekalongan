@@ -116,6 +116,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     instagramAccount: "tautorochmani",
     priceRange: "terjangkau",
     openingHours: makeFoodScheduleWithFridayBreak("08:00", "16:30"),
+    hasFridayPrayerBreak: true,
     facilities: ["car_parking", "motorcycle_parking", "prayer_room"],
     coverImageUrl:
       "https://images.unsplash.com/photo-1541832676-9b763b0239ab?q=80&w=1000&auto=format&fit=crop",
@@ -171,6 +172,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Nasi+Megono+Ibu+Entun+Pekalongan",
     priceRange: "murah_meriah",
     openingHours: makeFoodScheduleWithFridayBreak("06:00", "13:00"),
+    hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking"],
     coverImageUrl:
       "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop",
@@ -199,6 +201,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     instagramAccount: "garangasemmasduki",
     priceRange: "terjangkau",
     openingHours: makeDailySchedule("07:30", "21:00"),
+    hasFridayPrayerBreak: true,
     facilities: ["air_conditioned", "car_parking", "motorcycle_parking", "prayer_room"],
     coverImageUrl:
       "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=1000&auto=format&fit=crop",
@@ -235,6 +238,22 @@ export const SPOTS_DATA: SpotEntity[] = [
     isFeatured: true,
     createdAt: "2026-01-20T09:00:00Z",
     updatedAt: "2026-03-12T14:00:00Z",
+    logisticsNotice: {
+      lastFuelStation: {
+        name: "SPBU 44.511.08 Doro",
+        distanceKm: 21,
+        location: "Jl. Raya Doro No. 88, Doro",
+        advice: "Isi penuh tangki di SPBU Doro (21 km sebelum spot). Di lereng Yosorejo hanya ada bensin eceran warga botolan.",
+      },
+      cellularSignal: {
+        status: "spotty_telkomsel",
+        checkpoint: "Pasar Doro",
+        recommendedProvider: "Telkomsel",
+        advice: "Sinyal 4G stabil berakhir di Pasar Doro. Di kedai ini, sinyal Telkomsel 2G/3G sesekali tertangkap di area teras luar; operator lain cenderung tiada sinyal.",
+      },
+      roadAdvice: "Jalur aspal menanjak via Doro - Petungkriyono. Waspadai kabut tebal setelah pukul 14:00 dan pastikan rem motor matic dalam kondisi prima saat meluncur turun.",
+      cashAdvice: "Tarik uang tunai secukupnya di minimarket/ATM Pasar Doro sebelum menanjak. Walaupun kedai kadang menerima QRIS saat sinyal bagus, sediakan tunai untuk antisipasi.",
+    },
   },
   {
     id: "spot-06",
@@ -255,6 +274,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     instagramAccount: "selasarkauman",
     priceRange: "terjangkau",
     openingHours: makeDailySchedule("08:30", "22:00"),
+    hasFridayPrayerBreak: true,
     facilities: ["wifi", "power_plug", "air_conditioned", "outdoor_smoking", "prayer_room"],
     coverImageUrl:
       "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1000&auto=format&fit=crop",
@@ -290,6 +310,22 @@ export const SPOTS_DATA: SpotEntity[] = [
     isFeatured: true,
     createdAt: "2026-01-25T07:30:00Z",
     updatedAt: "2026-03-15T10:00:00Z",
+    logisticsNotice: {
+      lastFuelStation: {
+        name: "SPBU 44.511.08 Doro",
+        distanceKm: 25,
+        location: "Jl. Raya Doro No. 88, Doro",
+        advice: "SPBU resmi terakhir ada di Doro (25 km sebelum pintu masuk curug). Pastikan tangki kendaraan terisi penuh sebelum melewati tugu selamat datang cagar alam.",
+      },
+      cellularSignal: {
+        status: "no_signal",
+        checkpoint: "Pasar Doro",
+        recommendedProvider: "Telkomsel",
+        advice: "Blank spot total di area lembah dasar air terjun. Unduh panduan rute dan simpan kontak darurat selagi masih di area Doro.",
+      },
+      roadAdvice: "Tanjakan curam berkelok sempit melewati tebing dan lereng hutan lindung. Gunakan gigi rendah dan bunyikan klakson di setiap tikungan buta (blind spot).",
+      cashAdvice: "Tiket retribusi kawasan hutan dan warung mendoan parkiran hanya melayani pembayaran tunai (cash-only). Tidak ada sinyal untuk QRIS.",
+    },
   },
   {
     id: "spot-08",
@@ -317,6 +353,22 @@ export const SPOTS_DATA: SpotEntity[] = [
     isFeatured: false,
     createdAt: "2026-01-28T08:00:00Z",
     updatedAt: "2026-03-16T11:00:00Z",
+    logisticsNotice: {
+      lastFuelStation: {
+        name: "SPBU 44.511.08 Doro",
+        distanceKm: 16,
+        location: "Jl. Raya Doro No. 88, Doro",
+        advice: "SPBU Pertamina terdekat berjarak 16 km di Doro. Jalur Kayupuring sudah tidak memiliki SPBU resmi.",
+      },
+      cellularSignal: {
+        status: "spotty_telkomsel",
+        checkpoint: "Pasar Doro",
+        recommendedProvider: "Telkomsel",
+        advice: "Koneksi data internet sangat terbatas di tepi aliran sungai Welo. Telkomsel masih bisa untuk pesan teks di area loket atas, namun tanpa jangkauan 4G berkecepatan tinggi.",
+      },
+      roadAdvice: "Akses jalan aspal bergelombang melewati perbukitan Kayupuring. Siapkan ban dan rem dalam keadaan prima, terutama saat musim hujan.",
+      cashAdvice: "Siapkan uang tunai untuk sewa pelampung, pemandu susur sungai, dan makan di warung pondok tepi sungai.",
+    },
   },
   {
     id: "spot-09",
@@ -344,6 +396,22 @@ export const SPOTS_DATA: SpotEntity[] = [
     isFeatured: false,
     createdAt: "2026-02-01T06:30:00Z",
     updatedAt: "2026-03-18T09:00:00Z",
+    logisticsNotice: {
+      lastFuelStation: {
+        name: "SPBU 44.511.08 Doro",
+        distanceKm: 28,
+        location: "Jl. Raya Doro No. 88, Doro",
+        advice: "Berada di ketinggian 1.500 mdpl ujung Petungkriyono, 28 km dari SPBU resmi Doro. Sangat krusial memastikan bahan bakar penuh sebelum mulai mendaki.",
+      },
+      cellularSignal: {
+        status: "no_signal",
+        checkpoint: "Pasar Doro",
+        recommendedProvider: "Telkomsel",
+        advice: "Kawasan cekungan telaga Sigebyar berstatus blank spot tanpa sinyal seluler. Pastikan peta offline sudah diunduh.",
+      },
+      roadAdvice: "Jalur aspal desa berlanjut ke jalan berbatu dan tanjakan terjal pegunungan Rogojembangan. Disarankan sepeda motor manual atau mobil berpenggerak kuat; hindari berkendara sore saat kabut pekat turun.",
+      cashAdvice: "Wajib membawa uang tunai fisik untuk retribusi pos masuk dusun Mangunan dan sajian kopi jahe warga lokal.",
+    },
   },
   {
     id: "spot-10",
@@ -392,6 +460,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     instagramAccount: "kampungbatikpesindon",
     priceRange: "murah_meriah",
     openingHours: makeDailySchedule("08:00", "18:00"),
+    hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking", "scenic_view"],
     coverImageUrl:
       "https://images.unsplash.com/photo-1606744837616-56c9a5c6a6eb?q=80&w=1000&auto=format&fit=crop",
@@ -419,6 +488,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Kampung+Batik+Kauman+Pekalongan",
     priceRange: "terjangkau",
     openingHours: makeDailySchedule("08:30", "17:00"),
+    hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking"],
     coverImageUrl:
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1000&auto=format&fit=crop",
