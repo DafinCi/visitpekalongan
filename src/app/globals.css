@@ -116,21 +116,15 @@ html {
 @supports (-moz-appearance: none) {
   * {
     scrollbar-width: thin;
-    scrollbar-color:
-      var(--primitive-roast-600)
-      var(--primitive-mori-100);
+    scrollbar-color: var(--primitive-roast-600) var(--primitive-mori-100);
   }
 
   html.intro-active {
-    scrollbar-color:
-      var(--primitive-roast-600)
-      var(--primitive-grout-200);
+    scrollbar-color: var(--primitive-roast-600) var(--primitive-grout-200);
   }
 
   html:has(.portal-intro-overlay) {
-    scrollbar-color:
-      var(--primitive-roast-600)
-      var(--primitive-grout-200);
+    scrollbar-color: var(--primitive-roast-600) var(--primitive-grout-200);
   }
 }
 
@@ -153,8 +147,8 @@ html.intro-active::-webkit-scrollbar-track {
 }
 
 .portal-intro-lockup {
-  animation: portal-intro-lockup-out 300ms cubic-bezier(0.22, 1, 0.36, 1)
-    1100ms forwards;
+  animation: portal-intro-lockup-out 300ms cubic-bezier(0.22, 1, 0.36, 1) 1100ms
+    forwards;
 }
 
 .portal-intro-stroke {
@@ -198,8 +192,8 @@ html.intro-active::-webkit-scrollbar-track {
 .portal-intro-wordmark {
   opacity: 0;
   transform: translateY(4px);
-  animation: portal-intro-wordmark 300ms cubic-bezier(0.22, 1, 0.36, 1)
-    650ms forwards;
+  animation: portal-intro-wordmark 300ms cubic-bezier(0.22, 1, 0.36, 1) 650ms
+    forwards;
 }
 
 .portal-intro-mask {
