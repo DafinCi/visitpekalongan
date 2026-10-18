@@ -7,9 +7,10 @@ import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { searchSpotsSmart } from "@/lib/utils/smart-search";
 import { calculateOpenStatus } from "@/lib/utils/opening-hours";
-import { LayoutGrid, Map, ChevronDown } from "lucide-react";
+import { LayoutGrid, List, Map, ChevronDown } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
+import { SpotList } from "./SpotList";
 import { EmptyState } from "./EmptyState";
 import { SpotMapLazy } from "@/components/map/SpotMapLazy";
 
@@ -156,7 +157,7 @@ export function SpotFeedExplorer({
             )}
           </div>
 
-          {/* Switch Segmented Kontrol In-Flow */}
+          {/* Switch Segmented Kontrol In-Flow: [Grid | List | Peta] */}
           <div
             className="flex items-center p-0.5 bg-surface-pure border border-border rounded-button"
             role="tablist"
@@ -165,16 +166,31 @@ export function SpotFeedExplorer({
             <button
               type="button"
               role="tab"
-              aria-selected={view === "list"}
-              onClick={() => setView("list")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
-                view === "list"
+              aria-selected={view === "grid"}
+              onClick={() => setView("grid")}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+                view === "grid"
                   ? "bg-text-primary text-canvas shadow-xs"
                   : "text-text-muted hover:text-text-primary hover:bg-canvas"
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Daftar</span>
+              <span>Grid</span>
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "list"}
+              onClick={() => setView("list")}
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+                view === "list"
+                  ? "bg-text-primary text-canvas shadow-xs"
+                  : "text-text-muted hover:text-text-primary hover:bg-canvas"
+              }`}
+            >
+              <List className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>List</span>
             </button>
 
             <button
@@ -182,7 +198,7 @@ export function SpotFeedExplorer({
               role="tab"
               aria-selected={view === "map"}
               onClick={() => setView("map")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                 view === "map"
                   ? "bg-text-primary text-canvas shadow-xs"
                   : "text-text-muted hover:text-text-primary hover:bg-canvas"
@@ -194,56 +210,58 @@ export function SpotFeedExplorer({
           </div>
         </div>
 
-        {view === "list" ? (
-          filteredSpots.length > 0 ? (
-            <>
-              <SpotGrid spots={paginatedSpots} />
-
-              {/* Tombol Muat Lebih Banyak */}
-              {visibleCount < filteredSpots.length && (
-                <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-text-primary bg-surface hover:bg-canvas border border-border hover:border-accent-terracotta rounded-button transition-colors shadow-xs min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
-                    aria-label={`Muat ${Math.min(PAGE_SIZE, filteredSpots.length - visibleCount)} tempat lagi`}
-                  >
-                    <span>Muat Lebih Banyak Tempat</span>
-                    <ChevronDown className="w-4 h-4 text-text-muted" aria-hidden="true" />
-                  </button>
-                  <p className="text-[11px] sm:text-xs text-text-muted">
-                    Menampilkan {paginatedSpots.length} dari {filteredSpots.length} tempat kurasi
-                  </p>
-                </div>
-              )}
-
-              {/* Status Akhir Kurasi jika semua sudah termuat */}
-              {visibleCount >= filteredSpots.length && filteredSpots.length > PAGE_SIZE && (
-                <div className="mt-8 sm:mt-12 text-center py-4 border-t border-border/50">
-                  <p className="text-xs text-text-muted">
-                    Seluruh {filteredSpots.length} tempat kurasi telah ditampilkan.
-                  </p>
-                </div>
-              )}
-            </>
-          ) : (
-            <EmptyState
-              hasOpenNowFilter={openNow}
-              onDisableOpenNow={() => setOpenNow(false)}
-              hasRegencyFilter={regency !== null}
-              onResetRegency={() => setRegency(null)}
-              hasSearchQuery={q !== ""}
-              onClearSearch={() => setQ("")}
-              hasSavedFilter={savedOnly}
-              onDisableSaved={() => setSavedOnly(false)}
-              onResetAll={resetAllFilters}
-            />
-          )
-        ) : (
+        {view === "map" ? (
           /* Tampilan Peta Interaktif MapLibre GL */
           <div className="py-2">
             <SpotMapLazy spots={filteredSpots} />
           </div>
+        ) : filteredSpots.length > 0 ? (
+          <>
+            {view === "grid" ? (
+              <SpotGrid spots={paginatedSpots} />
+            ) : (
+              <SpotList spots={paginatedSpots} />
+            )}
+
+            {/* Tombol Muat Lebih Banyak */}
+            {visibleCount < filteredSpots.length && (
+              <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-text-primary bg-surface hover:bg-canvas border border-border hover:border-accent-terracotta rounded-button transition-colors shadow-xs min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
+                  aria-label={`Muat ${Math.min(PAGE_SIZE, filteredSpots.length - visibleCount)} tempat lagi`}
+                >
+                  <span>Muat Lebih Banyak Tempat</span>
+                  <ChevronDown className="w-4 h-4 text-text-muted" aria-hidden="true" />
+                </button>
+                <p className="text-[11px] sm:text-xs text-text-muted">
+                  Menampilkan {paginatedSpots.length} dari {filteredSpots.length} tempat kurasi
+                </p>
+              </div>
+            )}
+
+            {/* Status Akhir Kurasi jika semua sudah termuat */}
+            {visibleCount >= filteredSpots.length && filteredSpots.length > PAGE_SIZE && (
+              <div className="mt-8 sm:mt-12 text-center py-4 border-t border-border/50">
+                <p className="text-xs text-text-muted">
+                  Seluruh {filteredSpots.length} tempat kurasi telah ditampilkan.
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          <EmptyState
+            hasOpenNowFilter={openNow}
+            onDisableOpenNow={() => setOpenNow(false)}
+            hasRegencyFilter={regency !== null}
+            onResetRegency={() => setRegency(null)}
+            hasSearchQuery={q !== ""}
+            onClearSearch={() => setQ("")}
+            hasSavedFilter={savedOnly}
+            onDisableSaved={() => setSavedOnly(false)}
+            onResetAll={resetAllFilters}
+          />
         )}
       </section>
     </div>

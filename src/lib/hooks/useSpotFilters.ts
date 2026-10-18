@@ -50,7 +50,7 @@ export function useSpotFilters() {
 
   const [view, setView] = useQueryState(
     "view",
-    parseAsStringEnum<"list" | "map">(["list", "map"]).withDefault("list").withOptions({
+    parseAsStringEnum<"grid" | "list" | "map">(["grid", "list", "map"]).withDefault("grid").withOptions({
       history: "replace",
       shallow: true,
     })
