@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Clock, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { DayOfWeek, WeeklyOpeningHours } from "@/types/spot";
 
 interface ScheduleTableProps {
@@ -46,11 +46,7 @@ export function ScheduleTable({ schedule }: ScheduleTableProps) {
   return (
     <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="p-6 rounded-card bg-surface-pure border border-border">
-        <div className="flex items-center gap-2 mb-4">
-          <Clock
-            className="w-4 h-4 text-accent-terracotta"
-            aria-hidden="true"
-          />
+        <div className="flex items-center mb-4">
           <h2 className="font-display text-xl sm:text-2xl text-text-primary">
             Jadwal Operasional Lengkap
           </h2>
@@ -62,9 +58,7 @@ export function ScheduleTable({ schedule }: ScheduleTableProps) {
               <tr className="border-b border-border text-xs uppercase tracking-wider text-text-muted">
                 <th className="py-2.5 px-3 font-semibold">Hari</th>
                 <th className="py-2.5 px-3 font-semibold">Jam Operasional</th>
-                <th className="py-2.5 px-3 font-semibold text-right">
-                  Status
-                </th>
+                <th className="py-2.5 px-3 font-semibold text-right">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">

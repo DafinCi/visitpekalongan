@@ -36,7 +36,8 @@ export function StorySection({ spot }: StorySectionProps) {
                 {spot.signatureDish}
               </h3>
               <p className="text-xs text-text-muted leading-relaxed">
-                Rekomendasi utama kurator kami untuk mencicipi rasa paling autentik dari tempat ini.
+                Rekomendasi utama kurator kami untuk mencicipi rasa paling
+                autentik dari tempat ini.
               </p>
             </div>
           )}
@@ -48,7 +49,10 @@ export function StorySection({ spot }: StorySectionProps) {
           {spot.bestTimeToVisit && (
             <div className="p-5 rounded-card bg-surface-pure border border-border">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
-                <Clock className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
+                <Clock
+                  className="w-3.5 h-3.5 text-accent-terracotta"
+                  aria-hidden="true"
+                />
                 <span>Waktu Terbaik Berkunjung</span>
               </div>
               <p className="text-sm font-medium text-text-primary leading-relaxed">
@@ -61,11 +65,15 @@ export function StorySection({ spot }: StorySectionProps) {
           {spot.googleMapsReviewUrl ? (
             <div className="p-5 rounded-card bg-surface-pure border border-border space-y-3">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
-                <MessageSquare className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
+                <MessageSquare
+                  className="w-3.5 h-3.5 text-accent-terracotta"
+                  aria-hidden="true"
+                />
                 <span>Ulasan Publik & Pengunjung</span>
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
-                Ingin melihat foto menu makanan terkini dan ulasan ratusan pengunjung lainnya di Google Maps?
+                Ingin melihat foto menu makanan terkini dan ulasan ratusan
+                pengunjung lainnya di Google Maps?
               </p>
               <a
                 href={spot.googleMapsReviewUrl}
@@ -83,23 +91,13 @@ export function StorySection({ spot }: StorySectionProps) {
                 <span>Hidden Gem Belum Terjamah</span>
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
-                Tempat ini adalah penemuan otentik yang belum banyak diulas di peta publik. Nikmati ketenangan dan keaslian suasananya.
+                Tempat ini adalah penemuan otentik yang belum banyak diulas di
+                peta publik. Nikmati ketenangan dan keaslian suasananya.
               </p>
             </div>
           )}
-
-          {/* Komitmen Kurasi Independen */}
-          <div className="p-5 rounded-card bg-surface-pure/50 border border-border">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
-              Prinsip Kurasi
-            </h4>
-            <p className="text-xs text-text-secondary leading-relaxed">
-              Tempat ini didokumentasikan murni berdasarkan kualitas rasa, konsistensi warisan lokal, dan kenyamanan pengunjung. Kami tidak menerima bayaran atau sponsor promosi terselubung.
-            </p>
-          </div>
         </div>
       </div>
     </section>
   );
 }
-
