@@ -13,6 +13,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { SpotFilterDrawer } from "@/components/feed/SpotFilterDrawer";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
 import { Regency, SpotCategory } from "@/types/spot";
 
@@ -108,8 +109,9 @@ export function Header({
             <Link
               href="/"
               aria-label="VisitPekalongan, kembali ke beranda"
-              className="flex min-h-11 items-center group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
+              className="flex min-h-11 items-center gap-2 group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
             >
+              <BrandLogo className="w-6 h-6 sm:w-7 sm:h-7 text-accent-terracotta shrink-0 group-hover:rotate-45 transition-transform duration-300" />
               <span
                 className={`${
                   showSearch ? "hidden sm:inline" : "inline"
