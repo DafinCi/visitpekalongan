@@ -10,6 +10,7 @@ import {
   History,
   Trash2,
   Plus,
+  ArrowLeft,
 } from "lucide-react";
 import { SpotFilterDrawer } from "@/components/feed/SpotFilterDrawer";
 import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
@@ -30,6 +31,8 @@ interface HeaderProps {
   onToggleSaved?: (saved: boolean) => void;
   bookmarkCount?: number;
   totalFilteredSpots?: number;
+  backUrl?: string;
+  backLabel?: string;
 }
 
 export function Header({
@@ -47,6 +50,8 @@ export function Header({
   onToggleSaved,
   bookmarkCount = 0,
   totalFilteredSpots = 0,
+  backUrl,
+  backLabel = "Kembali",
 }: HeaderProps) {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -86,8 +91,20 @@ export function Header({
     <>
       <header className="sticky top-0 z-40 w-full bg-canvas/95 backdrop-blur-sm border-b border-border transition-colors">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
-          {/* Sisi Kiri: Brand & Logo */}
-          <div className="flex items-center shrink-0">
+          {/* Sisi Kiri: Brand & Logo (dengan Tombol Kembali jika backUrl tersedia) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {backUrl && (
+              <Link
+                href={backUrl}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-text-primary hover:text-accent-terracotta bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-[38px] sm:min-h-[40px] focus-visible:outline-2 focus-visible:outline-border-focus"
+                aria-label={backLabel}
+                title={backLabel}
+              >
+                <ArrowLeft className="w-4 h-4 text-accent-terracotta" aria-hidden="true" />
+                <span className="hidden sm:inline">{backLabel}</span>
+              </Link>
+            )}
+
             <Link
               href="/"
               className="flex items-baseline group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
@@ -230,7 +247,7 @@ export function Header({
             className="flex items-center gap-1 sm:gap-3 shrink-0"
             aria-label="Navigasi Utama"
           >
-            {!showSearch && (
+            {!showSearch && !backUrl && (
               <Link
                 href="/"
                 className="px-3 py-2 text-xs sm:text-sm font-medium text-text-muted hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-border-focus rounded-button min-h-[44px] flex items-center"

@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { SpotDetailDTO } from "@/types/spot";
 import { formatDistrict, formatRegency } from "@/lib/utils/formatters";
 
@@ -10,18 +9,7 @@ interface DetailHeroProps {
 
 export function DetailHero({ spot }: DetailHeroProps) {
   return (
-    <section className="relative w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
-      {/* Tombol Kembali ke Feed Kurasi */}
-      <div className="mb-4">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 px-3 py-2 text-xs sm:text-sm font-medium text-text-muted hover:text-text-primary bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-border-focus"
-        >
-          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-          <span>Kembali ke Kurasi</span>
-        </Link>
-      </div>
-
+    <section className="relative w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-2">
       {/* Frame Foto Sampul Rasio 16:9 / 16:10 */}
       <div className="relative w-full aspect-[16/10] sm:aspect-[21/9] rounded-card overflow-hidden border border-border bg-surface-pure">
         <Image

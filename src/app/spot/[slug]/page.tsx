@@ -101,7 +101,7 @@ async function SpotDetailContent({ params }: SpotPageProps) {
   };
 
   return (
-    <main className="flex-1 pb-16">
+    <main className="flex-1 pb-28 sm:pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -128,7 +128,7 @@ export default function SpotDetailPage({ params }: SpotPageProps) {
     <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
       {/* Konten Utama dengan z-10 bg-canvas untuk menutupi Sticky Reveal Footer di bawahnya */}
       <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header />
+        <Header backUrl="/" backLabel="Kurasi" />
 
         <Suspense fallback={<DetailSkeleton />}>
           <SpotDetailContent params={params} />

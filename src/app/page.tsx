@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Footer } from "@/components/layout/Footer";
 import { SpotFeedExplorer } from "@/components/feed/SpotFeedExplorer";
 import { FeedSkeleton } from "@/components/feed/FeedSkeleton";
 import { spotRepository } from "@/lib/repositories/spot-repository";
@@ -21,9 +20,6 @@ export default async function Home() {
           </Suspense>
         </main>
       </div>
-
-      {/* Sticky Curtain Reveal Footer */}
-      <Footer />
     </div>
   );
 }

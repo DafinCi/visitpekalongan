@@ -142,13 +142,25 @@ export function SpotFeedExplorer({
         <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border/70">
           <div className="flex items-center gap-2">
             <p className="text-xs sm:text-sm font-medium text-text-muted">
-              Menampilkan{" "}
-              <span className="text-text-primary font-semibold">
-                {view === "map" || filteredSpots.length <= PAGE_SIZE
-                  ? filteredSpots.length
-                  : `${Math.min(visibleCount, filteredSpots.length)} dari ${filteredSpots.length}`}
-              </span>{" "}
-              tempat kurasi
+              {/* Teks lengkap di desktop */}
+              <span className="hidden sm:inline">
+                Menampilkan{" "}
+                <span className="text-text-primary font-semibold">
+                  {view === "map" || filteredSpots.length <= PAGE_SIZE
+                    ? filteredSpots.length
+                    : `${Math.min(visibleCount, filteredSpots.length)} dari ${filteredSpots.length}`}
+                </span>{" "}
+                tempat kurasi
+              </span>
+              {/* Teks ringkas di mobile agar tidak bertabrakan dengan segmented switch */}
+              <span className="sm:hidden text-text-muted">
+                <span className="text-text-primary font-semibold">
+                  {view === "map" || filteredSpots.length <= PAGE_SIZE
+                    ? filteredSpots.length
+                    : `${Math.min(visibleCount, filteredSpots.length)}/${filteredSpots.length}`}
+                </span>{" "}
+                tempat
+              </span>
             </p>
             {activeFilterCount > 0 && (
               <span className="hidden sm:inline-flex text-[11px] font-semibold text-accent-terracotta bg-accent-terracotta/10 px-2 py-0.5 rounded-badge border border-accent-terracotta/20">
