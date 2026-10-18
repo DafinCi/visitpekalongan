@@ -25,10 +25,26 @@ const INITIAL_FORM: SubmitSpotFormData = {
 };
 
 const CATEGORY_OPTIONS = [
-  { id: "kuliner-legendaris", label: "Kuliner Legendaris", desc: "Tauto, megono, garang asem, kopi rempah" },
-  { id: "coffee-workspace", label: "Coffee & Work Space", desc: "Kedai kopi tenang, roastery, spot ramah kerja" },
-  { id: "wisata-alam", label: "Wisata Alam", desc: "Curug alami, telaga, sungai Petungkriyono" },
-  { id: "heritage-batik", label: "Heritage & Batik", desc: "Kampung batik, studio kriya, museum bersejarah" },
+  {
+    id: "kuliner-legendaris",
+    label: "Kuliner Legendaris",
+    desc: "Tauto, megono, garang asem, kopi rempah",
+  },
+  {
+    id: "coffee-workspace",
+    label: "Coffee & Work Space",
+    desc: "Kedai kopi tenang, roastery, spot ramah kerja",
+  },
+  {
+    id: "wisata-alam",
+    label: "Wisata Alam",
+    desc: "Curug alami, telaga, sungai Petungkriyono",
+  },
+  {
+    id: "heritage-batik",
+    label: "Heritage & Batik",
+    desc: "Kampung batik, studio kriya, museum bersejarah",
+  },
 ];
 
 export function SubmitSpotForm() {
@@ -41,7 +57,9 @@ export function SubmitSpotForm() {
 
     // Simpan riwayat submission ke local storage jika diperlukan
     try {
-      const existing = JSON.parse(localStorage.getItem("vp_spot_submissions") || "[]");
+      const existing = JSON.parse(
+        localStorage.getItem("vp_spot_submissions") || "[]",
+      );
       existing.push({
         ...formData,
         submittedAt: new Date().toISOString(),
@@ -63,7 +81,10 @@ export function SubmitSpotForm() {
     return (
       <div className="p-8 sm:p-10 rounded-card bg-surface-pure border border-border text-center space-y-6 animate-in fade-in duration-300">
         <div className="w-16 h-16 rounded-full bg-status-open-bg border border-accent-sage/30 mx-auto flex items-center justify-center">
-          <CheckCircle2 className="w-8 h-8 text-accent-sage" aria-hidden="true" />
+          <CheckCircle2
+            className="w-8 h-8 text-accent-sage"
+            aria-hidden="true"
+          />
         </div>
 
         <div className="space-y-2">
@@ -71,7 +92,9 @@ export function SubmitSpotForm() {
             Laporan Rekomendasi Telah Diterima!
           </h2>
           <p className="text-xs sm:text-sm text-text-secondary leading-relaxed max-w-md mx-auto">
-            Matur nuwun atas kontribusi Anda mendokumentasikan tempat autentik di Pekalongan. Tim kurator VisitPekalongan akan memverifikasi tempat ini secara mandiri tanpa pungutan biaya kepada pemilik.
+            Matur nuwun atas kontribusi Anda mendokumentasikan tempat autentik
+            di Pekalongan. Tim kurator VisitPekalongan akan memverifikasi tempat
+            ini secara mandiri tanpa pungutan biaya kepada pemilik.
           </p>
         </div>
 
@@ -98,11 +121,18 @@ export function SubmitSpotForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 sm:p-8 rounded-card bg-surface-pure border border-border space-y-6 shadow-xs">
+    <form
+      onSubmit={handleSubmit}
+      className="p-6 sm:p-8 rounded-card bg-surface-pure border border-border space-y-6 shadow-xs"
+    >
       {/* 1. Nama Tempat */}
       <div className="space-y-1.5">
-        <label htmlFor="spot-name" className="block text-xs sm:text-sm font-semibold text-text-primary">
-          Nama Tempat atau Warung <span className="text-accent-terracotta">*</span>
+        <label
+          htmlFor="spot-name"
+          className="block text-xs sm:text-sm font-semibold text-text-primary"
+        >
+          Nama Tempat atau Warung{" "}
+          <span className="text-accent-terracotta">*</span>
         </label>
         <input
           id="spot-name"
@@ -134,7 +164,9 @@ export function SubmitSpotForm() {
                     : "bg-canvas border-border hover:border-border-focus/50"
                 }`}
               >
-                <span className={`text-xs font-semibold ${isSelected ? "text-accent-terracotta" : "text-text-primary"}`}>
+                <span
+                  className={`text-xs font-semibold ${isSelected ? "text-accent-terracotta" : "text-text-primary"}`}
+                >
                   {cat.label}
                 </span>
                 <span className="text-[11px] text-text-muted leading-tight mt-1">
@@ -149,22 +181,35 @@ export function SubmitSpotForm() {
       {/* 3. Wilayah & Patokan Lokasi */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label htmlFor="spot-regency" className="block text-xs sm:text-sm font-semibold text-text-primary">
-            Wilayah Administrasi <span className="text-accent-terracotta">*</span>
+          <label
+            htmlFor="spot-regency"
+            className="block text-xs sm:text-sm font-semibold text-text-primary"
+          >
+            Wilayah Administrasi{" "}
+            <span className="text-accent-terracotta">*</span>
           </label>
           <select
             id="spot-regency"
             value={formData.regency}
-            onChange={(e) => setFormData({ ...formData, regency: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, regency: e.target.value })
+            }
             className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-button text-text-primary focus:outline-none focus:border-accent-terracotta"
           >
-            <option value="kota">Kota Pekalongan (Pesisir & Sentra Batik)</option>
-            <option value="kabupaten">Kabupaten Pekalongan (Pegunungan & Alam)</option>
+            <option value="kota">
+              Kota Pekalongan (Pesisir & Sentra Batik)
+            </option>
+            <option value="kabupaten">
+              Kabupaten Pekalongan (Pegunungan & Alam)
+            </option>
           </select>
         </div>
 
         <div className="space-y-1.5">
-          <label htmlFor="spot-district" className="block text-xs sm:text-sm font-semibold text-text-primary">
+          <label
+            htmlFor="spot-district"
+            className="block text-xs sm:text-sm font-semibold text-text-primary"
+          >
             Kecamatan atau Patokan Lokasi
           </label>
           <input
@@ -172,7 +217,9 @@ export function SubmitSpotForm() {
             type="text"
             placeholder="Contoh: Kraton Kidul / Petungkriyono"
             value={formData.district}
-            onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, district: e.target.value })
+            }
             className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-button text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-terracotta"
           />
         </div>
@@ -180,7 +227,10 @@ export function SubmitSpotForm() {
 
       {/* 4. Menu Khas / Daya Tarik Utama */}
       <div className="space-y-1.5">
-        <label htmlFor="spot-signature" className="block text-xs sm:text-sm font-semibold text-text-primary">
+        <label
+          htmlFor="spot-signature"
+          className="block text-xs sm:text-sm font-semibold text-text-primary"
+        >
           Menu Andalan atau Daya Tarik Utama
         </label>
         <input
@@ -188,14 +238,19 @@ export function SubmitSpotForm() {
           type="text"
           placeholder="Contoh: Megono Cumi Hitam / Kopi Robusta"
           value={formData.signature}
-          onChange={(e) => setFormData({ ...formData, signature: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, signature: e.target.value })
+          }
           className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-button text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-terracotta"
         />
       </div>
 
       {/* 5. Cerita & Alasan Mengapa Wajib Masuk Kurasi */}
       <div className="space-y-1.5">
-        <label htmlFor="spot-reason" className="block text-xs sm:text-sm font-semibold text-text-primary">
+        <label
+          htmlFor="spot-reason"
+          className="block text-xs sm:text-sm font-semibold text-text-primary"
+        >
           Cerita atau Alasan Rekomendasi
         </label>
         <textarea
@@ -210,7 +265,10 @@ export function SubmitSpotForm() {
 
       {/* 6. Akun Instagram / Kontak (Opsional) */}
       <div className="space-y-1.5">
-        <label htmlFor="spot-ig" className="block text-xs sm:text-sm font-semibold text-text-primary">
+        <label
+          htmlFor="spot-ig"
+          className="block text-xs sm:text-sm font-semibold text-text-primary"
+        >
           Akun Instagram (Opsional)
         </label>
         <div className="flex rounded-button overflow-hidden">
@@ -222,7 +280,12 @@ export function SubmitSpotForm() {
             type="text"
             placeholder="namatempat"
             value={formData.instagram}
-            onChange={(e) => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, "") })}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                instagram: e.target.value.replace(/^@/, ""),
+              })
+            }
             className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-r-button text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-terracotta"
           />
         </div>
@@ -241,4 +304,3 @@ export function SubmitSpotForm() {
     </form>
   );
 }
-

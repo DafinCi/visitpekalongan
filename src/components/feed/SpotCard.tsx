@@ -40,9 +40,10 @@ function InstagramIcon({ className }: { className?: string }) {
 
 interface SpotCardProps {
   spot: SpotListItemDTO;
+  eager?: boolean;
 }
 
-export function SpotCard({ spot }: SpotCardProps) {
+export function SpotCard({ spot, eager = false }: SpotCardProps) {
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const openStatus = useOpenStatus(
     spot.openingHours,
@@ -149,6 +150,8 @@ export function SpotCard({ spot }: SpotCardProps) {
             alt={`Suasana tempat di ${spot.name}`}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading={eager ? "eager" : "lazy"}
+            fetchPriority={eager ? "high" : "auto"}
             className="object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
           />
         </Link>

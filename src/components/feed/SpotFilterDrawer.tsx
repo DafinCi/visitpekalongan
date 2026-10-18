@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { X, MapPin, Clock, Check, Bookmark } from "lucide-react";
 import { Regency, SpotCategory } from "@/types/spot";
+import { useScrollLock } from "@/lib/hooks/useScrollLock";
 
 interface SpotFilterDrawerProps {
   isOpen: boolean;
@@ -39,17 +40,7 @@ export function SpotFilterDrawer({
   onResetAll,
   activeFilterCount,
 }: SpotFilterDrawerProps) {
-  // Kunci scroll halaman ketika drawer terbuka
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
+  useScrollLock(isOpen);
 
   // Handle tombol ESC untuk menutup drawer
   useEffect(() => {

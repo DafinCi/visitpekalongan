@@ -16,7 +16,8 @@ export function DetailHero({ spot }: DetailHeroProps) {
           src={spot.coverImageUrl}
           alt={`Suasana dan foto di ${spot.name}`}
           fill
-          priority
+          preload
+          fetchPriority="high"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1100px"
           className="object-cover"
         />

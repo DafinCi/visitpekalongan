@@ -12,8 +12,8 @@ export function SpotList({ spots }: SpotListProps) {
       role="feed"
       aria-label="Daftar tempat terkurasi mode list"
     >
-      {spots.map((spot) => (
-        <SpotListCard key={spot.id} spot={spot} />
+      {spots.map((spot, index) => (
+        <SpotListCard key={spot.id} spot={spot} eager={index === 0} />
       ))}
     </div>
   );

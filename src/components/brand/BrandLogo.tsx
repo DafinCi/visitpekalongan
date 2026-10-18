@@ -1,4 +1,8 @@
-interface BrandLogoProps {
+import { BRAND_LOGO_GEOMETRY } from "./logo-geometry";
+
+export { BRAND_LOGO_GEOMETRY };
+
+export interface BrandLogoProps {
   className?: string;
   size?: number;
   ariaLabel?: string;
@@ -15,10 +19,17 @@ export function BrandLogo({
   ariaLabel = "Logo VisitPekalongan",
   monochrome = false,
 }: BrandLogoProps) {
+  const strokeColor = monochrome
+    ? "currentColor"
+    : "var(--primitive-roast-700, #73472c)";
+  const diamondColor = monochrome
+    ? "currentColor"
+    : "var(--primitive-terracotta-raw, #c86446)";
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 48 48"
+      viewBox={BRAND_LOGO_GEOMETRY.viewBox}
       fill="none"
       width={size}
       height={size}
@@ -28,66 +39,66 @@ export function BrandLogo({
     >
       {/* Lengkung Luar Berundak (Gapura Heritage) */}
       <path
-        d="M 8.5 43 L 8.5 19.5 L 10.6 18.6 L 10.6 15.6 L 12.6 14.8 C 13.4 9.6 22.2 8.4 24 4.5 C 25.8 8.4 34.6 9.6 35.4 14.8 L 37.4 15.6 L 37.4 18.6 L 39.5 19.5 L 39.5 43"
-        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
-        strokeWidth="2.3"
+        d={BRAND_LOGO_GEOMETRY.outerArch.d}
+        stroke={strokeColor}
+        strokeWidth={BRAND_LOGO_GEOMETRY.outerArch.strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
       {/* Lengkung Tengah */}
       <path
-        d="M 12.8 43 L 12.8 21.5 C 12.8 14.8 17.8 10.5 24 10.5 C 30.2 10.5 35.2 14.8 35.2 21.5 L 35.2 43"
-        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
-        strokeWidth="2.2"
+        d={BRAND_LOGO_GEOMETRY.middleArch.d}
+        stroke={strokeColor}
+        strokeWidth={BRAND_LOGO_GEOMETRY.middleArch.strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
       {/* Lengkung Dalam Berujung Lancip (Ogee Arch) */}
       <path
-        d="M 16.8 43 L 16.8 23.5 C 16.8 18.5 22.3 17.2 24 15.2 C 25.7 17.2 31.2 18.5 31.2 23.5 L 31.2 43"
-        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
-        strokeWidth="2.2"
+        d={BRAND_LOGO_GEOMETRY.innerArch.d}
+        stroke={strokeColor}
+        strokeWidth={BRAND_LOGO_GEOMETRY.innerArch.strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
 
       {/* Garis Pijakan Dasar Kiri & Kanan */}
       <line
-        x1="6"
-        y1="43"
-        x2="19.2"
-        y2="43"
-        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
-        strokeWidth="2.4"
+        x1={BRAND_LOGO_GEOMETRY.leftBase.x2}
+        y1={BRAND_LOGO_GEOMETRY.leftBase.y1}
+        x2={BRAND_LOGO_GEOMETRY.leftBase.x1}
+        y2={BRAND_LOGO_GEOMETRY.leftBase.y2}
+        stroke={strokeColor}
+        strokeWidth={BRAND_LOGO_GEOMETRY.leftBase.strokeWidth}
         strokeLinecap="round"
       />
       <line
-        x1="28.8"
-        y1="43"
-        x2="42"
-        y2="43"
-        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
-        strokeWidth="2.4"
+        x1={BRAND_LOGO_GEOMETRY.rightBase.x1}
+        y1={BRAND_LOGO_GEOMETRY.rightBase.y1}
+        x2={BRAND_LOGO_GEOMETRY.rightBase.x2}
+        y2={BRAND_LOGO_GEOMETRY.rightBase.y2}
+        stroke={strokeColor}
+        strokeWidth={BRAND_LOGO_GEOMETRY.rightBase.strokeWidth}
         strokeLinecap="round"
       />
 
       {/* Tiang Pancang Tengah */}
       <line
-        x1="24"
-        y1="43"
-        x2="24"
-        y2="31.2"
-        stroke={monochrome ? "currentColor" : "var(--primitive-roast-700, #73472c)"}
-        strokeWidth="2.3"
+        x1={BRAND_LOGO_GEOMETRY.centerStem.x1}
+        y1={BRAND_LOGO_GEOMETRY.centerStem.y2}
+        x2={BRAND_LOGO_GEOMETRY.centerStem.x2}
+        y2={BRAND_LOGO_GEOMETRY.centerStem.y1}
+        stroke={strokeColor}
+        strokeWidth={BRAND_LOGO_GEOMETRY.centerStem.strokeWidth}
         strokeLinecap="butt"
       />
 
       {/* Aksen Wajik Terakota Pusat */}
       <polygon
-        points="24,20.5 28,25 24,29.5 20,25"
-        fill={monochrome ? "currentColor" : "var(--primitive-terracotta-raw, #c86446)"}
+        points={BRAND_LOGO_GEOMETRY.diamond.points}
+        fill={diamondColor}
       />
     </svg>
   );

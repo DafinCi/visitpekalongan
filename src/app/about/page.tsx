@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import {
-  ArrowLeft,
   Coffee,
   Utensils,
   Mountain,
@@ -25,17 +24,6 @@ export default function AboutPage() {
         <Header backUrl="/" backLabel="Katalog" />
 
         <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-          {/* Tombol Kembali ke Katalog */}
-          <div className="mb-8">
-            <Link
-              href="/"
-              className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-text-muted hover:text-accent-terracotta transition-colors min-h-[44px] py-2 focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
-              <span>Kembali ke Katalog Kurasi</span>
-            </Link>
-          </div>
-
           {/* Judul & Pengantar */}
           <div className="space-y-4 mb-12 pb-8 border-b border-border">
             <h1 className="font-serif text-3xl sm:text-5xl text-text-primary tracking-tight leading-tight">

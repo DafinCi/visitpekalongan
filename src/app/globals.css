@@ -89,3 +89,155 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+
+.portal-intro-overlay {
+  background-color: var(--primitive-grout-200);
+  overscroll-behavior: none;
+  animation:
+    portal-intro-overlay-out 300ms cubic-bezier(0.22, 1, 0.36, 1) 1400ms
+      forwards,
+    portal-intro-failsafe 2400ms step-end forwards;
+}
+
+.portal-intro-lockup {
+  animation: portal-intro-lockup-out 300ms cubic-bezier(0.22, 1, 0.36, 1)
+    1100ms forwards;
+}
+
+.portal-intro-stroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: portal-intro-draw 360ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.portal-intro-stroke-outer {
+  animation-duration: 420ms;
+  animation-delay: 240ms;
+}
+
+.portal-intro-stroke-middle {
+  animation-duration: 360ms;
+  animation-delay: 160ms;
+}
+
+.portal-intro-stroke-inner {
+  animation-duration: 320ms;
+  animation-delay: 80ms;
+}
+
+.portal-intro-stroke-base {
+  animation-duration: 240ms;
+  animation-delay: 320ms;
+}
+
+.portal-intro-stroke-stem {
+  animation-duration: 200ms;
+  animation-delay: 0ms;
+}
+
+.portal-intro-diamond {
+  opacity: 0;
+  transform: scale(0.97);
+  transform-origin: 24px 25px;
+  animation: portal-intro-diamond 240ms ease-out 40ms forwards;
+}
+
+.portal-intro-wordmark {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: portal-intro-wordmark 300ms cubic-bezier(0.22, 1, 0.36, 1)
+    650ms forwards;
+}
+
+.portal-intro-mask {
+  transform: scale(0);
+  transform-origin: 50px 47px;
+  animation: portal-intro-mask 700ms cubic-bezier(0.22, 1, 0.36, 1) 1100ms
+    forwards;
+}
+
+@keyframes portal-intro-overlay-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes portal-intro-failsafe {
+  0%,
+  99% {
+    display: flex;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  100% {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes portal-intro-lockup-out {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes portal-intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes portal-intro-diamond {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes portal-intro-wordmark {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes portal-intro-mask {
+  to {
+    transform: scale(18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-intro-lockup,
+  .portal-intro-stroke,
+  .portal-intro-diamond,
+  .portal-intro-wordmark,
+  .portal-intro-mask {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .portal-intro-overlay {
+    animation: portal-intro-failsafe 2400ms step-end forwards !important;
+  }
+
+  .portal-intro-stroke {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .portal-intro-diamond {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+  }
+
+  .portal-intro-wordmark {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .portal-intro-mask {
+    transform: scale(0) !important;
+  }
+}

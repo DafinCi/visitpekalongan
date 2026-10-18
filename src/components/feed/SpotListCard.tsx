@@ -39,9 +39,10 @@ function InstagramIcon({ className }: { className?: string }) {
 
 interface SpotListCardProps {
   spot: SpotListItemDTO;
+  eager?: boolean;
 }
 
-export function SpotListCard({ spot }: SpotListCardProps) {
+export function SpotListCard({ spot, eager = false }: SpotListCardProps) {
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const openStatus = useOpenStatus(
     spot.openingHours,
@@ -144,6 +145,8 @@ export function SpotListCard({ spot }: SpotListCardProps) {
             alt={`Foto suasana ${spot.name}`}
             fill
             sizes="(max-width: 640px) 90px, 112px"
+            loading={eager ? "eager" : "lazy"}
+            fetchPriority={eager ? "high" : "auto"}
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
 

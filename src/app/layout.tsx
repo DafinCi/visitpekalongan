@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { PortalIntroOverlay } from "@/components/brand/PortalIntroOverlay";
 import { getBaseUrl } from "@/lib/utils/url";
 import "./globals.css";
 
@@ -37,7 +38,13 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-canvas text-text-primary selection:bg-accent-terracotta selection:text-white">
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <noscript>
+          <style>{`.portal-intro-overlay{display:none!important}`}</style>
+        </noscript>
+        <PortalIntroOverlay />
+        <div id="app-content" className="contents">
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </div>
       </body>
     </html>
   );

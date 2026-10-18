@@ -8,8 +8,8 @@ interface SpotGridProps {
 export function SpotGrid({ spots }: SpotGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 py-6">
-      {spots.map((spot) => (
-        <SpotCard key={spot.id} spot={spot} />
+      {spots.map((spot, index) => (
+        <SpotCard key={spot.id} spot={spot} eager={index === 0} />
       ))}
     </div>
   );

@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowLeft, ShieldCheck, CheckCircle2, BookOpen } from "lucide-react";
+import { ShieldCheck, CheckCircle2, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { SubmitSpotForm } from "@/components/community/SubmitSpotForm";
@@ -19,17 +18,6 @@ export default function LaporPage() {
         <Header showSearch={false} backUrl="/" backLabel="Katalog" />
 
         <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 w-full">
-          {/* Tombol Navigasi Kembali */}
-          <div className="mb-6 sm:mb-8">
-            <Link
-              href="/"
-              className="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-text-muted hover:text-accent-terracotta transition-colors min-h-[44px] py-2 focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
-              <span>Kembali ke Katalog Kurasi</span>
-            </Link>
-          </div>
-
           {/* Header Editorial */}
           <div className="space-y-3 mb-10 pb-6 border-b border-border">
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-text-primary tracking-tight leading-tight">
