@@ -126,13 +126,14 @@ export function SpotCard({ spot }: SpotCardProps) {
 
   return (
     <article className="group bg-surface border border-border hover:border-accent-terracotta/40 rounded-card overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col h-full relative">
-      {/* Area Klik Detail: Foto + Teks Informasi */}
-      <Link
-        href={`/spot/${spot.slug}`}
-        className="flex-1 flex flex-col focus-visible:outline-2 focus-visible:outline-border-focus"
-      >
-        {/* Kontainer Foto Rasio 4:3 */}
-        <div className="relative aspect-4/3 w-full overflow-hidden bg-canvas">
+      {/* Kontainer Foto Rasio 4:3 */}
+      <div className="relative aspect-4/3 w-full overflow-hidden bg-canvas">
+        <Link
+          href={`/spot/${spot.slug}`}
+          className="block w-full h-full relative focus:outline-none"
+          tabIndex={-1}
+          aria-hidden="true"
+        >
           <Image
             src={spot.coverImageUrl}
             alt={`Suasana tempat di ${spot.name}`}
@@ -140,6 +141,7 @@ export function SpotCard({ spot }: SpotCardProps) {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
           />
+        </Link>
 
           {/* Lencana Status Operasional (Sudut Kiri Atas) */}
           <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 pointer-events-none">
@@ -279,7 +281,12 @@ export function SpotCard({ spot }: SpotCardProps) {
 
             {/* Nama Tempat */}
             <h3 className="font-serif text-xl sm:text-2xl text-text-primary tracking-tight leading-snug group-hover:text-accent-terracotta transition-colors">
-              {spot.name}
+              <Link
+                href={`/spot/${spot.slug}`}
+                className="focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm"
+              >
+                {spot.name}
+              </Link>
             </h3>
 
             {/* Menu Khas (Signature Dish) */}
@@ -303,7 +310,6 @@ export function SpotCard({ spot }: SpotCardProps) {
             </div>
           </div>
         </div>
-      </Link>
 
       {/* Bilah Aksi Cepat Bawah Kartu: Rute & Bookmark Saja */}
       <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-3 border-t border-border-subtle flex items-center justify-between gap-3">
