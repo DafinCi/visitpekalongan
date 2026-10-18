@@ -114,6 +114,8 @@ export interface SpotListItemDTO {
   regency: Regency;
   district: string;
   signatureDish?: string;
+  description?: string;
+  bestTimeToVisit?: string;
   priceRange: PriceRange;
   coverImageUrl: string;
   latitude: number;

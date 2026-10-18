@@ -2,7 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Compass, Search, SlidersHorizontal, X, History, Trash2 } from "lucide-react";
+import {
+  Compass,
+  Search,
+  SlidersHorizontal,
+  X,
+  History,
+  Trash2,
+} from "lucide-react";
 import { SubmitSpotDrawer } from "@/components/community/SubmitSpotDrawer";
 import { SpotFilterDrawer } from "@/components/feed/SpotFilterDrawer";
 import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
@@ -93,7 +100,7 @@ export function Header({
 
           {/* Tengah: Search & Filter Pill Terpadu (Hanya muncul jika mode showSearch aktif) */}
           {showSearch && onSearchChange && (
-            <div className="relative flex-1 max-w-sm sm:max-w-md mx-1 sm:mx-3 min-w-0">
+            <div className="relative w-full">
               <div className="relative flex items-center bg-surface-pure border border-border hover:border-border-focus focus-within:border-border-focus focus-within:ring-1 focus-within:ring-border-focus rounded-button transition-all h-9 sm:h-10 shadow-2xs">
                 <Search
                   className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-subtle ml-2.5 sm:ml-3 shrink-0"
@@ -128,7 +135,10 @@ export function Header({
                 )}
 
                 {/* Pemisah Vertikal Halus */}
-                <div className="h-4 w-px bg-border shrink-0 my-auto" aria-hidden="true" />
+                <div
+                  className="h-4 w-px bg-border shrink-0 my-auto"
+                  aria-hidden="true"
+                />
 
                 {/* Tombol Pemicu Bottom Sheet Filter */}
                 <button
@@ -141,7 +151,10 @@ export function Header({
                   }`}
                   aria-label={`Buka filter kurasi, ${activeFilterCount} filter aktif`}
                 >
-                  <SlidersHorizontal className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <SlidersHorizontal
+                    className="w-3.5 h-3.5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span className="hidden sm:inline">Filter</span>
                   {activeFilterCount > 0 && (
                     <span className="w-4 h-4 rounded-full bg-accent-terracotta text-canvas text-[10px] font-bold flex items-center justify-center">
@@ -189,7 +202,10 @@ export function Header({
                           }}
                           className="flex-1 flex items-center gap-2 text-left text-xs sm:text-sm text-text-primary cursor-pointer min-w-0"
                         >
-                          <History className="w-3.5 h-3.5 text-text-subtle shrink-0" aria-hidden="true" />
+                          <History
+                            className="w-3.5 h-3.5 text-text-subtle shrink-0"
+                            aria-hidden="true"
+                          />
                           <span className="truncate">{item}</span>
                         </button>
                         <button
@@ -210,13 +226,19 @@ export function Header({
           )}
 
           {/* Sisi Kanan: Menu Navigasi & Aksi */}
-          <nav className="flex items-center gap-1 sm:gap-3 shrink-0" aria-label="Navigasi Utama">
+          <nav
+            className="flex items-center gap-1 sm:gap-3 shrink-0"
+            aria-label="Navigasi Utama"
+          >
             {!showSearch && (
               <Link
                 href="/"
                 className="px-3 py-2 text-xs sm:text-sm font-medium text-text-muted hover:text-text-primary transition-colors focus-visible:outline-2 focus-visible:outline-border-focus rounded-button min-h-[44px] flex items-center"
               >
-                <Compass className="w-4 h-4 mr-1.5 text-accent-terracotta" aria-hidden="true" />
+                <Compass
+                  className="w-4 h-4 mr-1.5 text-accent-terracotta"
+                  aria-hidden="true"
+                />
                 <span>Katalog</span>
               </Link>
             )}

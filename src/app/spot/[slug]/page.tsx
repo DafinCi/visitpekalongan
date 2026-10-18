@@ -10,8 +10,10 @@ import { StorySection } from "@/components/detail/StorySection";
 import { FacilitiesList } from "@/components/detail/FacilitiesList";
 import { ScheduleTable } from "@/components/detail/ScheduleTable";
 import { OfflineGuideNotice } from "@/components/detail/OfflineGuideNotice";
+import { RelatedSpotsSection } from "@/components/detail/RelatedSpotsSection";
 import { DetailSkeleton } from "@/components/detail/DetailSkeleton";
 import { spotRepository } from "@/lib/repositories/spot-repository";
+import { getRecommendedSpots } from "@/lib/utils/smart-search";
 
 interface SpotPageProps {
   params: Promise<{
@@ -58,11 +60,16 @@ export async function generateMetadata({
 
 async function SpotDetailContent({ params }: SpotPageProps) {
   const { slug } = await params;
-  const spot = await spotRepository.getSpotBySlug(slug);
+  const [spot, allSpots] = await Promise.all([
+    spotRepository.getSpotBySlug(slug),
+    spotRepository.getSpots(),
+  ]);
 
   if (!spot) {
     notFound();
   }
+
+  const recommendations = getRecommendedSpots(spot, allSpots, 3);
 
   const isFoodOrCafe =
     spot.categorySlug === "kuliner-legendaris" ||
@@ -108,6 +115,10 @@ async function SpotDetailContent({ params }: SpotPageProps) {
       <FacilitiesList facilities={spot.facilities} />
       <ScheduleTable schedule={spot.weeklySchedule} />
       <OfflineGuideNotice spot={spot} />
+      <RelatedSpotsSection
+        recommendations={recommendations}
+        currentSpotName={spot.name}
+      />
     </main>
   );
 }

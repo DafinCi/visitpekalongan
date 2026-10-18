@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { SpotCategory, SpotListItemDTO } from "@/types/spot";
 import { useSpotFilters } from "@/lib/hooks/useSpotFilters";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
+import { searchSpotsSmart } from "@/lib/utils/smart-search";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
 import { EmptyState } from "./EmptyState";
@@ -37,20 +38,9 @@ export function SpotFeedExplorer({
 
   const { bookmarks, bookmarkCount } = useBookmarks();
 
-  // Filter spots berdasarkan query string & status bookmark
+  // Filter spots menggunakan mesin pencarian pintar & status filter
   const filteredSpots = useMemo(() => {
     let result = allSpots;
-
-    // Filter teks pencarian
-    if (q && q.trim() !== "") {
-      const keyword = q.toLowerCase().trim();
-      result = result.filter(
-        (s) =>
-          s.name.toLowerCase().includes(keyword) ||
-          s.signatureDish?.toLowerCase().includes(keyword) ||
-          s.district.toLowerCase().includes(keyword)
-      );
-    }
 
     // Filter kategori
     if (category && category !== "all") {
@@ -70,6 +60,11 @@ export function SpotFeedExplorer({
     // Filter daftar tersimpan offline
     if (savedOnly) {
       result = result.filter((s) => bookmarks.includes(s.slug));
+    }
+
+    // Pencarian pintar (bahasa alami, sinonim niat, multi-kata, & toleransi typo)
+    if (q && q.trim() !== "") {
+      result = searchSpotsSmart(result, q);
     }
 
     return result;

@@ -61,6 +61,8 @@ export class LocalSpotRepository implements SpotRepository {
         regency: spot.regency,
         district: spot.district,
         signatureDish: spot.signatureDish,
+        description: spot.description,
+        bestTimeToVisit: spot.bestTimeToVisit,
         priceRange: spot.priceRange,
         coverImageUrl: spot.coverImageUrl,
         latitude: spot.latitude,
