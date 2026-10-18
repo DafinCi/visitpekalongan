@@ -79,8 +79,11 @@ export default function AboutPage() {
                 </div>
                 <h3 className="font-serif text-lg text-text-primary">Gotong Royong</h3>
                 <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                  Warga lokal dapat mengajukan rekomendasi tempat baru melalui tombol Lapor
-                  Spot. Setiap data yang masuk akan diverifikasi secara langsung.
+                  Warga lokal dapat mengajukan rekomendasi tempat baru melalui halaman{" "}
+                  <Link href="/lapor" className="text-accent-terracotta hover:underline font-medium">
+                    Lapor Spot
+                  </Link>
+                  . Setiap data yang masuk akan diverifikasi secara langsung.
                 </p>
               </div>
             </div>

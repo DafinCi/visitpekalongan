@@ -9,8 +9,8 @@ import {
   X,
   History,
   Trash2,
+  Plus,
 } from "lucide-react";
-import { SubmitSpotDrawer } from "@/components/community/SubmitSpotDrawer";
 import { SpotFilterDrawer } from "@/components/feed/SpotFilterDrawer";
 import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
 import { Regency, SpotCategory } from "@/types/spot";
@@ -251,7 +251,14 @@ export function Header({
             </Link>
 
             {/* Tombol Lapor Hidden Gem Komunitas */}
-            <SubmitSpotDrawer />
+            <Link
+              href="/lapor"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-canvas bg-accent-terracotta hover:bg-accent-terracotta/90 rounded-button shadow-xs transition-colors cursor-pointer min-h-[40px] sm:min-h-[44px] focus-visible:outline-2 focus-visible:outline-border-focus"
+              aria-label="Buka formulir Lapor Hidden Gem"
+            >
+              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+              <span className="hidden sm:inline">Lapor Spot</span>
+            </Link>
           </nav>
         </div>
       </header>

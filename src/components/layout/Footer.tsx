@@ -53,6 +53,18 @@ export function Footer() {
                   />
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/lapor"
+                  className="hover:text-accent-terracotta transition-colors inline-flex items-center gap-1 text-canvas/80"
+                >
+                  <span>Lapor Hidden Gem</span>
+                  <ArrowUpRight
+                    className="w-3 h-3 text-canvas/50"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -67,8 +79,11 @@ export function Footer() {
               Petungkriyono dan perbukitan Doro).
             </p>
             <div className="text-[11px] text-canvas/50 pt-1">
-              Punya usulan tempat tersembunyi? Ajukan lewat tombol Lapor Spot di
-              atas.
+              Punya usulan tempat tersembunyi? Rekomendasikan melalui halaman{" "}
+              <Link href="/lapor" className="underline hover:text-accent-terracotta transition-colors">
+                Lapor Spot
+              </Link>
+              .
             </div>
           </div>
         </div>

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Compass, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { SubmitSpotDrawer } from "@/components/community/SubmitSpotDrawer";
 
 export default function NotFound() {
   return (
@@ -41,9 +40,12 @@ export default function NotFound() {
                 <span>Kembali ke Katalog</span>
               </Link>
 
-              <div className="w-full sm:w-auto">
-                <SubmitSpotDrawer />
-              </div>
+              <Link
+                href="/lapor"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 text-xs sm:text-sm font-medium text-text-primary bg-surface hover:bg-canvas border border-border rounded-button transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-border-focus"
+              >
+                <span>Lapor Hidden Gem</span>
+              </Link>
             </div>
           </div>
         </main>
