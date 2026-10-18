@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VisitPekalongan
 
-## Getting Started
+VisitPekalongan is a platform for exploring curated food, coffee, nature, and heritage places in Pekalongan, Indonesia. The repository is a working prototype. It renders 28 sample spot records from a local TypeScript dataset.
 
-First, run the development server:
+The 28 records are prototype content. They are not verified production listings.
+
+## Current status
+
+- Framework: Next.js 16.4.2 with the App Router.
+- UI: React 19.3 and Tailwind CSS 4.
+- Data: a local TypeScript dataset in `src/data/spots.ts`.
+- Persistence: browser `localStorage` for saved spots, recent searches, and submitted recommendations.
+- Map: MapLibre GL with CARTO basemap tiles.
+- Backend: no API routes, database, authentication, or admin workflow exist in this repository.
+- Deployment target: no platform configuration is committed to the repository.
+
+## Requirements
+
+- Node.js 20.9.0 or newer.
+- npm.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Environment variables are optional for local development. Copy `.env.example` to `.env.local` if you want to set the public site URL or a CARTO API key.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+On Windows PowerShell, if `npm` is blocked by the execution policy, use `npm.cmd` with the same arguments.
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable                    | Required | Purpose                                                                                                                            |
+| --------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`      | No       | Sets the base URL used by metadata, sitemap, and robots files. The application falls back to `https://visitpekalongan.vercel.app`. |
+| `NEXT_PUBLIC_CARTO_API_KEY` | No       | Adds a CARTO key to the map style URL. The map loads a CARTO basemap without it.                                                   |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Database and media-storage variables in `.env.example` are placeholders for future work. The current application does not read them.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+| Command         | Purpose                                                                                |
+| --------------- | -------------------------------------------------------------------------------------- |
+| `npm run dev`   | Starts the Next.js development server.                                                 |
+| `npm run build` | Creates a production build.                                                            |
+| `npm start`     | Starts the production server after a build.                                            |
+| `npm run lint`  | Runs the repository ESLint command. See the known issue in [Testing](docs/testing.md). |
+| `npm test`      | Runs the two Node test files for the intro state machine and scroll lock.              |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Start with the [documentation index](docs/README.md). It separates product explanations, setup instructions, feature reference, architecture, data contracts, user flows, routes, testing, and references.
+
+- [Product overview](docs/about.md)
+- [Getting started](docs/getting-started.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Current features](docs/FEATURES.md)
+- [Architecture](docs/architecture.md)
+- [Data model](docs/data-model.md)
+- [User flows](docs/user-flows.md)
+- [Routes and SEO](docs/routes-and-seo.md)
+- [Testing](docs/testing.md)
+- [External references](docs/references.md)
+- [Roadmap template](docs/roadmap.md)
+- [Design system](DESIGN.md)
+
+## Known limitations
+
+- Filtering and search run in the browser over the 28 records already sent to the page.
+- The report form does not send data to a server. It saves the submission in the current browser only.
+- Saved spots store slugs, not a full offline copy of a spot.
+- There is no user account or cross-device sync.
+- The map needs network access for CARTO tiles.
+- `npm run lint` currently scans `.agents` and the generated MapLibre worker in `public`, so it can fail even when `src` has no lint errors.

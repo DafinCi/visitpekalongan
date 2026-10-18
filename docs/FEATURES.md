@@ -1,72 +1,97 @@
-# Fitur & Roadmap: VisitPekalongan
+# Current Features
 
-Dokumen ini memetakan spesifikasi fitur platform **VisitPekalongan**, mulai dari rilis Minimum Viable Product (MVP) hingga rencana pengembangan jangka panjang.
+This page describes the features that exist in the repository as of 18 October 2026. The catalog data is prototype content.
 
----
+## Feature summary
 
-## 1. Fase 1: MVP (Peluncuran Inti)
+| Capability | Status | What it does |
+| --- | --- | --- |
+| Catalog | Implemented | Shows the 28 sample spots in a responsive card grid. |
+| Grid, list, and map views | Implemented | Switches the catalog presentation without leaving the page. |
+| Smart search | Implemented | Searches names, signature dishes, districts, descriptions, categories, and intent words in the browser. |
+| Category filter | Implemented | Limits the catalog to one of four categories. |
+| City or regency filter | Implemented | Limits results to Kota Pekalongan or Kabupaten Pekalongan. |
+| Open-now filter | Implemented | Filters by the current opening status calculated in the WIB timezone. |
+| Saved-spots filter | Implemented | Shows spots bookmarked in the current browser. |
+| Pagination | Implemented | Loads nine catalog cards at a time. |
+| Detail page | Implemented | Shows a place narrative, schedule, facilities, status, price range, and related places. |
+| Google Maps route link | Implemented | Opens the Google Maps directions URL built from the spot coordinates. |
+| Instagram link | Implemented when data exists | Opens the recorded Instagram account. |
+| Google Maps review link | Implemented when data exists | Opens a Maps search URL recorded in the sample data. |
+| Share action | Implemented | Uses the Web Share API when available, otherwise falls back to clipboard copy. |
+| Bookmarks | Implemented, local only | Stores saved spot slugs in `localStorage`. |
+| Recent searches | Implemented, local only | Stores up to five recent search strings in `localStorage`. |
+| Report form | UI only | Saves a recommendation in the current browser and shows a success state. |
+| About page | Implemented | Explains the product direction and curation themes. |
+| Intro overlay | Implemented | Plays a logo reveal and releases the page after a timer, Escape, or a failsafe. |
+| SEO routes | Implemented | Provides metadata, sitemap, robots, manifest, and Open Graph images. |
+| Vibe filter | Not implemented | A `VibePills` component and tag list exist, but no route imports the component and no spot has tag relations. |
+| District filter | Not implemented | The filter type accepts a district, but the catalog and repository do not filter by it. |
+| Distance sort | Not implemented | The map shows a distance in the preview card, but the catalog is not sorted by distance. |
+| Offline guide | Not implemented | The detail page shows static logistics guidance for some places. It does not download a guide. |
+| Multi-image gallery | Not implemented | The detail view receives one gallery item built from the cover image. |
+| Server-side report storage | Not implemented | The form does not call an API. |
+| Full PWA offline mode | Not implemented | A web manifest exists, but there is no service worker or offline route cache. |
 
-Fokus fase ini adalah menghadirkan direktori kurasi independen yang cepat, berkarakter *Modern Heritage*, ramah seluler (*mobile-first*), serta langsung menjawab kebutuhan pengguna dalam menemukan tempat autentik.
+## Catalog behavior
 
-### A. Eksplorasi & Filter Cerdas
+The home page loads categories and spots on the server, then sends the full list to the client feed. The client applies filters and search without another request.
 
-- **Pencarian Teks Instan:** Pencarian cepat tanpa muat ulang halaman untuk nama tempat, menu signature (misal: *soto tauto*, *kopi tahlil*, *garang asem*), dan nama kecamatan (misal: *Petungkriyono*, *Pekalongan Barat*).
-- **Pil Filter Suasana (Vibe Pills):** Filter satu ketukan berdasarkan suasana tempat:
-  - *Kopi & Nugas (WFC Friendly)*
-  - *Kuliner Legendaris*
-  - *Hawa Dingin & Alam*
-  - *Heritage & Batik*
-- **Filter Wilayah (Kota vs Kabupaten):** Pengelompokan cepat antara wilayah perkotaan pesisir dan dataran tinggi pegunungan.
-- **Sinkronisasi Parameter URL (`nuqs`):** Status pencarian, kategori, suasana, dan koordinat aktif otomatis tercermin di URL peramban, memudahkan pengguna membagikan tautan hasil kurasi spesifik ke WhatsApp atau media sosial.
+Search is handled by `searchSpotsSmart` in `src/lib/utils/smart-search.ts`. It scores direct name and dish matches, district and category matches, description matches, intent rules, and small spelling differences. It is useful for a small local list, not for a large remote dataset.
 
-### B. Tampilan Feed & Peta Interaktif
+The category, city or regency, open-now, and saved controls are available from the header filter drawer. The grid, list, and map switch is visible above the results.
 
-- **Mode Tampilan Ganda (Dual View Mode):** Tombol aksi mengambang di bagian bawah layar untuk beralih instan antara **Tampilan Daftar (Grid)** dan **Peta Interaktif (MapLibre GL)**.
-- **Kartu Tempat Artisanal (Spot Cards):**
-  - Foto suasana berasio 4:3 dengan efek pembesaran lembut saat disentuh atau disorot kursor.
-  - Lencana kategori dan suasana berdesain stempel keramik.
-  - Indikator status operasional otomatis: lencana **"Buka Sekarang"** atau **"Tutup"** yang dikalkulasi secara waktu nyata berdasarkan jadwal harian.
-  - Tanda menu khas (*Signature Dish*) langsung di kartu (misal: *"Wajib coba: Kopi Tahlil Rempah"*).
-  - Tautan langsung satu ketukan menuju navigasi aplikasi Google Maps untuk rute presisi.
-  - Tautan langsung satu ketukan menuju akun profil Instagram resmi pengelola spot.
-- **Peta Interaktif (MapLibre GL):**
-  - Menggunakan vector tiles berlatar belakang lembut selaras warna kanvas mori (`#F7F5F0`).
-  - Pin penanda (*custom marker*) berbasis kategori tempat.
-  - **Laci Bawah Ringkasan (Bottom Drawer Preview):** Mengetuk pin di peta akan memunculkan laci bawah berisi ringkasan info spot tanpa menutup tampilan peta secara penuh.
+When no result matches, the empty state offers ways to remove the current filters. When the open-now filter is selected before the client clock is ready, the feed shows a temporary checking message.
 
-### C. Halaman Detail Tempat (`/spot/[slug]`)
+## Map behavior
 
-- **Galeri Foto Suasana:** Foto beresolusi tinggi dalam format AVIF/WebP teroptimasi dengan rasio aspek seimbang.
-- **Narasi Kurasi:** Ulasan cerita di balik tempat, sejarah singkat, atau keunikan rasa yang membedakannya dari tempat lain.
-- **Waktu Kunjungan Terbaik (Best Time to Visit):** Rekomendasi momen ideal berkunjung (misal: *"Paling syahdu saat kabut turun jam 15:30"*).
-- **Informasi Operasional Lengkap:**
-  - Jadwal jam buka rinci untuk setiap hari (Senin hingga Minggu).
-  - Indikator rentang harga lokal: *Murah Meriah* (< Rp 15rb), *Terjangkau* (Rp 15rb - Rp 35rb), atau *Kafe/Spesial* (> Rp 35rb).
-  - Deretan lencana fasilitas (WiFi kencang, colokan listrik, area merokok, mushola nyaman, parkir mobil/motor, pendingin udara).
-- **Aksi Cepat:** Tombol salin tautan (*Share Link*) dan tombol panduan rute navigasi.
+The map loads only when the user selects the map view. MapLibre GL renders one marker for each filtered spot. Selecting a marker opens a preview card with the spot name, category, district, status, price range, optional distance, a Google Maps route link, and a detail-page link.
 
----
+The location button requests browser geolocation permission. It adds a user marker and can center the map when the user is within the approximate Pekalongan region. It does not reorder the catalog.
 
-## 2. Fase 2: Keterlibatan Komunitas & Ketahanan Offline
+The map uses CARTO basemap tiles over the network. It is not an offline map.
 
-Fokus fase ini adalah memperluas basis data secara organik lewat warga lokal dan memastikan aplikasi tetap bermanfaat saat pelancong berada di daerah lereng pegunungan.
+## Detail behavior
 
-- **Formulir "Lapor Hidden Gem" (Community Submission):**
-  - Laci formulir interaktif bagi warga lokal untuk mengirimkan rekomendasi spot baru.
-  - Masukan meliputi: Nama spot, kategori, kecamatan, deskripsi alasan rekomendasi, menu khas, tautan Google Maps, serta kontak pengusul.
-  - Data yang masuk berstatus *pending* dalam tabel `spot_submissions` hingga disetujui melalui kurasi admin internal.
-- **Bookmark / Simpan Tempat Favorit:**
-  - Fitur simpan tempat tanpa perlu proses registrasi akun (tersimpan di peramban pengguna via *LocalStorage*).
-  - Tab khusus *"Tempat Tersimpan"* untuk menyusun daftar kunjungan sebelum memulai perjalanan.
-- **Ketahanan Offline Ringan (Offline Resilience):**
-  - Penyimpanan otomatis untuk data tempat yang telah dibuka ke memori peramban, sehingga rute dan deskripsi tempat di kawasan Petungkriyono tetap dapat dibaca meski ponsel kehilangan sinyal internet.
-- **Pengurutan Berdasarkan Jarak (Geolocation Sort):**
-  - Tombol deteksi izin lokasi peramban untuk mengurutkan daftar spot dari titik terdekat pengguna saat berada di teritori Pekalongan.
+The detail page shows:
 
----
+- a cover image;
+- category, regency, and district labels;
+- the current opening status;
+- the address and price range;
+- Google Maps, Instagram, and review actions when their data exists;
+- a share action;
+- bookmark controls;
+- the curator narrative and signature dish;
+- the best time to visit;
+- the weekly schedule with Friday break notes when present;
+- facility labels;
+- logistics guidance for some highland or nature spots;
+- three related spots selected by category, distance, shared facilities, and price similarity.
 
-## 3. Fase 3: Rute Tematik & Eksplorasi Lanjutan
+## Browser storage
 
-- **Jalur Seharian (Curated Mini Itinerary):** Rute perjalanan tematik siap tempuh (contoh: *"Sehari Menjelajah Petungkriyono: Dari Kopi Omah hingga Curug Bajing"*, *"Jelajah Kuliner Malam Pesisir Kota Batik"*).
-- **Widget Cuaca & Ketinggian:** Indikator suhu, prakiraan cuaca, dan ketinggian lokasi otomatis, khusus untuk spot wisata alam di kawasan pegunungan selatan.
-- **Dukungan PWA Penuh:** Instalasi aplikasi ke layar utama ponsel (*Add to Home Screen*) dengan kemampuan kerja luring yang lebih komprehensif.
+The application uses three storage keys:
+
+| Key | Data | Written by |
+| --- | --- | --- |
+| `vp_bookmarked_spots` | An array of saved spot slugs | Bookmark buttons |
+| `vp_recent_searches` | Up to five recent search strings | Search field |
+| `vp_spot_submissions` | An array of report-form submissions | Report form |
+
+Clearing site data removes these values. They do not sync between browsers or devices.
+
+## Explicit limits
+
+- The 28 spot records are sample data.
+- The four category groups each contain seven sample records.
+- The detail header says the place is curator-verified. The repository does not contain the external verification record behind that label.
+- The catalog sends every record to the client before filtering.
+- The map, remote images, and Google Fonts need network access at the relevant runtime stage.
+
+## Related documents
+
+- [User flows](user-flows.md)
+- [Architecture](architecture.md)
+- [Data model](data-model.md)
+- [Routes and SEO](routes-and-seo.md)

@@ -1,163 +1,141 @@
-# Arsitektur Teknis: VisitPekalongan
+# Architecture
 
-Dokumen ini mendefinisikan arsitektur sistem, strategi rendering, optimasi performa seluler, manajemen state, dan alur data teknis untuk platform **VisitPekalongan**.
+This document describes the current runtime architecture. It does not describe planned database or backend work.
 
----
-
-## 1. Ikhtisar Arsitektur Sistem
-
-VisitPekalongan dibangun menggunakan arsitektur web modern berbasis Next.js App Router. Sistem dirancang dengan prinsip *mobile-first*, latensi rendah, serta pemisahan tegas antara logika server dan interaktivitas klien.
+## System shape
 
 ```mermaid
 flowchart TD
-    User["Pengunjung (Peramban Mobile / Desktop)"]
-    
-    subgraph Frontend["Lapisan Antarmuka (Next.js 16 + React 19)"]
-        Layout["Root Layout (Font Instrument Serif + Plus Jakarta Sans, CSS Tokens)"]
-        
-        subgraph SuspenseBoundary["Suspense Wrapper (Batas Streaming SSR)"]
-            URLState["Manajer Parameter URL (nuqs dengan history: 'replace')"]
-            ListView["Feed Kurasi (Grid / List Cepat)"]
-            MapView["Peta Interaktif (MapLibre GL - Lazy Dynamic Import)"]
-        end
-        
-        DetailView["Halaman Detail Spot (/spot/[slug])"]
-        DrawerPreview["Bottom Drawer Ringkasan Spot (Vaul)"]
-    end
-    
-    subgraph DataLayer["Lapisan Akses Data (Repository Pattern)"]
-        Repo["Spot Repository Interface"]
-        LocalAdapter["Adapter Prototipe Lokal (Typed TypeScript Dataset)"]
-        DBAdapter["Target Adapter Database (Drizzle ORM + PostgreSQL)"]
-    end
-    
-    subgraph Storage["Penyimpanan & Media"]
-        MediaCDN["Cloudflare R2 / Supabase Storage (AVIF / WebP)"]
-        OfflineCache["Penyimpanan Panduan Lokal (LocalStorage / IndexedDB)"]
-    end
-
-    User --> Layout
-    Layout --> SuspenseBoundary
-    SuspenseBoundary --> URLState
-    URLState --> ListView
-    URLState --> MapView
-    ListView --> Repo
-    MapView --> Repo
-    DetailView --> Repo
-    MapView --> DrawerPreview
-    
-    Repo --> LocalAdapter
-    Repo -. "Fase Produksi DB" .-> DBAdapter
-    DetailView --> MediaCDN
-    Views --> OfflineCache
+    Browser[Browser] --> Route[Next.js App Router route]
+    Route --> Server[Server component]
+    Server --> Repository[LocalSpotRepository]
+    Repository --> Data[src/data/spots.ts]
+    Server --> Client[Client components]
+    Client --> URLState[nuqs URL state]
+    Client --> LocalStorage[Browser localStorage]
+    Client --> Search[Smart search and filters]
+    Client --> Map[MapLibre GL]
+    Map --> Carto[CARTO tile service]
 ```
 
----
+The application has no API route, database adapter, authentication layer, or server mutation in the current repository.
 
-## 2. Strategi Rendering & Komponen (Next.js 16 + React 19)
+## Rendering boundaries
 
-### A. Pembagian Peran Komponen & Suspense Boundary
+| Area | Rendering | Responsibility |
+| --- | --- | --- |
+| Root layout | Server component | Loads fonts, metadata, global CSS, the `nuqs` adapter, and the intro overlay. |
+| Home page | Server component shell | Calls the repository and passes categories and spots to the feed. |
+| Feed explorer | Client component | Keeps URL filters, search state, pagination, saved-spot state, and view selection. |
+| Map loader | Client component | Uses `next/dynamic` with `ssr: false` for the MapLibre map. |
+| Detail page | Server component | Fetches a spot, builds metadata and JSON-LD, and calculates related spots. |
+| Detail actions | Client component | Runs share, bookmark, and mobile action-bar behavior. |
+| Report page | Server component shell with a client form | Renders the form, then stores a submission in the browser. |
 
-Pada Next.js 16 dan React 19, seluruh komponen klien yang mengonsumsi parameter URL (`useSearchParams` atau pustaka `nuqs`) wajib dibungkus dalam boundary `<Suspense>`. Hal ini mencegah de-optimasi halaman menjadi *client-side only* dan mempertahankan keunggulan *streaming SSR*.
+## Home page data flow
 
-| Komponen | Tipe | Alasan & Perilaku |
-| :--- | :--- | :--- |
-| `app/layout.tsx` | Server Component | Memuat font web via `next/font/google`, metadata SEO, dan CSS tokens global. |
-| `app/page.tsx` | Server Component Shell | Mengambil data awal kurasi dan membungkus feed dalam `<Suspense fallback={<FeedSkeleton />}>`. |
-| `components/feed/SpotFilter.tsx` | Client Component | Membaca dan memperbarui query URL dengan konfigurasi `{ history: 'replace', shallow: true }`. |
-| `components/map/SpotMap.tsx` | Client Component (Lazy) | Dimuat melalui `next/dynamic` dengan `{ ssr: false }` hanya saat tab peta diaktifkan oleh pengguna. |
-| `components/feed/SpotCard.tsx` | Presentational Component | Kartu visual dengan optimasi gambar `next/image` rasio 4:3 dan lencana status operasional waktu nyata. |
-| `app/spot/[slug]/page.tsx` | Server Component | Halaman detail dengan metadata Open Graph lengkap untuk pratinjau tautan WhatsApp/Twitter. |
+`src/app/page.tsx` calls:
 
-### B. Isolasi Lazy Loading MapLibre GL
-Pustaka MapLibre GL beserta asset worker WebGL berukuran sekitar 800 KB hingga 1 MB. Agar ukuran ini tidak membebani First Contentful Paint (FCP) pengunjung utama:
-- Kode peta diisolasi total di dalam file `components/map/SpotMapLazy.tsx`.
-- Komponen hanya diimpor saat pengguna secara eksplisit mengetuk tombol toggle tampilan "Peta".
-- Pengunjung yang hanya menelusuri daftar feed kartu tidak akan mengunduh aset peta sama sekali.
-
-### C. Isolasi Gestur Mobile (Map vs Vaul Drawer)
-Ketika pengguna membuka laci bawah ringkasan spot (*bottom drawer*) di atas peta:
-- State `isDrawerDragging` diaktifkan saat gestur drag laci dimulai.
-- Kontainer canvas peta diberi kelas dinamis `pointer-events-none` untuk mencegah canvas WebGL ikut tergeser atau ter-zoom secara tidak sengaja (*touch event bleeding*).
-- Area konten laci bawah menerapkan CSS `touch-action: pan-y`, sedangkan bar handle laci menerapkan `touch-action: none`.
-
----
-
-## 3. Manajemen State & Sinkronisasi URL (`nuqs`)
-
-Seluruh state interaktif disinkronkan ke parameter URL peramban untuk menghasilkan tautan kurasi yang dapat dibagikan langsung via WhatsApp.
-
-### Aturan Sanitasi & History Browser
-1. **Pencarian Teks & Viewport Peta (`?q=`, `?lat=`, `?lng=`):**
-   Wajib menggunakan opsi `{ history: 'replace', shallow: true }`. Hal ini mencegah tombol *Back* pada ponsel terjebak dalam riwayat input ketukan tuts huruf demi huruf.
-2. **Pergantian Kategori & Tampilan (`?category=`, `?view=`):**
-   Dapat menggunakan opsi `{ history: 'push' }` agar navigasi tombol kembali peramban mengembalikan pengguna ke kategori sebelumnya secara logis.
-3. **Penyaringan Nilai Default:**
-   Parameter yang kembali ke status awal (misal kolom pencarian kosong) otomatis dihapus dari URL string untuk menjaga kebersihan tautan yang disalin.
-
----
-
-## 4. Lapisan Abstraksi Data (Repository Pattern)
-
-Untuk memfasilitasi kebutuhan prototipe cepat yang tetap mematuhi skema basis data produksi kelak, aplikasi menggunakan pola Repository Interface.
-
-### Kontrak Repository (`src/lib/repositories/spot-repository.ts`):
-
-```typescript
-export interface SpotRepository {
-  // Kueri ringan khusus marker peta (< 15 KB payload)
-  getMapMarkers(filter?: SpotFilterParams): Promise<SpotMapMarkerDTO[]>;
-  
-  // Kueri daftar kartu feed
-  getSpots(filter?: SpotFilterParams): Promise<SpotListItemDTO[]>;
-  
-  // Kueri ulasan detail mendalam per slug
-  getSpotBySlug(slug: string): Promise<SpotDetailDTO | null>;
-}
+```ts
+spotRepository.getCategories()
+spotRepository.getSpots()
 ```
 
-1. **Tahap 1 (Prototipe Terstruktur):**
-   Repository mengonsumsi dataset lokal TypeScript (`src/data/spots.ts`) yang divalidasi dengan skema Zod. Hal ini menjamin bahwa seluruh properti (koordinat, jam buka harian multi-shift, fasilitas, foto) identik dengan struktur tabel PostgreSQL target.
-2. **Tahap 2 (Migrasi Database):**
-   Implementasi repository diganti menjadi kueri Drizzle ORM menuju PostgreSQL (Supabase / Neon) tanpa perlu mengubah satu baris pun kode pada komponen tampilan antarmuka.
+The repository reads `CATEGORIES` and `SPOTS_DATA` from `src/data/spots.ts`. The home page sends the results to `SpotFeedExplorer`.
 
----
+The client feed filters the list in this order:
 
-## 5. Strategi Ketahanan Lapangan di Pegunungan Petungkriyono
+1. category;
+2. city or regency;
+3. open-now status;
+4. saved-spot list;
+5. debounced smart search.
 
-Lereng pegunungan Petungkriyono memiliki kawasan hutan lindung dengan titik *blank spot* seluler total. Upaya melakukan cache vector tiles peta MapLibre secara penuh rawan menghasilkan tampilan layar abu-abu kosong (*missing gray tiles*) di tengah hutan.
+The feed then slices the result into pages of nine items. The map receives the filtered list when the user selects map view.
 
-### Solusi Pragmatis yang Diterapkan:
-1. **Paket Panduan Mandiri Petungkriyono (Offline Text Guide):**
-   Satu tombol simpan yang mengunduh data kurasi seluruh spot Petungkriyono ke `IndexedDB` lokal:
-   - Deskripsi teks ulasan dan patokan arah rute (contoh: *"200 meter setelah Jembatan Rogojembangan, belok kiri ke jalan berbatu"*).
-   - Nomor kontak darurat basecamp wisata lokal dan pengelola curug.
-   - Jam buka dan tips persiapan fisik/kendaraan.
-2. **Navigasi Rute Native Intent:**
-   Tombol navigasi rute diarahkan ke URI intent native:
-   `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`
-   Format ini memungkinkan aplikasi peta native di ponsel pengguna (seperti Google Maps Offline Area atau OsmAnd) mengambil alih panduan navigasi tanpa bergantung pada koneksi internet web browser.
-3. **Indikator Status Jaringan:**
-   Banner pemberitahuan halus (*network recovery banner*) yang muncul otomatis saat koneksi internet terputus, memberi tahu pengguna bahwa aplikasi beralih ke mode data tersimpan lokal.
+## Detail page data flow
 
----
+`src/app/spot/[slug]/page.tsx` calls `getSpotBySlug` and `getSpots`. It returns a not-found page when the slug is missing or points to a permanently closed spot.
 
-## 6. Pipeline Optimasi Aset & Media (LCP & CLS Control)
+The detail page uses `getRecommendedSpots` to rank other spots by:
 
-- **Format Media:** Seluruh foto kurasi dikonversi ke format AVIF dan WebP dengan kompresi terukur.
-- **Rasio Aspek:**
-  - Kartu Feed: 4:3 (fokus pada estetika komposisi foto suasana tempat).
-  - Galeri Detail: 16:10 dan 4:3.
-- **Atribut Ukuran Responsif (`sizes`):**
-  Untuk mencegah unduhan gambar berukuran desktop pada layar seluler:
-  `sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"`
-- **Low-Quality Image Placeholder (LQIP):**
-  Menggunakan inline base64 blur placeholder berukuran mikroskopis (~500 bytes) untuk mencegah pergeseran tata letak kumulatif (*Cumulative Layout Shift / CLS*) dan menjaga LCP tetap di bawah 1.8 detik pada koneksi 3G/4G.
+- category match;
+- geographic distance;
+- shared facilities;
+- price range.
 
----
+The opening status is calculated in client components with `calculateOpenStatus` and the shared `useNow` hook. The calculation uses the `Asia/Jakarta` timezone and supports shifts that cross midnight.
 
-## 7. Topologi Lingkungan & Deployment
+## Map loading
 
-- **Platform:** Vercel Serverless Platform.
-- **Node.js Runtime:** Node 20 LTS.
-- **Analitik & Metrik:** Vercel Speed Insights dan Core Web Vitals monitoring.
+`SpotMapLazy` imports `SpotMap` through `next/dynamic` with `ssr: false`. The MapLibre worker is served from `public/maplibre-gl-worker.mjs`.
+
+The map style URL is:
+
+```text
+https://basemaps.cartocdn.com/gl/positron-gl-style/style.json
+```
+
+When `NEXT_PUBLIC_CARTO_API_KEY` is set, the application appends it as a `key` query parameter.
+
+The repository contains a `getMapMarkers` method, but the current map consumes `SpotListItemDTO[]`. The marker method is not used by a route.
+
+## URL state
+
+`useSpotFilters` uses `nuqs` and `history: replace` for all current query parameters. The current parameters are:
+
+- `q`;
+- `category`;
+- `regency`;
+- `openNow`;
+- `saved`;
+- `view`;
+- `spot`.
+
+The `spot` parameter is exposed by the hook but is not passed to the map or used to select a marker.
+
+## Browser state
+
+The application uses `localStorage` for:
+
+- bookmark slugs;
+- recent search strings;
+- report-form submissions.
+
+Each hook uses `useSyncExternalStore` or a local event so multiple components can react to changes. These values are not persisted on a server.
+
+## Styling and configuration
+
+- Global tokens are defined in `src/app/globals.css`.
+- `next.config.ts` enables `cacheComponents`, `partialPrefetching`, and `reactCompiler`.
+- Tailwind CSS 4 is loaded through `@tailwindcss/turbopack`.
+- The root layout uses `Instrument_Serif` and `Plus_Jakarta_Sans` from `next/font/google`.
+- The document uses a fixed light visual theme. There is no working theme toggle.
+
+## Responsive scroll model
+
+The current layout treats small and large screens differently:
+
+- Below the `md` breakpoint, the document uses normal page scrolling and the header stays sticky at the top.
+- At `md` and above, the root document is locked to the viewport and the application content scrolls inside the page container.
+- The scroll-lock utility blocks the root document and the application scroll container while the intro or filter dialog is active.
+
+This behavior lives in `src/app/globals.css` and the page shells. It affects where a scrollbar appears, not the filter or search logic.
+
+## Intro overlay and scroll lock
+
+The root layout renders `PortalIntroOverlay`. The overlay:
+
+- locks document scrolling while it is active;
+- marks the application content as inert;
+- completes after the visual timeline, a watchdog timer, Escape, or an interaction;
+- respects the reduced-motion media query.
+
+The scroll-lock utility counts nested locks and restores the previous overflow values when the final lock is released.
+
+## Related documents
+
+- [Data model](data-model.md)
+- [User flows](user-flows.md)
+- [Routes and SEO](routes-and-seo.md)
+- [Design system](../DESIGN.md)

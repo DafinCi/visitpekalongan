@@ -1,179 +1,195 @@
-# Panduan Desain Sistem: VisitPekalongan
+# VisitPekalongan Design System
 
-Dokumen ini adalah sumber kebenaran (*single source of truth*) untuk identitas visual, arsitektur token desain tiga lapis (*primitive, semantic, component*), spesifikasi komponen antarmuka, dan tipografi untuk platform **VisitPekalongan**.
+This document describes the visual system in the current implementation. It covers tokens, typography, component patterns, and accessibility rules. Product behavior is documented in [Current features](docs/FEATURES.md).
 
----
+## 1. Identity
 
-## 1. Identitas & Filosofi Desain
+The visual direction is warm, tactile, and editorial. It draws on raw mori cloth, clay, terracotta, and the geometry of local craft. The interface uses a light canvas, dark charcoal text, restrained terracotta accents, and thin borders.
 
-- **Konsep Inti:** *Warm Artisanal Mori with Architectural Rigor* (Kehangatan Alami berpadu Presisi Kriya).
-- **Inspirasi Visual:**
-  - Kehangatan serat kain mori mentah sebelum proses pencelupan malam batik.
-  - Palet tanah liat terakota dan kehangatan gerabah lokal.
-  - Ketegasan garis presisi cetakan balok cap tembaga pembatik dan etiket kurasi museum.
-- **Prinsip Utama:**
-  1. **Anti-Pill & Presisi Geometri:** Menolak bentuk kapsul lonjong seragam pada kartu dan tombol. Menggunakan sudut ramping 6px hingga 8px untuk menghadirkan wibawa kriya yang kokoh.
-  2. **Hairline Terdefinisi:** Menggunakan garis batas halus `1px solid` yang nyata daripada mengandalkan bayangan kabur melayang.
-  3. **Kejujuran Warna & Kontras WCAG AA:** Seluruh teks dan elemen interaktif terkalibrasi lolos uji kontras minimum 4.5:1 di atas kanvas mori.
+The goal is a curated local guide with a recognizable character. The current palette and type choices are part of the interface, not decoration added to a generic template.
 
----
+## 2. Token architecture
 
-## 2. Arsitektur Tiga Lapisan Token (Three-Layer Tokens)
+Tokens have three layers:
 
-Sistem token disusun dalam 3 tingkatan hierarki untuk fleksibilitas tema dan pemeliharaan kode:
+1. Primitive values such as hex colors and radius sizes.
+2. Semantic roles such as canvas, surface, text, border, and status.
+3. Component conventions such as cards, buttons, badges, and the map preview.
 
-```mermaid
-flowchart TD
-    Primitive["1. Primitive Tokens (Nilai Hex & Ukuran Mutlak)"]
-    Semantic["2. Semantic Tokens (Tujuan & Peran Fungsional UI)"]
-    Component["3. Component Tokens (Spesifikasi Komponen Konkret)"]
+The source of truth is `src/app/globals.css`.
 
-    Primitive --> Semantic
-    Semantic --> Component
-```
-
-### A. Lapisan 1: Primitive Tokens (Nilai Hex Mutlak)
+## 3. Primitive tokens
 
 ```css
 :root {
-  /* Nuansa Kanvas & Tanah */
-  --primitive-mori-50:       #FCFAF7;
-  --primitive-mori-100:      #F7F5F0; /* Kanvas Mori Utama */
-  --primitive-clay-50:       #FAF8F5; /* Surface Kartu Utama */
-  --primitive-clay-100:      #F2EFEB;
-  --primitive-grout-200:     #E8E3DA;
-  --primitive-grout-300:     #DDD6CA; /* Border Terdefinisi */
-  --primitive-grout-400:     #C5BEB2;
+  --primitive-mori-50: #fcfaf7;
+  --primitive-mori-100: #f7f5f0;
+  --primitive-clay-50: #faf8f5;
+  --primitive-clay-100: #f2efeb;
+  --primitive-grout-200: #e8e3da;
+  --primitive-grout-300: #ddd6ca;
+  --primitive-grout-400: #c5beb2;
 
-  /* Nuansa Arang & Tipografi */
-  --primitive-charcoal-900:  #242220; /* Teks Utama */
-  --primitive-driftwood-600: #6E6963; /* Teks Sekunder */
-  --primitive-driftwood-400: #9B948C;
+  --primitive-charcoal-900: #242220;
+  --primitive-driftwood-600: #6e6963;
+  --primitive-driftwood-400: #9b948c;
 
-  /* Nuansa Budaya & Alam */
-  --primitive-terracotta-600: #A8472B; /* Aksen Teks (Kontras 5.05:1) */
-  --primitive-terracotta-raw: #C86446; /* Latar Badge Aksen (Teks Putih) */
-  --primitive-terracotta-subtle: #F5EAE6;
-  --primitive-sage-700:       #48584A;
-  --primitive-sage-600:       #5A6B5C; /* Sage Petungkriyono */
-  --primitive-sage-subtle:    #ECF0EC;
-  --primitive-roast-700:      #73472C;
-  --primitive-roast-600:      #8C5A3C; /* Biji Kopi Sangrai */
+  --primitive-terracotta-600: #a8472b;
+  --primitive-terracotta-raw: #c86446;
+  --primitive-terracotta-subtle: #f5eae6;
+  --primitive-sage-700: #48584a;
+  --primitive-sage-600: #5a6b5c;
+  --primitive-sage-subtle: #ecf0ec;
+  --primitive-roast-700: #73472c;
+  --primitive-roast-600: #8c5a3c;
 
-  /* Status Fungsional */
-  --primitive-moss-700:       #3E6D4B; /* Status Buka (Kontras 4.85:1) */
-  --primitive-moss-subtle:    #EBF2ED;
-  --primitive-brick-700:      #9E5345; /* Status Tutup */
-  --primitive-brick-subtle:   #F7ECE9;
+  --primitive-moss-700: #3e6d4b;
+  --primitive-moss-subtle: #ebf2ed;
+  --primitive-brick-700: #9e5345;
+  --primitive-brick-subtle: #f7ece9;
 
-  /* Skala Geometri Ramping */
-  --primitive-radius-xs:  2px;
-  --primitive-radius-sm:  4px;
-  --primitive-radius-md:  6px;
-  --primitive-radius-lg:  8px;
-  --primitive-radius-xl:  12px;
+  --primitive-radius-xs: 2px;
+  --primitive-radius-sm: 4px;
+  --primitive-radius-md: 6px;
+  --primitive-radius-lg: 8px;
+  --primitive-radius-xl: 12px;
 }
 ```
 
-### B. Lapisan 2: Semantic Tokens (Tujuan UI Fungsional)
-
-Token semantik memetakan nilai primitif ke peran antarmuka yang dipakai oleh Tailwind CSS v4 `@theme`:
+## 4. Semantic tokens
 
 ```css
 @theme {
-  /* Latar Belakang & Permukaan */
-  --color-canvas:            var(--primitive-mori-100);
-  --color-surface:           var(--primitive-clay-50);
-  --color-surface-elevated:  var(--primitive-mori-50);
-  --color-surface-pure:      #FFFFFF;
+  --color-canvas: var(--primitive-mori-100);
+  --color-surface: var(--primitive-clay-50);
+  --color-surface-elevated: var(--primitive-mori-50);
+  --color-surface-pure: #ffffff;
 
-  /* Garis Batas & Pemisah */
-  --color-border:            var(--primitive-grout-300);
-  --color-border-subtle:     var(--primitive-grout-200);
-  --color-border-focus:      var(--primitive-terracotta-600);
+  --color-border: var(--primitive-grout-300);
+  --color-border-subtle: var(--primitive-grout-200);
+  --color-border-focus: var(--primitive-terracotta-600);
 
-  /* Tipografi */
-  --color-text-primary:      var(--primitive-charcoal-900);
-  --color-text-muted:        var(--primitive-driftwood-600);
-  --color-text-subtle:       var(--primitive-driftwood-400);
+  --color-charcoal: var(--primitive-charcoal-900);
+  --color-text-primary: var(--primitive-charcoal-900);
+  --color-text-muted: var(--primitive-driftwood-600);
+  --color-text-subtle: var(--primitive-driftwood-400);
 
-  /* Aksen Berkarakter */
   --color-accent-terracotta: var(--primitive-terracotta-600);
-  --color-accent-sage:       var(--primitive-sage-600);
-  --color-accent-roast:      var(--primitive-roast-600);
+  --color-accent-terracotta-raw: var(--primitive-terracotta-raw);
+  --color-accent-sage: var(--primitive-sage-600);
+  --color-accent-roast: var(--primitive-roast-600);
 
-  /* Status Operasional */
-  --color-status-open-text:  var(--primitive-moss-700);
-  --color-status-open-bg:    var(--primitive-moss-subtle);
+  --color-status-open-text: var(--primitive-moss-700);
+  --color-status-open-bg: var(--primitive-moss-subtle);
   --color-status-closed-text: var(--primitive-brick-700);
-  --color-status-closed-bg:  var(--primitive-brick-subtle);
+  --color-status-closed-bg: var(--primitive-brick-subtle);
 
-  /* Sistem Radius Terstruktur */
-  --radius-card:             var(--primitive-radius-lg);  /* 8px */
-  --radius-button:           var(--primitive-radius-md);  /* 6px */
-  --radius-badge:            var(--primitive-radius-sm);  /* 4px */
-  --radius-drawer:           var(--primitive-radius-xl);  /* 12px (atas saja) */
+  --radius-card: 8px;
+  --radius-button: 6px;
+  --radius-badge: 4px;
+  --radius-drawer: 12px;
 }
 ```
 
-### C. Lapisan 3: Component Tokens (Spesifikasi Komponen)
+## 5. Typography
 
-Spesifikasi langsung untuk setiap komponen antarmuka yang akan dibangun:
+| Role | Family | Use |
+| --- | --- | --- |
+| Display and editorial headings | Instrument Serif | Page titles, place names, and story headings |
+| Interface and body text | Plus Jakarta Sans | Search, labels, schedules, cards, and actions |
 
-| Komponen | Properti Token | Nilai Semantic | Keterangan Desain |
-| :--- | :--- | :--- | :--- |
-| **Spot Card** | Background | `var(--color-surface)` | Clay krem `#FAF8F5` |
-| | Border | `1px solid var(--color-border)` | Hairline terdefinisi `#DDD6CA` |
-| | Radius | `var(--radius-card)` | 8px (sudut rapi, bukan gelembung) |
-| | Shadow | `0 2px 8px -2px rgba(36,34,32,0.05)` | Bayangan pigmen tanah lembut |
-| **Stamp Badge** | Background | `var(--color-surface-elevated)` | Krem pudar |
-| | Border | `1px solid var(--color-border-subtle)` | Garis stempel halus |
-| | Radius | `var(--radius-badge)` | 4px (persegi lembut, anti-kapsul) |
-| | Padding | `3px 8px` | Padat dan hemat ruang |
-| | Typography | Plus Jakarta Sans, 11px, Semi-bold | Gaya etiket kurasi arsip |
-| **Nav/Utility Button** | Background | `var(--color-surface-pure)` | Putih bersih |
-| | Border | `1px solid var(--color-border)` | Menyerupai instrumen fisik |
-| | Radius | `var(--radius-button)` | 6px |
-| | Active State | `var(--color-canvas)` | Tertekan alami |
-| **Map Drawer** | Background | `var(--color-surface)` | Clay krem |
-| | Top Border | `1px solid var(--color-border)` | Garis pemisah tegas dengan canvas peta |
-| | Top Radius | `var(--radius-drawer)` | 12px pada kedua sudut atas |
-| | Drag Handle | `36px x 4px`, bg `#C5BEB2`, radius 2px | Bar minimalis presisi |
+The root layout loads both families through `next/font/google` and exposes them as `--font-instrument-serif` and `--font-plus-jakarta-sans`.
 
----
+The current type scale:
 
-## 3. Sistem Tipografi (Typography System)
+| Level | Size | Use |
+| --- | --- | --- |
+| Display | 36px to 48px | Home and editorial headings |
+| Heading 1 | 28px | Place detail title |
+| Heading 2 | 20px | Card and section titles |
+| Subhead | 14px | Supporting labels |
+| Body UI | 13px | Descriptions and metadata |
+| Caption | 11px | Badges and compact status labels |
 
-### A. Pasangan Font (Font Pairing)
-1. **Instrument Serif (Google Fonts):**
-   - Peran: Headline, nama spot di halaman detail, judul header editorial.
-   - Sifat: Berkelas, anggun, tajam pada ujung kait serif, mencerminkan narasi sastra dan warisan budaya.
-2. **Plus Jakarta Sans (Google Fonts):**
-   - Peran: Seluruh elemen antarmuka (label filter, harga, status buka, alamat, tombol aksi).
-   - Sifat: Keterbacaan sangat tinggi (*high x-height*), modern, netral, dan nyaman untuk navigasi layar sentuh.
+The code uses responsive utility classes rather than a single fixed size for every heading.
 
-### B. Skala Tipe (Type Scale)
+## 6. Component patterns
 
-| Tingkat | Font Family | Ukuran / Line Height | Bobot | Penggunaan |
-| :--- | :--- | :--- | :--- | :--- |
-| **Display** | Instrument Serif | 36px / 42px (Mobile) ~ 48px / 56px (Desktop) | Regular 400 | Judul Beranda & Header Jurnal |
-| **Heading 1** | Instrument Serif | 28px / 34px | Regular 400 | Nama Spot di Halaman Detail |
-| **Heading 2** | Instrument Serif | 20px / 26px | Regular 400 | Nama Spot di Kartu Feed Grid |
-| **Subhead** | Plus Jakarta Sans | 14px / 20px | Medium 500 | Signature Dish & Teritori Kecamatan |
-| **Body UI** | Plus Jakarta Sans | 13px / 18px | Regular 400 | Deskripsi Ringkas & Jam Operasional |
-| **Caption / Badge** | Plus Jakarta Sans | 11px / 14px | Semi-bold 600 | Lencana Kategori, Fasilitas, & Status |
+### Catalog cards
 
----
+Catalog cards use:
 
-## 4. Pola Aksesibilitas & Keandalan (Craftsmanship Standard)
+- `bg-surface`;
+- `border-border`;
+- `rounded-card`;
+- `shadow-xs` at rest and `shadow-sm` on hover;
+- a 4:3 image area;
+- a terracotta hover border on the title and card edge.
 
-- **Audit Kontras Warna (WCAG AA):**
-  - Teks Charcoal `#242220` di atas Kanvas `#F7F5F0`: **14.2:1** (Lolos AAA).
-  - Teks Driftwood `#6E6963` di atas Kanvas `#F7F5F0`: **4.99:1** (Lolos AA).
-  - Teks Terracotta `#A8472B` di atas Kanvas `#F7F5F0`: **5.05:1** (Lolos AA).
-  - Teks Status Buka `#3E6D4B` di atas Kanvas `#F7F5F0`: **4.85:1** (Lolos AA).
-- **Target Ketukan Jari (Tap Targets):**
-  Seluruh tombol aksi dan pil filter memiliki ukuran sentuh minimum `44px x 44px` atau pembungkus area klik (*hit-area wrapper*) yang memenuhi standar ergonomi seluler.
-- **Indikator Fokus Keyboard:**
-  Setiap elemen interaktif yang menerima fokus tombol `Tab` menampilkan garis tepi fokus `2px solid var(--color-border-focus)` dengan offset `2px`.
+The grid card shows the image, status badge, category, name, signature dish, district, price range, route action, and bookmark action.
 
+### List cards
+
+List cards use a compact horizontal layout with a square thumbnail. Mobile keeps the route and bookmark actions in a narrow side rail. Desktop adds route, share, and bookmark actions.
+
+### Buttons and controls
+
+Buttons use `rounded-button` and a minimum target height of 44px. Primary actions use the terracotta token with canvas text. Secondary actions use the surface color, a thin border, and primary text.
+
+Icon-only controls keep at least a 44px touch area. The filter trigger and view selector use the same utility-button language.
+
+### Badges
+
+Badges use `rounded-badge` rather than a pill shape. Status badges use the open or closed token pair. Category labels use muted text with a terracotta accent where hierarchy needs it.
+
+### Map preview
+
+The current map preview is a card over the map, not a bottom drawer. It uses:
+
+- `bg-canvas`;
+- `border-border`;
+- `rounded-card`;
+- `shadow-lg`;
+- a compact image;
+- status, price, region, and optional distance;
+- route and detail actions.
+
+The `--radius-drawer` token is reserved but not used by the current preview.
+
+### Focus and motion
+
+Interactive elements use `focus-visible:outline-2` with `outline-border-focus`. Motion is limited to short fades, slides, scale changes, and the intro reveal. The intro overlay respects `prefers-reduced-motion`.
+
+## 7. Accessibility
+
+The current system follows these rules:
+
+- normal text should meet WCAG AA contrast against its background;
+- interactive controls should have a visible focus indicator;
+- touch targets should be at least 44px;
+- status should not rely on color alone;
+- the intro overlay releases scroll and inert state when it completes;
+- the map markers are keyboard reachable through their rendered button elements.
+
+Measured contrast against the canvas `#f7f5f0`:
+
+| Pair | Ratio |
+| --- | --- |
+| Primary text `#242220` | 14.55:1 |
+| Muted text `#6e6963` | 4.99:1 |
+| Terracotta `#a8472b` | 5.35:1 |
+| Open status `#3e6d4b` | 5.52:1 |
+| Closed status `#9e5345` | 5.10:1 |
+
+## 8. Current scope notes
+
+- The interface has a light theme. It does not ship a theme toggle.
+- The footer component exists but no current page imports it.
+- The `VibePills` component exists but no current route uses it.
+- The design system describes visual rules. It does not make an unused component part of the product.
+
+## Related documents
+
+- [Current features](docs/FEATURES.md)
+- [Architecture](docs/architecture.md)
+- [Routes and SEO](docs/routes-and-seo.md)
