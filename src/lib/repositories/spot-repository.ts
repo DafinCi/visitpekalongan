@@ -70,6 +70,7 @@ export class LocalSpotRepository implements SpotRepository {
         categorySlug: category?.slug || "",
         regency: spot.regency,
         district: spot.district,
+        address: spot.address,
         signatureDish: spot.signatureDish,
         description: spot.description,
         bestTimeToVisit: spot.bestTimeToVisit,

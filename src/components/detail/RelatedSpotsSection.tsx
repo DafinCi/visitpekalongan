@@ -1,4 +1,3 @@
-import { Compass } from "lucide-react";
 import { SpotCard } from "@/components/feed/SpotCard";
 import { RecommendedSpotDTO } from "@/lib/utils/smart-search";
 
@@ -21,10 +20,6 @@ export function RelatedSpotsSection({
       <div className="border-t border-border pt-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-accent-terracotta uppercase tracking-wider mb-1">
-              <Compass className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Rekomendasi Kurasi Pintar</span>
-            </div>
             <h2
               id="related-spots-heading"
               className="font-serif text-2xl sm:text-3xl text-text-primary tracking-tight"
@@ -33,7 +28,8 @@ export function RelatedSpotsSection({
             </h2>
           </div>
           <p className="text-xs text-text-muted">
-            Dipilih berdasarkan kemiripan suasana, fasilitas, dan jarak rute terdekat
+            Dipilih berdasarkan kemiripan suasana, fasilitas, dan jarak rute
+            terdekat
           </p>
         </div>
 
@@ -56,4 +52,3 @@ export function RelatedSpotsSection({
     </section>
   );
 }
-

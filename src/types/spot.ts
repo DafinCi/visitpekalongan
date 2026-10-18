@@ -132,6 +132,7 @@ export interface SpotListItemDTO {
   categorySlug: string;
   regency: Regency;
   district: string;
+  address?: string;
   signatureDish?: string;
   description?: string;
   bestTimeToVisit?: string;
