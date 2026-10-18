@@ -108,7 +108,7 @@ export function SubmitSpotForm() {
           id="spot-name"
           type="text"
           required
-          placeholder="Contoh: Soto Tauto H. Rochmani / Omah Kopi Petung"
+          placeholder="Contoh: Soto Tauto H. Rochmani"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-button text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-terracotta focus:ring-1 focus:ring-accent-terracotta"
@@ -170,7 +170,7 @@ export function SubmitSpotForm() {
           <input
             id="spot-district"
             type="text"
-            placeholder="Contoh: Petungkriyono / Kraton Kidul"
+            placeholder="Contoh: Kraton Kidul / Petungkriyono"
             value={formData.district}
             onChange={(e) => setFormData({ ...formData, district: e.target.value })}
             className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-button text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-terracotta"
@@ -186,7 +186,7 @@ export function SubmitSpotForm() {
         <input
           id="spot-signature"
           type="text"
-          placeholder="Contoh: Nasi Megono Cumi Hitam / Air Terjun Bertingkat"
+          placeholder="Contoh: Megono Cumi Hitam / Kopi Robusta"
           value={formData.signature}
           onChange={(e) => setFormData({ ...formData, signature: e.target.value })}
           className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-button text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-terracotta"
@@ -196,12 +196,12 @@ export function SubmitSpotForm() {
       {/* 5. Cerita & Alasan Mengapa Wajib Masuk Kurasi */}
       <div className="space-y-1.5">
         <label htmlFor="spot-reason" className="block text-xs sm:text-sm font-semibold text-text-primary">
-          Cerita atau Alasan Tempat Ini Wajib Dikunjungi
+          Cerita atau Alasan Rekomendasi
         </label>
         <textarea
           id="spot-reason"
-          rows={4}
-          placeholder="Ceritakan pengalaman Anda: apakah kuahnya memakai tauco resep turun-temurun? Apakah suasananya tenang untuk kerja, atau rutenya melewati hutan asri? Cerita jujur Anda sangat membantu kurasi kami."
+          rows={3}
+          placeholder="Ceritakan keunikan rasa, suasana, atau alasan tempat ini istimewa..."
           value={formData.reason}
           onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
           className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-canvas border border-border rounded-button text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-terracotta leading-relaxed"
@@ -211,7 +211,7 @@ export function SubmitSpotForm() {
       {/* 6. Akun Instagram / Kontak (Opsional) */}
       <div className="space-y-1.5">
         <label htmlFor="spot-ig" className="block text-xs sm:text-sm font-semibold text-text-primary">
-          Akun Instagram Tempat (Opsional)
+          Akun Instagram (Opsional)
         </label>
         <div className="flex rounded-button overflow-hidden">
           <span className="inline-flex items-center px-3 text-xs sm:text-sm text-text-muted bg-surface border border-r-0 border-border select-none">
