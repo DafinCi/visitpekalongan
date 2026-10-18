@@ -1,8 +1,8 @@
 export function FeedSkeleton() {
   return (
-    <div className="h-full flex flex-col w-full overflow-hidden">
+    <div className="min-h-screen md:h-full flex flex-col w-full md:overflow-hidden">
       {/* Skeleton Header Sticky */}
-      <div className="flex-none z-40 w-full bg-canvas/95 backdrop-blur-sm border-b border-border h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 lg:px-8 gap-2 sm:gap-4">
+      <div className="sticky top-0 md:flex-none z-40 w-full bg-canvas/95 backdrop-blur-sm border-b border-border h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 lg:px-8 gap-2 sm:gap-4">
         <div className="font-serif text-lg sm:text-2xl text-text-primary shrink-0">
           VisitPekalongan
         </div>
@@ -10,7 +10,7 @@ export function FeedSkeleton() {
         <div className="w-10 sm:w-28 h-11 bg-surface border border-border rounded-button animate-pulse shrink-0" />
       </div>
 
-      <div className="app-scroll-container flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+      <div className="app-scroll-container flex-1 md:overflow-y-auto md:overflow-x-hidden md:min-h-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (

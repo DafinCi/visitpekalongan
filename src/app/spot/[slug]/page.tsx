@@ -124,10 +124,10 @@ async function SpotDetailContent({ params }: SpotPageProps) {
 
 export default function SpotDetailPage({ params }: SpotPageProps) {
   return (
-    <div className="h-dvh flex flex-col bg-canvas text-text-primary overflow-hidden">
+    <div className="min-h-screen md:h-dvh flex flex-col bg-canvas text-text-primary md:overflow-hidden">
       <Header backUrl="/" backLabel="Kurasi" />
 
-      <div className="app-scroll-container flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+      <div className="app-scroll-container flex-1 md:overflow-y-auto md:overflow-x-hidden md:min-h-0">
         <Suspense fallback={<DetailSkeleton />}>
           <SpotDetailContent params={params} />
         </Suspense>

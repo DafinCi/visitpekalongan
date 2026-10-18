@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function LaporPage() {
   return (
-    <div className="h-dvh flex flex-col bg-canvas text-text-primary overflow-hidden">
+    <div className="min-h-screen md:h-dvh flex flex-col bg-canvas text-text-primary md:overflow-hidden">
       <Header showSearch={false} backUrl="/" backLabel="Katalog" />
 
-      <div className="app-scroll-container flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+      <div className="app-scroll-container flex-1 md:overflow-y-auto md:overflow-x-hidden md:min-h-0">
         <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 w-full">
           {/* Header Editorial */}
           <div className="space-y-3 mb-10 pb-6 border-b border-border">

@@ -10,7 +10,7 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="h-dvh flex flex-col bg-canvas text-text-primary overflow-hidden">
+    <div className="min-h-screen md:h-dvh flex flex-col bg-canvas text-text-primary md:overflow-hidden">
       <Suspense fallback={<FeedSkeleton />}>
         <SpotFeedExplorer categories={categories} allSpots={spots} />
       </Suspense>

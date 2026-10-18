@@ -83,12 +83,6 @@
   --radius-drawer: 12px;
 }
 
-html,
-body {
-  height: 100%;
-  overflow: hidden;
-}
-
 body {
   background-color: var(--primitive-mori-100);
   color: var(--primitive-charcoal-900);
@@ -96,10 +90,21 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Hybrid Scroll: Desktop (>= 768px) mengunci root window agar scrollbar dimulai rapi di bawah header */
+@media (min-width: 768px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
 .app-scroll-container {
   -webkit-overflow-scrolling: touch;
 }
 
+html.scroll-locked,
+html.scroll-locked body,
 html.scroll-locked .app-scroll-container {
   overflow: hidden !important;
 }
