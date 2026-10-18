@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { SpotCategory, SpotListItemDTO } from "@/types/spot";
 import { useSpotFilters } from "@/lib/hooks/useSpotFilters";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 import { searchSpotsSmart } from "@/lib/utils/smart-search";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
@@ -37,6 +38,7 @@ export function SpotFeedExplorer({
   } = useSpotFilters();
 
   const { bookmarks, bookmarkCount } = useBookmarks();
+  const debouncedQ = useDebounce(q, 250);
 
   // Filter spots menggunakan mesin pencarian pintar & status filter
   const filteredSpots = useMemo(() => {
@@ -62,13 +64,13 @@ export function SpotFeedExplorer({
       result = result.filter((s) => bookmarks.includes(s.slug));
     }
 
-    // Pencarian pintar (bahasa alami, sinonim niat, multi-kata, & toleransi typo)
-    if (q && q.trim() !== "") {
-      result = searchSpotsSmart(result, q);
+    // Pencarian pintar menggunakan debouncedQ agar tidak memicu kalkulasi & animasi peta berulang saat mengetik
+    if (debouncedQ && debouncedQ.trim() !== "") {
+      result = searchSpotsSmart(result, debouncedQ);
     }
 
     return result;
-  }, [allSpots, q, category, regency, openNow, savedOnly, bookmarks]);
+  }, [allSpots, debouncedQ, category, regency, openNow, savedOnly, bookmarks]);
 
   return (
     <div className="w-full">
