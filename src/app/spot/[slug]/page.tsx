@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { DetailHero } from "@/components/detail/DetailHero";
 import { DetailHeader } from "@/components/detail/DetailHeader";
 import { DetailActions } from "@/components/detail/DetailActions";
@@ -134,9 +133,6 @@ export default function SpotDetailPage({ params }: SpotPageProps) {
           <SpotDetailContent params={params} />
         </Suspense>
       </div>
-
-      {/* Sticky Curtain Reveal Footer */}
-      <Footer />
     </div>
   );
 }

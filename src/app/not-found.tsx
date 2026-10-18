@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { Compass, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
       <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header showSearch={false} />
+        <Header showSearch={false} backUrl="/" backLabel="Katalog" />
 
         <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
           <div className="max-w-lg w-full text-center space-y-6 bg-surface-pure border border-border rounded-card p-8 sm:p-12 shadow-xs">
@@ -50,8 +49,6 @@ export default function NotFound() {
           </div>
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 }

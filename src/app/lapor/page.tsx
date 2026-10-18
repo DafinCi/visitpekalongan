@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowLeft, ShieldCheck, CheckCircle2, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { SubmitSpotForm } from "@/components/community/SubmitSpotForm";
 
 export const metadata: Metadata = {
@@ -15,9 +14,9 @@ export const metadata: Metadata = {
 export default function LaporPage() {
   return (
     <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
-      {/* Kontainer Halaman Utama dengan z-10 agar menutupi Sticky Footer */}
+      {/* Kontainer Halaman Utama */}
       <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header showSearch={false} />
+        <Header showSearch={false} backUrl="/" backLabel="Katalog" />
 
         <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 w-full">
           {/* Tombol Navigasi Kembali */}
@@ -44,10 +43,15 @@ export default function LaporPage() {
             </p>
           </div>
 
-          {/* Tata Letak Dua Kolom: Panduan & Formulir */}
+          {/* Tata Letak Dua Kolom: Panduan & Formulir (Di Mobile Formulir Tampil Lebih Dulu) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-            {/* Kolom Kiri: Prinsip Kurasi & Bantuan */}
-            <div className="lg:col-span-5 space-y-6">
+            {/* Kolom Formulir Interaktif (Mobile: Urutan 1, Desktop: Kolom Kanan) */}
+            <div className="lg:col-span-7 order-1 lg:order-2">
+              <SubmitSpotForm />
+            </div>
+
+            {/* Kolom Panduan & Prinsip Kurasi (Mobile: Urutan 2, Desktop: Kolom Kiri) */}
+            <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
               <div className="p-6 rounded-card bg-surface border border-border space-y-4">
                 <div className="flex items-center gap-2.5 text-text-primary font-semibold text-sm">
                   <ShieldCheck
@@ -114,16 +118,9 @@ export default function LaporPage() {
                 </p>
               </div>
             </div>
-
-            {/* Kolom Kanan: Formulir Interaktif */}
-            <div className="lg:col-span-7">
-              <SubmitSpotForm />
-            </div>
           </div>
         </main>
       </div>
-
-      <Footer />
     </div>
   );
 }

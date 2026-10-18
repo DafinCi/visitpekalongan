@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import {
   ArrowLeft,
   Coffee,
@@ -21,9 +20,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="min-h-screen flex flex-col bg-canvas text-text-primary">
-      {/* Kontainer Konten Utama dengan z-10 agar menutupi Sticky Footer */}
+      {/* Kontainer Konten Utama */}
       <div className="relative z-10 bg-canvas min-h-screen flex flex-col">
-        <Header />
+        <Header backUrl="/" backLabel="Katalog" />
 
         <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
           {/* Tombol Kembali ke Katalog */}
@@ -184,9 +183,6 @@ export default function AboutPage() {
           </div>
         </main>
       </div>
-
-      {/* Sticky Footer Reveal */}
-      <Footer />
     </div>
   );
 }

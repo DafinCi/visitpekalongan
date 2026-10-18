@@ -88,19 +88,12 @@ export function ScheduleTable({ schedule }: ScheduleTableProps) {
                     key={day}
                     className={`transition-colors ${
                       isToday
-                        ? "bg-accent-terracotta/5 font-semibold text-text-primary"
+                        ? "bg-accent-terracotta/10 font-semibold text-text-primary border-l-2 border-accent-terracotta"
                         : "text-text-secondary hover:bg-canvas/50"
                     }`}
                   >
                     <td className="py-2.5 px-3">
-                      <div className="flex items-center gap-2">
-                        <span>{DAY_LABELS[day]}</span>
-                        {isToday && (
-                          <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-button bg-accent-terracotta text-canvas">
-                            Hari Ini
-                          </span>
-                        )}
-                      </div>
+                      <span>{DAY_LABELS[day]}</span>
                     </td>
                     <td className="py-2.5 px-3">{hoursText}</td>
                     <td className="py-2.5 px-3 text-right">

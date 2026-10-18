@@ -1,4 +1,5 @@
 import { SpotCard } from "@/components/feed/SpotCard";
+import { SpotListCard } from "@/components/feed/SpotListCard";
 import { RecommendedSpotDTO } from "@/lib/utils/smart-search";
 
 interface RelatedSpotsSectionProps {
@@ -33,7 +34,8 @@ export function RelatedSpotsSection({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Desktop View: Grid 3 Kolom Kartu Penuh */}
+        <div className="hidden md:grid md:grid-cols-3 gap-6">
           {recommendations.map(({ spot, matchReason }) => (
             <div key={spot.id} className="flex flex-col h-full">
               {/* Lencana Alasan Rekomendasi Pintar */}
@@ -45,6 +47,20 @@ export function RelatedSpotsSection({
               <div className="flex-1">
                 <SpotCard spot={spot} />
               </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile View: Daftar Kompak Hemat Ruang Vertikal */}
+        <div className="md:hidden flex flex-col gap-3">
+          {recommendations.map(({ spot, matchReason }) => (
+            <div key={spot.id} className="space-y-1.5">
+              {/* Lencana Alasan Rekomendasi Pintar */}
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-button bg-accent-terracotta/10 border border-accent-terracotta/25 text-[10px] font-medium text-accent-terracotta w-fit">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-terracotta shrink-0" />
+                <span className="line-clamp-1">{matchReason}</span>
+              </div>
+              <SpotListCard spot={spot} />
             </div>
           ))}
         </div>
