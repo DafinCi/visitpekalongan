@@ -85,6 +85,7 @@ export class LocalSpotRepository implements SpotRepository {
         hasFridayPrayerBreak: spot.hasFridayPrayerBreak,
         facilities: spot.facilities,
         vibeTags: [category?.name || "", spot.regency === "kota" ? "Kota" : "Pegunungan"],
+        openingHours: spot.openingHours,
       };
     });
   }

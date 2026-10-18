@@ -1,12 +1,33 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { MapPin, CheckCircle2, CircleDollarSign } from "lucide-react";
 import { SpotDetailDTO } from "@/types/spot";
 import { formatPriceRange } from "@/lib/utils/formatters";
+import { calculateOpenStatus } from "@/lib/utils/opening-hours";
 
 interface DetailHeaderProps {
   spot: SpotDetailDTO;
 }
 
 export function DetailHeader({ spot }: DetailHeaderProps) {
+  const [openStatus, setOpenStatus] = useState({
+    isOpenNow: spot.isOpenNow,
+    statusLabel: spot.statusLabel,
+  });
+
+  useEffect(() => {
+    if (spot.weeklySchedule) {
+      const live = calculateOpenStatus(
+        spot.weeklySchedule,
+        spot.lifecycleStatus,
+        new Date(),
+        spot.hasFridayPrayerBreak
+      );
+      setOpenStatus(live);
+    }
+  }, [spot]);
+
   return (
     <header className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-4">
       {/* Baris Status & Harga */}
@@ -14,18 +35,18 @@ export function DetailHeader({ spot }: DetailHeaderProps) {
         {/* Status Operasional */}
         <span
           className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-button border ${
-            spot.isOpenNow
+            openStatus.isOpenNow
               ? "bg-status-open-bg text-status-open-text border-status-open-text/20"
               : "bg-status-closed-bg text-status-closed-text border-status-closed-text/20"
           }`}
         >
           <span
             className={`w-2 h-2 rounded-full ${
-              spot.isOpenNow ? "bg-status-open-text animate-pulse" : "bg-status-closed-text"
+              openStatus.isOpenNow ? "bg-status-open-text animate-pulse" : "bg-status-closed-text"
             }`}
             aria-hidden="true"
           />
-          <span>{spot.statusLabel}</span>
+          <span>{openStatus.statusLabel}</span>
         </span>
 
         {/* Rentang Harga */}

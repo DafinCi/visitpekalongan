@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { SpotCategory, SpotListItemDTO } from "@/types/spot";
 import { useSpotFilters } from "@/lib/hooks/useSpotFilters";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { searchSpotsSmart } from "@/lib/utils/smart-search";
+import { calculateOpenStatus } from "@/lib/utils/opening-hours";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
 import { EmptyState } from "./EmptyState";
@@ -40,9 +41,32 @@ export function SpotFeedExplorer({
   const { bookmarks, bookmarkCount } = useBookmarks();
   const debouncedQ = useDebounce(q, 250);
 
+  // Status operasional dinamis mengikuti waktu pengguna saat ini di sisi klien
+  const [liveSpots, setLiveSpots] = useState<SpotListItemDTO[]>(allSpots);
+
+  useEffect(() => {
+    const now = new Date();
+    setLiveSpots(
+      allSpots.map((spot) => {
+        if (!spot.openingHours) return spot;
+        const status = calculateOpenStatus(
+          spot.openingHours,
+          spot.lifecycleStatus,
+          now,
+          spot.hasFridayPrayerBreak
+        );
+        return {
+          ...spot,
+          isOpenNow: status.isOpenNow,
+          statusLabel: status.statusLabel,
+        };
+      })
+    );
+  }, [allSpots]);
+
   // Filter spots menggunakan mesin pencarian pintar & status filter
   const filteredSpots = useMemo(() => {
-    let result = allSpots;
+    let result = liveSpots;
 
     // Filter kategori
     if (category && category !== "all") {
@@ -70,7 +94,7 @@ export function SpotFeedExplorer({
     }
 
     return result;
-  }, [allSpots, debouncedQ, category, regency, openNow, savedOnly, bookmarks]);
+  }, [liveSpots, debouncedQ, category, regency, openNow, savedOnly, bookmarks]);
 
   return (
     <div className="w-full">

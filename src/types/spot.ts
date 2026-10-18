@@ -147,6 +147,7 @@ export interface SpotListItemDTO {
   hasFridayPrayerBreak?: boolean;
   facilities: Facility[];
   vibeTags: string[];
+  openingHours?: WeeklyOpeningHours;
 }
 
 // Data Transfer Object: Ulasan Detail Lengkap
