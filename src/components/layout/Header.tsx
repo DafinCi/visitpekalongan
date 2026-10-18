@@ -101,7 +101,7 @@ export function Header({
           {/* Tengah: Search & Filter Pill Terpadu (Hanya muncul jika mode showSearch aktif) */}
           {showSearch && onSearchChange && (
             <div className="relative w-full">
-              <div className="relative flex items-center bg-surface-pure border border-border hover:border-border-focus focus-within:border-border-focus focus-within:ring-1 focus-within:ring-border-focus rounded-button transition-all h-9 sm:h-10 shadow-2xs">
+              <div className="relative flex items-center bg-surface-pure border border-border focus-within:ring-border-focus rounded-button transition-all h-9 sm:h-10 shadow-2xs">
                 <Search
                   className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-subtle ml-2.5 sm:ml-3 shrink-0"
                   aria-hidden="true"
