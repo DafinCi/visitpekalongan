@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Navigation, Share2, Check, MessageSquare, ExternalLink } from "lucide-react";
+import { Navigation, Share2, Check, MessageSquare, ExternalLink, Bookmark } from "lucide-react";
 import { SpotDetailDTO } from "@/types/spot";
+import { useBookmarks } from "@/lib/hooks/useBookmarks";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -29,6 +30,8 @@ interface DetailActionsProps {
 
 export function DetailActions({ spot }: DetailActionsProps) {
   const [copied, setCopied] = useState(false);
+  const { isBookmarked, toggleBookmark } = useBookmarks();
+  const saved = isBookmarked(spot.slug);
 
   const handleShare = async () => {
     const shareData = {
@@ -75,6 +78,25 @@ export function DetailActions({ spot }: DetailActionsProps) {
           <span>Buka Petunjuk Arah Google Maps</span>
         </a>
 
+        {/* Tombol Simpan Offline / Bookmark */}
+        <button
+          type="button"
+          onClick={() => toggleBookmark(spot.slug)}
+          className={`inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-button border transition-colors min-h-[48px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+            saved
+              ? "bg-accent-terracotta/10 border-accent-terracotta/40 text-accent-terracotta font-semibold"
+              : "bg-surface-pure hover:bg-canvas border-border text-text-primary"
+          }`}
+          aria-pressed={saved}
+          aria-label={saved ? "Hapus tempat ini dari daftar tersimpan" : "Simpan tempat ini ke daftar offline"}
+        >
+          <Bookmark
+            className={`w-4 h-4 ${saved ? "fill-accent-terracotta text-accent-terracotta" : "text-text-muted"}`}
+            aria-hidden="true"
+          />
+          <span>{saved ? "Tersimpan" : "Simpan Spot"}</span>
+        </button>
+
         {/* Tombol Ulasan Google Maps (Hanya tampil jika listing ulasan tersedia) */}
         {spot.googleMapsReviewUrl && (
           <a
@@ -106,7 +128,7 @@ export function DetailActions({ spot }: DetailActionsProps) {
         <button
           type="button"
           onClick={handleShare}
-          className="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-text-primary bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-[48px] focus-visible:outline-2 focus-visible:outline-border-focus"
+          className="inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-text-primary bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-[48px] focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
           aria-label={copied ? "Tautan tersalin ke papan klip" : "Bagikan ulasan tempat ini"}
         >
           {copied ? (
@@ -125,4 +147,3 @@ export function DetailActions({ spot }: DetailActionsProps) {
     </section>
   );
 }
-

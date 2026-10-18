@@ -10,9 +10,14 @@ if (typeof window !== "undefined") {
 }
 import Link from "next/link";
 import Image from "next/image";
-import { Navigation, ArrowRight, X, Sparkles, MapPin } from "lucide-react";
+import { Navigation, ArrowRight, X, Sparkles, MapPin, LocateFixed, Loader2 } from "lucide-react";
 import { SpotListItemDTO } from "@/types/spot";
 import { formatDistrict, formatPriceRange, formatRegency } from "@/lib/utils/formatters";
+import {
+  calculateDistanceKm,
+  formatDistance,
+  isWithinPekalonganRegion,
+} from "@/lib/utils/geolocation";
 
 interface SpotMapProps {
   spots: SpotListItemDTO[];
@@ -28,7 +33,12 @@ export function SpotMap({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const markersRef = useRef<Marker[]>([]);
+  const userMarkerRef = useRef<Marker | null>(null);
+
   const [activeSpot, setActiveSpot] = useState<SpotListItemDTO | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "active" | "error">("idle");
+  const [geoMessage, setGeoMessage] = useState<string | null>(null);
 
   // Inisialisasi Peta MapLibre GL
   useEffect(() => {
@@ -139,15 +149,122 @@ export function SpotMap({
     }
   }, [selectedSpotId, spots]);
 
+  // Handler deteksi lokasi pengguna saat tombol Lokasi Saya ditekan
+  const handleLocateUser = () => {
+    if (typeof window === "undefined" || !("geolocation" in navigator)) {
+      setGeoStatus("error");
+      setGeoMessage("Browser Anda tidak mendukung fitur geolokasi.");
+      return;
+    }
+
+    setGeoStatus("loading");
+    setGeoMessage(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setUserLocation({ lat, lng });
+        setGeoStatus("active");
+
+        const map = mapRef.current;
+        if (map) {
+          if (userMarkerRef.current) {
+            userMarkerRef.current.remove();
+          }
+
+          // Buat penanda titik biru berdenyut untuk posisi pengguna
+          const userEl = document.createElement("div");
+          userEl.className = "relative flex items-center justify-center";
+          userEl.innerHTML = `
+            <span class="absolute w-7 h-7 rounded-full bg-blue-500/30 animate-ping"></span>
+            <span class="relative w-4 h-4 rounded-full bg-blue-600 border-2 border-white shadow-md"></span>
+          `;
+
+          userMarkerRef.current = new Marker({ element: userEl })
+            .setLngLat([lng, lat])
+            .addTo(map);
+
+          if (isWithinPekalonganRegion(lat, lng)) {
+            map.flyTo({
+              center: [lng, lat],
+              zoom: 13,
+              duration: 900,
+            });
+            setGeoMessage("Menampilkan titik posisi Anda di Pekalongan.");
+          } else {
+            setGeoMessage("Anda berada di luar Pekalongan. Jarak ke tiap spot tetap dihitung.");
+          }
+        }
+      },
+      () => {
+        setGeoStatus("error");
+        setGeoMessage("Izin lokasi tidak diaktifkan. Aktifkan izin lokasi di browser Anda.");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000,
+      }
+    );
+  };
+
+  const activeSpotDistance =
+    activeSpot && userLocation
+      ? formatDistance(
+          calculateDistanceKm(
+            userLocation.lat,
+            userLocation.lng,
+            activeSpot.latitude,
+            activeSpot.longitude
+          )
+        )
+      : null;
+
   return (
     <div className="relative w-full h-[600px] sm:h-[680px] rounded-card border border-border overflow-hidden bg-surface-pure shadow-xs">
       {/* Kontainer Kanvas Peta MapLibre */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* Info Petunjuk Peta */}
-      <div className="absolute top-4 left-4 z-10 hidden sm:flex items-center gap-2 px-3 py-1.5 bg-canvas/90 backdrop-blur-xs text-text-primary text-xs font-medium border border-border rounded-button shadow-xs pointer-events-none">
-        <MapPin className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
-        <span>Menampilkan {spots.length} titik kurasi di Pekalongan</span>
+      {/* Bilah Atas: Info Titik & Tombol Lokasi Saya */}
+      <div className="absolute top-4 left-4 right-14 z-10 flex flex-wrap items-center gap-2 pointer-events-none">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-canvas/95 backdrop-blur-xs text-text-primary text-xs font-medium border border-border rounded-button shadow-xs">
+          <MapPin className="w-3.5 h-3.5 text-accent-terracotta shrink-0" aria-hidden="true" />
+          <span>Menampilkan {spots.length} titik kurasi di Pekalongan</span>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleLocateUser}
+          disabled={geoStatus === "loading"}
+          className={`pointer-events-auto inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-button border shadow-xs backdrop-blur-xs transition-colors min-h-[40px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+            geoStatus === "active"
+              ? "bg-accent-terracotta text-canvas border-accent-terracotta"
+              : "bg-canvas/95 text-text-primary border-border hover:bg-surface-pure"
+          }`}
+          aria-label="Deteksi lokasi saya saat ini di peta"
+        >
+          {geoStatus === "loading" ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" aria-hidden="true" />
+          ) : (
+            <LocateFixed className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+          )}
+          <span>{geoStatus === "active" ? "Lokasi Aktif" : "Lokasi Saya"}</span>
+        </button>
+
+        {geoMessage && (
+          <div className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 bg-canvas/95 backdrop-blur-xs text-text-secondary text-[11px] border border-border rounded-button shadow-xs">
+            <span>{geoMessage}</span>
+            <button
+              type="button"
+              onClick={() => setGeoMessage(null)}
+              className="text-text-muted hover:text-text-primary p-0.5 cursor-pointer"
+              aria-label="Tutup pesan lokasi"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Pratinjau Spot yang Dipilih (Preview Card Overlay) */}
@@ -172,14 +289,14 @@ export function SpotMap({
                 setActiveSpot(null);
                 if (onSelectSpot) onSelectSpot(null);
               }}
-              className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus"
+              className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
               aria-label="Tutup pratinjau tempat"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Foto Kecil & Info Harga/Status */}
+          {/* Foto Kecil & Info Harga/Status/Jarak */}
           <div className="flex items-center gap-3 my-3">
             <div className="relative w-16 h-16 rounded-button overflow-hidden shrink-0 border border-border bg-surface-pure">
               <Image
@@ -200,7 +317,17 @@ export function SpotMap({
                 <span className="font-medium text-text-primary">{activeSpot.statusLabel}</span>
               </div>
               <p className="text-text-muted">{formatPriceRange(activeSpot.priceRange)}</p>
-              <p className="text-text-muted">{formatRegency(activeSpot.regency)}</p>
+              <div className="flex items-center gap-1.5 text-text-muted">
+                <span>{formatRegency(activeSpot.regency)}</span>
+                {activeSpotDistance && (
+                  <>
+                    <span>•</span>
+                    <span className="font-semibold text-accent-terracotta">
+                      {activeSpotDistance} dari Anda
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
@@ -229,4 +356,3 @@ export function SpotMap({
     </div>
   );
 }
-

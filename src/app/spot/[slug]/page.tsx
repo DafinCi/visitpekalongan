@@ -64,8 +64,43 @@ async function SpotDetailContent({ params }: SpotPageProps) {
     notFound();
   }
 
+  const isFoodOrCafe =
+    spot.categorySlug === "kuliner-legendaris" ||
+    spot.categorySlug === "coffee-workspace";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": isFoodOrCafe ? "FoodEstablishment" : "TouristAttraction",
+    name: spot.name,
+    description: spot.description,
+    image: [spot.coverImageUrl],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: spot.address,
+      addressLocality: spot.district,
+      addressRegion:
+        spot.regency === "kota" ? "Kota Pekalongan" : "Kabupaten Pekalongan",
+      addressCountry: "ID",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: spot.latitude,
+      longitude: spot.longitude,
+    },
+    ...(isFoodOrCafe && {
+      servesCuisine: spot.signatureDish || "Kuliner Khas Pekalongan",
+      priceRange: spot.priceRange,
+    }),
+  };
+
   return (
     <main className="flex-1 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <DetailHero spot={spot} />
       <DetailHeader spot={spot} />
       <DetailActions spot={spot} />

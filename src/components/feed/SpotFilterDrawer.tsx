@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, Sparkles, MapPin, Clock, Check } from "lucide-react";
+import { X, Sparkles, MapPin, Clock, Check, Bookmark } from "lucide-react";
 import { Regency, SpotCategory } from "@/types/spot";
 
 interface SpotFilterDrawerProps {
@@ -14,6 +14,9 @@ interface SpotFilterDrawerProps {
   onSelectRegency: (regency: Regency | null) => void;
   openNowOnly: boolean;
   onToggleOpenNow: (openNow: boolean) => void;
+  savedOnly: boolean;
+  onToggleSaved: (saved: boolean) => void;
+  bookmarkCount: number;
   totalFilteredSpots: number;
   onResetAll: () => void;
   activeFilterCount: number;
@@ -29,6 +32,9 @@ export function SpotFilterDrawer({
   onSelectRegency,
   openNowOnly,
   onToggleOpenNow,
+  savedOnly,
+  onToggleSaved,
+  bookmarkCount,
   totalFilteredSpots,
   onResetAll,
   activeFilterCount,
@@ -86,7 +92,7 @@ export function SpotFilterDrawer({
               Filter Kurasi Tempat
             </h2>
             <p className="text-xs text-text-muted">
-              Saring berdasarkan kategori, teritori, dan jam buka
+              Saring berdasarkan kategori, teritori, jam buka, dan daftar simpanan
             </p>
           </div>
 
@@ -246,6 +252,52 @@ export function SpotFilterDrawer({
               </div>
             </button>
           </div>
+
+          {/* Bagian 4: Daftar Tersimpan Offline */}
+          <div>
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">
+              <Bookmark className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
+              <span>Daftar Tersimpan Offline</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => onToggleSaved(!savedOnly)}
+              className={`w-full flex items-center justify-between p-3.5 rounded-button border transition-colors min-h-[48px] cursor-pointer ${
+                savedOnly
+                  ? "bg-accent-terracotta/10 border-accent-terracotta text-text-primary font-semibold"
+                  : "bg-surface-pure border-border text-text-secondary hover:bg-canvas"
+              }`}
+            >
+              <div className="flex items-center gap-2.5 text-left">
+                <Bookmark
+                  className={`w-4 h-4 shrink-0 ${
+                    savedOnly ? "fill-accent-terracotta text-accent-terracotta" : "text-text-subtle"
+                  }`}
+                  aria-hidden="true"
+                />
+                <div>
+                  <p className="text-xs sm:text-sm font-medium text-text-primary">
+                    Hanya Spot yang Disimpan ({bookmarkCount})
+                  </p>
+                  <p className="text-[11px] text-text-muted">
+                    Akses cepat daftar rencana perjalanan Anda tanpa login
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className={`w-10 h-6 rounded-full p-1 transition-colors ${
+                  savedOnly ? "bg-accent-terracotta" : "bg-border"
+                }`}
+              >
+                <div
+                  className={`w-4 h-4 rounded-full bg-canvas transition-transform transform ${
+                    savedOnly ? "translate-x-4" : "translate-x-0"
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Sticky Bottom CTA: Terapkan Filter */}
@@ -262,4 +314,3 @@ export function SpotFilterDrawer({
     </div>
   );
 }
-

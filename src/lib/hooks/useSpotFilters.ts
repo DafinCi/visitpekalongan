@@ -40,6 +40,14 @@ export function useSpotFilters() {
     })
   );
 
+  const [savedOnly, setSavedOnly] = useQueryState(
+    "saved",
+    parseAsBoolean.withDefault(false).withOptions({
+      history: "replace",
+      shallow: true,
+    })
+  );
+
   const [view, setView] = useQueryState(
     "view",
     parseAsStringEnum<"list" | "map">(["list", "map"]).withDefault("list").withOptions({
@@ -61,6 +69,7 @@ export function useSpotFilters() {
     setCategory("all");
     setRegency(null);
     setOpenNow(false);
+    setSavedOnly(false);
     setSelectedSpotSlug(null);
   };
 
@@ -73,12 +82,18 @@ export function useSpotFilters() {
     setRegency,
     openNow,
     setOpenNow,
+    savedOnly,
+    setSavedOnly,
     view,
     setView,
     selectedSpotSlug,
     setSelectedSpotSlug,
     resetAllFilters,
-    isFiltered: q !== "" || category !== "all" || regency !== null || openNow,
+    isFiltered:
+      q !== "" ||
+      category !== "all" ||
+      regency !== null ||
+      openNow ||
+      savedOnly,
   };
 }
-

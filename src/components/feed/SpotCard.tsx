@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Navigation, ArrowRight, MapPin, Sparkles } from "lucide-react";
+import { Navigation, ArrowRight, MapPin, Sparkles, Bookmark } from "lucide-react";
 import { SpotListItemDTO } from "@/types/spot";
 import { formatDistrict, formatPriceRange, formatRegency } from "@/lib/utils/formatters";
+import { useBookmarks } from "@/lib/hooks/useBookmarks";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -28,6 +31,9 @@ interface SpotCardProps {
 }
 
 export function SpotCard({ spot }: SpotCardProps) {
+  const { isBookmarked, toggleBookmark } = useBookmarks();
+  const saved = isBookmarked(spot.slug);
+
   return (
     <article className="group bg-surface border border-border hover:border-accent-terracotta/40 rounded-card overflow-hidden shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
       {/* Kontainer Foto Rasio 4:3 */}
@@ -129,8 +135,29 @@ export function SpotCard({ spot }: SpotCardProps) {
             <span>Rute</span>
           </a>
 
-          {/* Tautan Instagram & Detail */}
+          {/* Tautan Bookmark, Instagram, & Detail */}
           <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleBookmark(spot.slug);
+              }}
+              className={`w-10 h-10 flex items-center justify-center border rounded-button transition-colors min-h-[44px] min-w-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+                saved
+                  ? "bg-accent-terracotta/10 border-accent-terracotta/40 text-accent-terracotta"
+                  : "bg-surface-pure hover:bg-canvas border-border text-text-muted hover:text-text-primary"
+              }`}
+              aria-label={saved ? `Hapus ${spot.name} dari daftar tersimpan` : `Simpan ${spot.name} ke daftar offline`}
+              aria-pressed={saved}
+            >
+              <Bookmark
+                className={`w-4 h-4 ${saved ? "fill-accent-terracotta text-accent-terracotta" : ""}`}
+                aria-hidden="true"
+              />
+            </button>
+
             {spot.instagramAccount && (
               <a
                 href={`https://instagram.com/${spot.instagramAccount}`}
@@ -145,7 +172,7 @@ export function SpotCard({ spot }: SpotCardProps) {
 
             <Link
               href={`/spot/${spot.slug}`}
-              className="inline-flex items-center justify-center gap-1 px-3 py-1.5 text-xs font-medium text-text-primary hover:text-accent-terracotta transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-border-focus"
+              className="inline-flex items-center justify-center gap-1 px-2.5 py-1.5 text-xs font-medium text-text-primary hover:text-accent-terracotta transition-colors min-h-[44px] focus-visible:outline-2 focus-visible:outline-border-focus"
             >
               <span>Ulasan</span>
               <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
@@ -156,4 +183,3 @@ export function SpotCard({ spot }: SpotCardProps) {
     </article>
   );
 }
-

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { SpotCategory, SpotListItemDTO } from "@/types/spot";
 import { useSpotFilters } from "@/lib/hooks/useSpotFilters";
+import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
 import { EmptyState } from "./EmptyState";
@@ -27,12 +28,16 @@ export function SpotFeedExplorer({
     setRegency,
     openNow,
     setOpenNow,
+    savedOnly,
+    setSavedOnly,
     view,
     setView,
     resetAllFilters,
   } = useSpotFilters();
 
-  // Filter spots berdasarkan query string
+  const { bookmarks, bookmarkCount } = useBookmarks();
+
+  // Filter spots berdasarkan query string & status bookmark
   const filteredSpots = useMemo(() => {
     let result = allSpots;
 
@@ -62,8 +67,13 @@ export function SpotFeedExplorer({
       result = result.filter((s) => s.isOpenNow);
     }
 
+    // Filter daftar tersimpan offline
+    if (savedOnly) {
+      result = result.filter((s) => bookmarks.includes(s.slug));
+    }
+
     return result;
-  }, [allSpots, q, category, regency, openNow]);
+  }, [allSpots, q, category, regency, openNow, savedOnly, bookmarks]);
 
   return (
     <div className="w-full">
@@ -79,6 +89,9 @@ export function SpotFeedExplorer({
         onSelectCategory={setCategory}
         openNowOnly={openNow}
         onToggleOpenNow={setOpenNow}
+        savedOnly={savedOnly}
+        onToggleSaved={setSavedOnly}
+        bookmarkCount={bookmarkCount}
         totalFilteredSpots={filteredSpots.length}
       />
 
@@ -95,6 +108,8 @@ export function SpotFeedExplorer({
               onResetRegency={() => setRegency(null)}
               hasSearchQuery={q !== ""}
               onClearSearch={() => setQ("")}
+              hasSavedFilter={savedOnly}
+              onDisableSaved={() => setSavedOnly(false)}
               onResetAll={resetAllFilters}
             />
           )
@@ -111,4 +126,3 @@ export function SpotFeedExplorer({
     </div>
   );
 }
-
