@@ -202,8 +202,8 @@ export default async function SpotOpenGraphImage({
                 {formatPriceRange(spot.priceRange)}
               </span>
               <span>•</span>
-              <span style={{ color: spot.isOpenNow ? "#276749" : "#70675D" }}>
-                {spot.statusLabel}
+              <span style={{ color: "#70675D" }}>
+                Jam operasional dalam WIB
               </span>
             </div>
 

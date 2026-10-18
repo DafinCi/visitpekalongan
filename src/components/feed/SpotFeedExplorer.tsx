@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { SpotCategory, SpotListItemDTO } from "@/types/spot";
 import { useSpotFilters } from "@/lib/hooks/useSpotFilters";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { searchSpotsSmart } from "@/lib/utils/smart-search";
 import { calculateOpenStatus } from "@/lib/utils/opening-hours";
-import { LayoutGrid, List, Map, ChevronDown } from "lucide-react";
+import { useNow } from "@/lib/hooks/useNow";
+import { LayoutGrid, List, Map as MapIcon, ChevronDown } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { SpotGrid } from "./SpotGrid";
 import { SpotList } from "./SpotList";
@@ -41,33 +42,35 @@ export function SpotFeedExplorer({
 
   const { bookmarks, bookmarkCount } = useBookmarks();
   const debouncedQ = useDebounce(q, 250);
+  const now = useNow();
 
-  // Status operasional dinamis mengikuti waktu pengguna saat ini di sisi klien
-  const [liveSpots, setLiveSpots] = useState<SpotListItemDTO[]>(allSpots);
+  const statusBySlug = useMemo(() => {
+    const statuses = new Map<
+      string,
+      ReturnType<typeof calculateOpenStatus>
+    >();
+    if (!now) return statuses;
 
-  useEffect(() => {
-    const now = new Date();
-    setLiveSpots(
-      allSpots.map((spot) => {
-        if (!spot.openingHours) return spot;
-        const status = calculateOpenStatus(
+    for (const spot of allSpots) {
+      if (!spot.openingHours) continue;
+      statuses.set(
+        spot.slug,
+        calculateOpenStatus(
           spot.openingHours,
           spot.lifecycleStatus,
           now,
           spot.hasFridayPrayerBreak
-        );
-        return {
-          ...spot,
-          isOpenNow: status.isOpenNow,
-          statusLabel: status.statusLabel,
-        };
-      })
-    );
-  }, [allSpots]);
+        )
+      );
+    }
+
+    return statuses;
+  }, [allSpots, now]);
+  const statusPending = openNow && !now;
 
   // Filter spots menggunakan mesin pencarian pintar & status filter
   const filteredSpots = useMemo(() => {
-    let result = liveSpots;
+    let result = allSpots;
 
     // Filter kategori
     if (category && category !== "all") {
@@ -81,7 +84,9 @@ export function SpotFeedExplorer({
 
     // Filter buka sekarang
     if (openNow) {
-      result = result.filter((s) => s.isOpenNow);
+      result = result.filter(
+        (s) => statusBySlug.get(s.slug)?.isOpenNow === true
+      );
     }
 
     // Filter daftar tersimpan offline
@@ -95,7 +100,16 @@ export function SpotFeedExplorer({
     }
 
     return result;
-  }, [liveSpots, debouncedQ, category, regency, openNow, savedOnly, bookmarks]);
+  }, [
+    allSpots,
+    statusBySlug,
+    debouncedQ,
+    category,
+    regency,
+    openNow,
+    savedOnly,
+    bookmarks,
+  ]);
 
   const activeFilterCount =
     (category !== "all" && Boolean(category) ? 1 : 0) +
@@ -104,12 +118,19 @@ export function SpotFeedExplorer({
     (savedOnly ? 1 : 0);
 
   const PAGE_SIZE = 9;
-  const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
-
-  // Reset pagination saat filter atau query pencarian berubah
-  useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [debouncedQ, category, regency, openNow, savedOnly]);
+  const filterKey = JSON.stringify([
+    debouncedQ,
+    category,
+    regency,
+    openNow,
+    savedOnly,
+  ]);
+  const [pagination, setPagination] = useState({
+    key: filterKey,
+    count: PAGE_SIZE,
+  });
+  const visibleCount =
+    pagination.key === filterKey ? pagination.count : PAGE_SIZE;
 
   // Slicing data khusus untuk tampilan feed daftar/grid
   const paginatedSpots = useMemo(() => {
@@ -133,7 +154,7 @@ export function SpotFeedExplorer({
         savedOnly={savedOnly}
         onToggleSaved={setSavedOnly}
         bookmarkCount={bookmarkCount}
-        totalFilteredSpots={filteredSpots.length}
+        totalFilteredSpots={statusPending ? allSpots.length : filteredSpots.length}
       />
 
       {/* Konten Utama: Mode Daftar vs Peta */}
@@ -180,7 +201,7 @@ export function SpotFeedExplorer({
               role="tab"
               aria-selected={view === "grid"}
               onClick={() => setView("grid")}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-11 cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                 view === "grid"
                   ? "bg-text-primary text-canvas shadow-xs"
                   : "text-text-muted hover:text-text-primary hover:bg-canvas"
@@ -195,7 +216,7 @@ export function SpotFeedExplorer({
               role="tab"
               aria-selected={view === "list"}
               onClick={() => setView("list")}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-11 cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                 view === "list"
                   ? "bg-text-primary text-canvas shadow-xs"
                   : "text-text-muted hover:text-text-primary hover:bg-canvas"
@@ -210,19 +231,28 @@ export function SpotFeedExplorer({
               role="tab"
               aria-selected={view === "map"}
               onClick={() => setView("map")}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-[36px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-11 cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                 view === "map"
                   ? "bg-text-primary text-canvas shadow-xs"
                   : "text-text-muted hover:text-text-primary hover:bg-canvas"
               }`}
             >
-              <Map className="w-3.5 h-3.5" aria-hidden="true" />
+              <MapIcon className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Peta</span>
             </button>
           </div>
         </div>
 
-        {view === "map" ? (
+        {statusPending ? (
+          <div className="py-12 text-center" role="status">
+            <p className="text-sm font-medium text-text-primary">
+              Memeriksa tempat yang buka sekarang...
+            </p>
+            <p className="mt-1 text-xs text-text-muted">
+              Status mengikuti jam WIB.
+            </p>
+          </div>
+        ) : view === "map" ? (
           /* Tampilan Peta Interaktif MapLibre GL */
           <div className="py-2">
             <SpotMapLazy spots={filteredSpots} />
@@ -240,7 +270,12 @@ export function SpotFeedExplorer({
               <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2.5">
                 <button
                   type="button"
-                  onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
+                  onClick={() =>
+                    setPagination({
+                      key: filterKey,
+                      count: visibleCount + PAGE_SIZE,
+                    })
+                  }
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-text-primary bg-surface hover:bg-canvas border border-border hover:border-accent-terracotta rounded-button transition-colors shadow-xs min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
                   aria-label={`Muat ${Math.min(PAGE_SIZE, filteredSpots.length - visibleCount)} tempat lagi`}
                 >

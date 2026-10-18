@@ -109,7 +109,7 @@ export interface SpotEntity {
   logisticsNotice?: TransitLogisticsNotice;
 }
 
-// Data Transfer Object: Marker Ringan Peta (< 15 KB payload)
+// Data Transfer Object: Marker peta dengan jadwal untuk status live di client
 export interface SpotMapMarkerDTO {
   id: string;
   name: string;
@@ -119,8 +119,8 @@ export interface SpotMapMarkerDTO {
   latitude: number;
   longitude: number;
   priceRange: PriceRange;
-  isOpenNow: boolean;
-  statusLabel: string;
+  openingHours: WeeklyOpeningHours;
+  hasFridayPrayerBreak?: boolean;
 }
 
 // Data Transfer Object: Kartu Feed Grid
@@ -143,8 +143,6 @@ export interface SpotListItemDTO {
   googleMapsIntentUrl: string;
   instagramAccount?: string;
   lifecycleStatus: LifecycleStatus;
-  isOpenNow: boolean;
-  statusLabel: string;
   hasFridayPrayerBreak?: boolean;
   facilities: Facility[];
   vibeTags: string[];

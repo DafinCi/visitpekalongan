@@ -1,8 +1,5 @@
 import { CATEGORIES, SPOTS_DATA } from "@/data/spots";
-import {
-  calculateOpenStatus,
-  getGoogleMapsIntentUrl,
-} from "@/lib/utils/opening-hours";
+import { getGoogleMapsIntentUrl } from "@/lib/utils/opening-hours";
 import {
   SpotCategory,
   SpotDetailDTO,
@@ -28,12 +25,6 @@ export class LocalSpotRepository implements SpotRepository {
 
     return spots.map((spot) => {
       const category = CATEGORIES.find((c) => c.id === spot.categoryId);
-      const openStatus = calculateOpenStatus(
-        spot.openingHours,
-        spot.lifecycleStatus,
-        undefined,
-        spot.hasFridayPrayerBreak
-      );
 
       return {
         id: spot.id,
@@ -44,8 +35,8 @@ export class LocalSpotRepository implements SpotRepository {
         latitude: spot.latitude,
         longitude: spot.longitude,
         priceRange: spot.priceRange,
-        isOpenNow: openStatus.isOpenNow,
-        statusLabel: openStatus.statusLabel,
+        openingHours: spot.openingHours,
+        hasFridayPrayerBreak: spot.hasFridayPrayerBreak,
       };
     });
   }
@@ -55,12 +46,6 @@ export class LocalSpotRepository implements SpotRepository {
 
     return spots.map((spot) => {
       const category = CATEGORIES.find((c) => c.id === spot.categoryId);
-      const openStatus = calculateOpenStatus(
-        spot.openingHours,
-        spot.lifecycleStatus,
-        undefined,
-        spot.hasFridayPrayerBreak
-      );
 
       return {
         id: spot.id,
@@ -81,8 +66,6 @@ export class LocalSpotRepository implements SpotRepository {
         googleMapsIntentUrl: getGoogleMapsIntentUrl(spot.latitude, spot.longitude),
         instagramAccount: spot.instagramAccount,
         lifecycleStatus: spot.lifecycleStatus,
-        isOpenNow: openStatus.isOpenNow,
-        statusLabel: openStatus.statusLabel,
         hasFridayPrayerBreak: spot.hasFridayPrayerBreak,
         facilities: spot.facilities,
         vibeTags: [category?.name || "", spot.regency === "kota" ? "Kota" : "Pegunungan"],
@@ -101,12 +84,6 @@ export class LocalSpotRepository implements SpotRepository {
     }
 
     const category = CATEGORIES.find((c) => c.id === spot.categoryId);
-    const openStatus = calculateOpenStatus(
-      spot.openingHours,
-      spot.lifecycleStatus,
-      undefined,
-      spot.hasFridayPrayerBreak
-    );
 
     return {
       id: spot.id,
@@ -124,8 +101,6 @@ export class LocalSpotRepository implements SpotRepository {
       googleMapsIntentUrl: getGoogleMapsIntentUrl(spot.latitude, spot.longitude),
       instagramAccount: spot.instagramAccount,
       lifecycleStatus: spot.lifecycleStatus,
-      isOpenNow: openStatus.isOpenNow,
-      statusLabel: openStatus.statusLabel,
       hasFridayPrayerBreak: spot.hasFridayPrayerBreak,
       facilities: spot.facilities,
       vibeTags: [category?.name || "", spot.regency === "kota" ? "Kota" : "Pegunungan"],
@@ -177,14 +152,6 @@ export class LocalSpotRepository implements SpotRepository {
     // Filter teritori (regency: kota | kabupaten)
     if (filter.regency) {
       result = result.filter((s) => s.regency === filter.regency);
-    }
-
-    // Filter buka sekarang
-    if (filter.openNow) {
-      result = result.filter((s) => {
-        const status = calculateOpenStatus(s.openingHours, s.lifecycleStatus);
-        return status.isOpenNow;
-      });
     }
 
     return result;

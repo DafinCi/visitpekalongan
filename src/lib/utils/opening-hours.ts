@@ -1,4 +1,9 @@
-import { DayOfWeek, LifecycleStatus, WeeklyOpeningHours } from "@/types/spot";
+import type {
+  DayOfWeek,
+  LifecycleStatus,
+  TimeSlot,
+  WeeklyOpeningHours,
+} from "../../types/spot";
 
 const DAYS_ORDER: DayOfWeek[] = [
   "sunday",
@@ -10,50 +15,56 @@ const DAYS_ORDER: DayOfWeek[] = [
   "saturday",
 ];
 
-const DAY_LABELS_ID: Record<DayOfWeek, string> = {
-  sunday: "Minggu",
-  monday: "Senin",
-  tuesday: "Selasa",
-  wednesday: "Rabu",
-  thursday: "Kamis",
-  friday: "Jumat",
-  saturday: "Sabtu",
-};
+export type OpenStatusKind =
+  | "open"
+  | "closed"
+  | "friday_break"
+  | "temporarily_closed"
+  | "permanently_closed";
+
+export interface OpenNextChange {
+  action: "open" | "close";
+  time: string;
+  day: "today" | "tomorrow";
+}
 
 export interface OpenStatusResult {
   isOpenNow: boolean;
-  statusLabel: string;
+  kind: OpenStatusKind;
+  nextChange: OpenNextChange | null;
 }
 
-// Tanggal acuan deterministik untuk static prerender Next.js agar build SSG stabil (Senin 10:00 WIB)
-const STATIC_PRERENDER_DATE = new Date("2026-03-02T10:00:00+07:00");
+export interface OpenStatusCopy {
+  stateLabel: string;
+  detailLabel: string | null;
+  compactLabel: string;
+  cardLabel: string;
+}
 
 /**
  * Mendapatkan representasi waktu WIB (UTC+7) dalam bentuk string HH:mm dan nama hari.
  */
-function getWIBDateTime(date?: Date): {
+function getWIBDateTime(date: Date): {
   currentDay: DayOfWeek;
   yesterdayDay: DayOfWeek;
-  currentTimeString: string;
+  currentMinutes: number;
 } {
-  const targetDate =
-    date ?? (typeof window === "undefined" ? STATIC_PRERENDER_DATE : new Date());
-
-  // Buat formatter zona waktu Asia/Jakarta (WIB)
-  const formatter = new Intl.DateTimeFormat("en-US", {
+  const formatter = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Jakarta",
+    hourCycle: "h23",
     hour: "2-digit",
     minute: "2-digit",
-    hour12: false,
     weekday: "long",
   });
 
-  const parts = formatter.formatToParts(targetDate);
+  const parts = formatter.formatToParts(date);
   const hour = parts.find((p) => p.type === "hour")?.value || "00";
   const minute = parts.find((p) => p.type === "minute")?.value || "00";
   const weekday = (parts.find((p) => p.type === "weekday")?.value || "Sunday").toLowerCase();
 
-  const currentDay = weekday as DayOfWeek;
+  const currentDay = (
+    DAYS_ORDER.includes(weekday as DayOfWeek) ? weekday : "sunday"
+  ) as DayOfWeek;
   const currentIndex = DAYS_ORDER.indexOf(currentDay);
   const yesterdayIndex = (currentIndex - 1 + 7) % 7;
   const yesterdayDay = DAYS_ORDER[yesterdayIndex];
@@ -61,8 +72,31 @@ function getWIBDateTime(date?: Date): {
   return {
     currentDay,
     yesterdayDay,
-    currentTimeString: `${hour}:${minute}`,
+    currentMinutes: Number(hour) * 60 + Number(minute),
   };
+}
+
+export function getWIBDay(date: Date): DayOfWeek {
+  return getWIBDateTime(date).currentDay;
+}
+
+function timeToMinutes(time: string): number {
+  const [hour, minute] = time.split(":").map(Number);
+  return hour * 60 + minute;
+}
+
+function sortSlots(slots: TimeSlot[]): TimeSlot[] {
+  return [...slots].sort(
+    (a, b) => timeToMinutes(a.open) - timeToMinutes(b.open)
+  );
+}
+
+function getFirstOpenTime(schedule: WeeklyOpeningHours, day: DayOfWeek): string | null {
+  const daySchedule = schedule[day];
+  if (!daySchedule || daySchedule.is_closed || daySchedule.slots.length === 0) {
+    return null;
+  }
+  return sortSlots(daySchedule.slots)[0]?.open ?? null;
 }
 
 /**
@@ -72,116 +106,174 @@ function getWIBDateTime(date?: Date): {
 export function calculateOpenStatus(
   schedule: WeeklyOpeningHours,
   lifecycleStatus: LifecycleStatus = "active",
-  referenceDate?: Date,
+  referenceDate: Date,
   hasFridayPrayerBreak = false
 ): OpenStatusResult {
   if (lifecycleStatus === "temporarily_closed") {
     return {
       isOpenNow: false,
-      statusLabel: "Tutup Sementara",
+      kind: "temporarily_closed",
+      nextChange: null,
     };
   }
 
   if (lifecycleStatus === "permanently_closed") {
     return {
       isOpenNow: false,
-      statusLabel: "Tutup Permanen",
+      kind: "permanently_closed",
+      nextChange: null,
     };
   }
 
-  const dateToEvaluate =
-    referenceDate ?? (typeof window === "undefined" ? STATIC_PRERENDER_DATE : new Date());
-  const { currentDay, yesterdayDay, currentTimeString } = getWIBDateTime(dateToEvaluate);
+  const { currentDay, yesterdayDay, currentMinutes } =
+    getWIBDateTime(referenceDate);
+  const todayIndex = DAYS_ORDER.indexOf(currentDay);
+  const tomorrowDay = DAYS_ORDER[(todayIndex + 1) % 7];
 
-  // Cek jeda ibadah Sholat Jumat (khusus hari Jumat pukul 11:30 - 13:00 WIB)
-  if (
-    hasFridayPrayerBreak &&
-    currentDay === "friday" &&
-    currentTimeString >= "11:30" &&
-    currentTimeString < "13:00"
-  ) {
-    return {
-      isOpenNow: false,
-      statusLabel: "Jeda Sholat Jumat, buka 13:00",
-    };
-  }
-
-  // 1. Cek luapan shift kemarin malam yang melewati tengah malam (misal buka 19:00, tutup 02:30)
   const yesterdaySchedule = schedule[yesterdayDay];
   if (yesterdaySchedule && !yesterdaySchedule.is_closed) {
     for (const slot of yesterdaySchedule.slots) {
-      if (slot.close < slot.open) {
-        // Shift melewati tengah malam
-        if (currentTimeString < slot.close) {
-          return {
-            isOpenNow: true,
-            statusLabel: `Buka hingga ${slot.close}`,
-          };
-        }
+      const openMinutes = timeToMinutes(slot.open);
+      const closeMinutes = timeToMinutes(slot.close);
+      if (closeMinutes < openMinutes && currentMinutes < closeMinutes) {
+        return {
+          isOpenNow: true,
+          kind: "open",
+          nextChange: {
+            action: "close",
+            time: slot.close,
+            day: "today",
+          },
+        };
       }
     }
   }
 
-  // 2. Cek slot jadwal aktif hari ini
   const todaySchedule = schedule[currentDay];
-  if (!todaySchedule || todaySchedule.is_closed || todaySchedule.slots.length === 0) {
-    return {
-      isOpenNow: false,
-      statusLabel: "Tutup hari ini",
-    };
-  }
+  const todaySlots =
+    todaySchedule && !todaySchedule.is_closed
+      ? sortSlots(todaySchedule.slots)
+      : [];
 
-  let nextSlotToday: string | null = null;
+  for (const slot of todaySlots) {
+    const openMinutes = timeToMinutes(slot.open);
+    const closeMinutes = timeToMinutes(slot.close);
 
-  for (const slot of todaySchedule.slots) {
-    // Kasus A: Jam operasional standar dalam satu hari yang sama (misal 08:00 s.d. 22:00)
-    if (slot.close > slot.open) {
-      if (currentTimeString >= slot.open && currentTimeString < slot.close) {
+    if (closeMinutes > openMinutes) {
+      if (currentMinutes >= openMinutes && currentMinutes < closeMinutes) {
         return {
           isOpenNow: true,
-          statusLabel: `Buka hingga ${slot.close}`,
+          kind: "open",
+          nextChange: {
+            action: "close",
+            time: slot.close,
+            day: "today",
+          },
         };
       }
-      if (currentTimeString < slot.open && !nextSlotToday) {
-        nextSlotToday = slot.open;
-      }
-    } else {
-      // Kasus B: Shift dimulai hari ini dan berakhir dini hari besok (misal 18:30 s.d. 02:00)
-      if (currentTimeString >= slot.open) {
-        return {
-          isOpenNow: true,
-          statusLabel: `Buka hingga ${slot.close}`,
-        };
-      }
-      if (currentTimeString < slot.open && !nextSlotToday) {
-        nextSlotToday = slot.open;
-      }
+    } else if (currentMinutes >= openMinutes) {
+      return {
+        isOpenNow: true,
+        kind: "open",
+        nextChange: {
+          action: "close",
+          time: slot.close,
+          day: "tomorrow",
+        },
+      };
     }
   }
+
+  const nextSlotToday = todaySlots.find(
+    (slot) => timeToMinutes(slot.open) > currentMinutes
+  );
 
   if (nextSlotToday) {
+    const breakStarts = timeToMinutes("11:15");
+    const isFridayBreak =
+      hasFridayPrayerBreak &&
+      currentDay === "friday" &&
+      currentMinutes >= breakStarts &&
+      timeToMinutes(nextSlotToday.open) >= timeToMinutes("13:00");
+
     return {
       isOpenNow: false,
-      statusLabel: `Tutup, buka ${nextSlotToday}`,
+      kind: isFridayBreak ? "friday_break" : "closed",
+      nextChange: {
+        action: "open",
+        time: nextSlotToday.open,
+        day: "today",
+      },
     };
   }
 
-  // Jika semua slot hari ini sudah lewat, cari jadwal besok
-  const todayIndex = DAYS_ORDER.indexOf(currentDay);
-  const tomorrowDay = DAYS_ORDER[(todayIndex + 1) % 7];
-  const tomorrowSchedule = schedule[tomorrowDay];
-
-  if (tomorrowSchedule && !tomorrowSchedule.is_closed && tomorrowSchedule.slots.length > 0) {
+  const tomorrowOpen = getFirstOpenTime(schedule, tomorrowDay);
+  if (tomorrowOpen) {
     return {
       isOpenNow: false,
-      statusLabel: `Tutup, buka besok ${tomorrowSchedule.slots[0].open}`,
+      kind: "closed",
+      nextChange: {
+        action: "open",
+        time: tomorrowOpen,
+        day: "tomorrow",
+      },
     };
   }
 
   return {
     isOpenNow: false,
-    statusLabel: "Tutup",
+    kind: "closed",
+    nextChange: null,
   };
+}
+
+export function formatOpenStatus(status: OpenStatusResult): OpenStatusCopy {
+  const next = status.nextChange;
+  const nextLabel =
+    next === null
+      ? null
+      : `${next.action === "open" ? "Buka" : "Tutup"} ${next.time} WIB${
+          next.day === "tomorrow" ? " besok" : ""
+        }`;
+
+  switch (status.kind) {
+    case "open":
+      return {
+        stateLabel: "Buka sekarang",
+        detailLabel: nextLabel,
+        compactLabel: "Buka",
+        cardLabel: "Buka",
+      };
+    case "friday_break":
+      return {
+        stateLabel: "Jeda salat Jumat",
+        detailLabel: next ? `Buka lagi ${next.time} WIB` : null,
+        compactLabel: "Jeda Jumat",
+        cardLabel: next ? `Jeda Jumat · ${next.time}` : "Jeda Jumat",
+      };
+    case "temporarily_closed":
+      return {
+        stateLabel: "Tutup sementara",
+        detailLabel: null,
+        compactLabel: "Tutup sementara",
+        cardLabel: "Tutup sementara",
+      };
+    case "permanently_closed":
+      return {
+        stateLabel: "Tutup permanen",
+        detailLabel: null,
+        compactLabel: "Tutup permanen",
+        cardLabel: "Tutup permanen",
+      };
+    case "closed":
+    default:
+      return {
+        stateLabel: "Tutup sekarang",
+        detailLabel: nextLabel,
+        compactLabel: "Tutup",
+        cardLabel: next ? `Tutup · ${next.time}` : "Tutup",
+      };
+  }
 }
 
 /**

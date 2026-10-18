@@ -96,7 +96,7 @@ export function Header({
             {backUrl && (
               <Link
                 href={backUrl}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-text-primary hover:text-accent-terracotta bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-[38px] sm:min-h-[40px] focus-visible:outline-2 focus-visible:outline-border-focus"
+                className="inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-text-primary hover:text-accent-terracotta bg-surface-pure hover:bg-canvas border border-border rounded-button transition-colors min-h-11 min-w-11 sm:min-h-10 focus-visible:outline-2 focus-visible:outline-border-focus"
                 aria-label={backLabel}
                 title={backLabel}
               >
@@ -107,18 +107,28 @@ export function Header({
 
             <Link
               href="/"
-              className="flex items-baseline group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
+              aria-label="VisitPekalongan, kembali ke beranda"
+              className="flex min-h-11 items-center group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
             >
-              <span className="font-serif text-base sm:text-2xl tracking-tight text-text-primary group-hover:text-accent-terracotta transition-colors">
+              <span
+                className={`${
+                  showSearch ? "hidden sm:inline" : "inline"
+                } font-serif text-base sm:text-2xl tracking-tight text-text-primary group-hover:text-accent-terracotta transition-colors`}
+              >
                 VisitPekalongan
               </span>
+              {showSearch && (
+                <span className="sm:hidden font-serif text-base tracking-tight text-text-primary group-hover:text-accent-terracotta transition-colors">
+                  Visit
+                </span>
+              )}
             </Link>
           </div>
 
           {/* Tengah: Search & Filter Pill Terpadu (Hanya muncul jika mode showSearch aktif) */}
           {showSearch && onSearchChange && (
             <div className="relative w-full">
-              <div className="relative flex items-center bg-surface-pure border border-border focus-within:border-border-focus  focus-within:ring-border-focus rounded-button transition-all h-9 sm:h-10 shadow-2xs">
+              <div className="relative flex items-center bg-surface-pure border border-border focus-within:border-border-focus focus-within:ring-border-focus rounded-button transition-all h-11 sm:h-10 shadow-2xs">
                 <Search
                   className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-text-subtle ml-2.5 sm:ml-3 shrink-0"
                   aria-hidden="true"
@@ -144,7 +154,7 @@ export function Header({
                     type="button"
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => onSearchChange("")}
-                    className="p-1 text-text-muted hover:text-text-primary rounded-sm mr-1 cursor-pointer shrink-0"
+                    className="flex min-h-11 min-w-11 items-center justify-center text-text-muted hover:text-text-primary rounded-sm cursor-pointer shrink-0"
                     aria-label="Bersihkan pencarian"
                   >
                     <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -161,7 +171,7 @@ export function Header({
                 <button
                   type="button"
                   onClick={() => setIsFilterDrawerOpen(true)}
-                  className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 h-full rounded-r-button text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
+                  className={`inline-flex min-w-11 items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 h-full rounded-r-button text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
                     activeFilterCount > 0
                       ? "text-accent-terracotta bg-accent-terracotta/10 hover:bg-accent-terracotta/20 font-bold"
                       : "text-text-secondary hover:text-text-primary hover:bg-canvas"
@@ -196,7 +206,7 @@ export function Header({
                       type="button"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => clearRecentSearches()}
-                      className="inline-flex items-center gap-1 text-[11px] text-text-muted hover:text-accent-terracotta cursor-pointer transition-colors"
+                      className="inline-flex min-h-11 items-center gap-1 text-[11px] text-text-muted hover:text-accent-terracotta cursor-pointer transition-colors"
                     >
                       <Trash2 className="w-3 h-3" aria-hidden="true" />
                       <span>Hapus Semua</span>
@@ -229,7 +239,7 @@ export function Header({
                           type="button"
                           onMouseDown={(e) => e.preventDefault()}
                           onClick={() => removeRecentSearch(item)}
-                          className="p-1 text-text-muted hover:text-text-primary rounded-sm cursor-pointer shrink-0 ml-2"
+                          className="ml-2 flex min-h-11 min-w-11 items-center justify-center text-text-muted hover:text-text-primary rounded-sm cursor-pointer shrink-0"
                           aria-label={`Hapus riwayat pencarian ${item}`}
                         >
                           <X className="w-3 h-3" />
@@ -270,7 +280,7 @@ export function Header({
             {/* Tombol Lapor Hidden Gem Komunitas */}
             <Link
               href="/lapor"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-canvas bg-accent-terracotta hover:bg-accent-terracotta/90 rounded-button shadow-xs transition-colors cursor-pointer min-h-[40px] sm:min-h-[44px] focus-visible:outline-2 focus-visible:outline-border-focus"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-canvas bg-accent-terracotta hover:bg-accent-terracotta/90 rounded-button shadow-xs transition-colors cursor-pointer min-h-11 focus-visible:outline-2 focus-visible:outline-border-focus"
               aria-label="Buka formulir Lapor Hidden Gem"
             >
               <Plus className="w-3.5 h-3.5" aria-hidden="true" />

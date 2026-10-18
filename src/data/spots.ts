@@ -1,7 +1,8 @@
-import {
+import type {
   SpotCategory,
   SpotEntity,
   SpotTag,
+  TimeSlot,
   WeeklyOpeningHours,
 } from "@/types/spot";
 
@@ -78,21 +79,27 @@ function makeDailySchedule(
   return result;
 }
 
-// Jadwal khusus warung makan dengan jeda Sholat Jumat
-function makeFoodScheduleWithFridayBreak(
+// Jumat dipecah menjadi dua slot agar tabel dan status memakai jadwal yang sama
+function makeScheduleWithFridayBreak(
   open: string,
   close: string
 ): WeeklyOpeningHours {
   const schedule = makeDailySchedule(open, close);
-  // Khusus Jumat dibuat 2 slot: sebelum dan sesudah Sholat Jumat
+  const fridaySlots: TimeSlot[] = [];
+
+  if (open < "11:15" && close > "11:15") {
+    fridaySlots.push({ open, close: "11:15" });
+  }
+  if (close > "13:00") {
+    fridaySlots.push({ open: "13:00", close });
+  }
+
   schedule.friday = {
-    slots: [
-      { open: open, close: "11:15" },
-      { open: "13:00", close: close },
-    ],
+    slots: fridaySlots.length > 0 ? fridaySlots : [{ open, close }],
     is_closed: false,
   };
-  schedule.notes = "Jumat tutup sejenak pukul 11:15 hingga 13:00 untuk ibadah Sholat Jumat";
+  schedule.notes =
+    "Jumat tutup sejenak pukul 11:15 hingga 13:00 untuk ibadah salat Jumat";
   return schedule;
 }
 
@@ -115,7 +122,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Soto+Tauto+H+Rochmani+Pekalongan",
     instagramAccount: "tautorochmani",
     priceRange: "terjangkau",
-    openingHours: makeFoodScheduleWithFridayBreak("08:00", "16:30"),
+    openingHours: makeScheduleWithFridayBreak("08:00", "16:30"),
     hasFridayPrayerBreak: true,
     facilities: ["car_parking", "motorcycle_parking", "prayer_room"],
     coverImageUrl:
@@ -171,7 +178,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsUrl: "https://maps.google.com/?q=-6.8852,109.6645",
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Nasi+Megono+Ibu+Entun+Pekalongan",
     priceRange: "murah_meriah",
-    openingHours: makeFoodScheduleWithFridayBreak("06:00", "13:00"),
+    openingHours: makeScheduleWithFridayBreak("06:00", "13:00"),
     hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking"],
     coverImageUrl:
@@ -200,7 +207,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Garang+Asem+H+Masduki+Pekalongan",
     instagramAccount: "garangasemmasduki",
     priceRange: "terjangkau",
-    openingHours: makeDailySchedule("07:30", "21:00"),
+    openingHours: makeScheduleWithFridayBreak("07:30", "21:00"),
     hasFridayPrayerBreak: true,
     facilities: ["air_conditioned", "car_parking", "motorcycle_parking", "prayer_room"],
     coverImageUrl:
@@ -273,7 +280,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Selasar+Kauman+Pekalongan",
     instagramAccount: "selasarkauman",
     priceRange: "terjangkau",
-    openingHours: makeDailySchedule("08:30", "22:00"),
+    openingHours: makeScheduleWithFridayBreak("08:30", "22:00"),
     hasFridayPrayerBreak: true,
     facilities: ["wifi", "power_plug", "air_conditioned", "outdoor_smoking", "prayer_room"],
     coverImageUrl:
@@ -459,7 +466,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Kampung+Batik+Pesindon+Pekalongan",
     instagramAccount: "kampungbatikpesindon",
     priceRange: "murah_meriah",
-    openingHours: makeDailySchedule("08:00", "18:00"),
+    openingHours: makeScheduleWithFridayBreak("08:00", "18:00"),
     hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking", "scenic_view"],
     coverImageUrl:
@@ -487,7 +494,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsUrl: "https://maps.google.com/?q=-6.8889,109.6675",
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Kampung+Batik+Kauman+Pekalongan",
     priceRange: "terjangkau",
-    openingHours: makeDailySchedule("08:30", "17:00"),
+    openingHours: makeScheduleWithFridayBreak("08:30", "17:00"),
     hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking"],
     coverImageUrl:
@@ -516,7 +523,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Nasi+Uwet+H+Zarkasi+Pekalongan",
     instagramAccount: "nasiuwethzarkasi",
     priceRange: "terjangkau",
-    openingHours: makeFoodScheduleWithFridayBreak("06:30", "14:00"),
+    openingHours: makeScheduleWithFridayBreak("06:30", "14:00"),
     hasFridayPrayerBreak: true,
     facilities: ["car_parking", "motorcycle_parking"],
     coverImageUrl:
@@ -544,7 +551,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsUrl: "https://maps.google.com/?q=-6.8945,109.6820",
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Tauto+Klego+Pak+Wan+Pekalongan",
     priceRange: "murah_meriah",
-    openingHours: makeFoodScheduleWithFridayBreak("09:00", "16:00"),
+    openingHours: makeScheduleWithFridayBreak("09:00", "16:00"),
     hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking"],
     coverImageUrl:
@@ -599,7 +606,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Kapeen+Coffee+Pekalongan",
     instagramAccount: "kapeencoffee",
     priceRange: "terjangkau",
-    openingHours: makeDailySchedule("09:00", "23:00"),
+    openingHours: makeScheduleWithFridayBreak("09:00", "23:00"),
     hasFridayPrayerBreak: true,
     facilities: ["wifi", "power_plug", "air_conditioned", "prayer_room", "motorcycle_parking"],
     coverImageUrl:
@@ -628,7 +635,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Selaras+Space+Pekalongan",
     instagramAccount: "selarasspace",
     priceRange: "terjangkau",
-    openingHours: makeDailySchedule("10:00", "23:00"),
+    openingHours: makeScheduleWithFridayBreak("10:00", "23:00"),
     hasFridayPrayerBreak: true,
     facilities: ["wifi", "power_plug", "outdoor_smoking", "motorcycle_parking"],
     coverImageUrl:
@@ -658,7 +665,6 @@ export const SPOTS_DATA: SpotEntity[] = [
     instagramAccount: "kopilawekajen",
     priceRange: "murah_meriah",
     openingHours: makeDailySchedule("13:00", "23:30"),
-    hasFridayPrayerBreak: true,
     facilities: ["outdoor_smoking", "motorcycle_parking", "car_parking"],
     coverImageUrl:
       "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000&auto=format&fit=crop",
@@ -918,7 +924,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     longitude: 109.683,
     googleMapsUrl: "https://maps.google.com/?q=-6.8740,109.6830",
     priceRange: "terjangkau",
-    openingHours: makeDailySchedule("08:00", "16:30"),
+    openingHours: makeScheduleWithFridayBreak("08:00", "16:30"),
     hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking"],
     coverImageUrl:
@@ -945,7 +951,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     longitude: 109.658,
     googleMapsUrl: "https://maps.google.com/?q=-6.8980,109.6580",
     priceRange: "murah_meriah",
-    openingHours: makeDailySchedule("08:30", "16:00"),
+    openingHours: makeScheduleWithFridayBreak("08:30", "16:00"),
     hasFridayPrayerBreak: true,
     facilities: ["motorcycle_parking"],
     coverImageUrl:
@@ -973,7 +979,7 @@ export const SPOTS_DATA: SpotEntity[] = [
     googleMapsUrl: "https://maps.google.com/?q=-6.9580,109.6640",
     googleMapsReviewUrl: "https://www.google.com/maps/search/?api=1&query=Batik+Oey+Soe+Tjoen+Kedungwuni+Pekalongan",
     priceRange: "kafe_spesial",
-    openingHours: makeDailySchedule("09:00", "16:00"),
+    openingHours: makeScheduleWithFridayBreak("09:00", "16:00"),
     hasFridayPrayerBreak: true,
     facilities: ["car_parking", "motorcycle_parking"],
     coverImageUrl:

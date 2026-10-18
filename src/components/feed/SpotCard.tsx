@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { SpotListItemDTO } from "@/types/spot";
 import { formatDistrict, formatPriceRange, formatRegency } from "@/lib/utils/formatters";
+import { formatOpenStatus } from "@/lib/utils/opening-hours";
+import { useOpenStatus } from "@/lib/hooks/useOpenStatus";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -42,6 +44,14 @@ interface SpotCardProps {
 
 export function SpotCard({ spot }: SpotCardProps) {
   const { isBookmarked, toggleBookmark } = useBookmarks();
+  const openStatus = useOpenStatus(
+    spot.openingHours,
+    spot.lifecycleStatus,
+    spot.hasFridayPrayerBreak
+  );
+  const statusCopy = openStatus ? formatOpenStatus(openStatus) : null;
+  const isOpen = openStatus?.isOpenNow ?? false;
+  const isTemporarilyClosed = spot.lifecycleStatus === "temporarily_closed";
   const saved = isBookmarked(spot.slug);
   const [copied, setCopied] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
@@ -143,30 +153,31 @@ export function SpotCard({ spot }: SpotCardProps) {
           />
         </Link>
 
-          {/* Lencana Status Operasional (Sudut Kiri Atas) */}
+        {statusCopy && (
           <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 pointer-events-none">
             <div
-              className={`px-2 py-0.5 text-[10px] font-semibold rounded-badge border backdrop-blur-xs flex items-center gap-1.5 ${
-                spot.lifecycleStatus === "temporarily_closed"
+              className={`px-2 py-0.5 text-[11px] font-semibold rounded-badge border backdrop-blur-xs flex items-center gap-1.5 ${
+                isTemporarilyClosed
                   ? "bg-surface/90 text-text-muted border-border"
-                  : spot.isOpenNow
-                  ? "bg-status-open-bg/95 text-status-open-text border-status-open-text/20"
-                  : "bg-status-closed-bg/95 text-status-closed-text border-status-closed-text/20"
+                  : isOpen
+                    ? "bg-status-open-bg/95 text-status-open-text border-status-open-text/20"
+                    : "bg-status-closed-bg/95 text-status-closed-text border-status-closed-text/20"
               }`}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
-                  spot.lifecycleStatus === "temporarily_closed"
+                  isTemporarilyClosed
                     ? "bg-text-muted"
-                    : spot.isOpenNow
-                    ? "bg-status-open-text"
-                    : "bg-status-closed-text"
+                    : isOpen
+                      ? "bg-status-open-text"
+                      : "bg-status-closed-text"
                 }`}
                 aria-hidden="true"
               />
-              <span>{spot.statusLabel}</span>
+              <span>{statusCopy.cardLabel}</span>
             </div>
           </div>
+        )}
 
           {/* Tombol Titik Tiga Kebab Menu (Sudut Kanan Atas) */}
           <div className="absolute top-2.5 right-2.5 z-20" ref={menuRef}>
@@ -177,7 +188,7 @@ export function SpotCard({ spot }: SpotCardProps) {
                 e.stopPropagation();
                 setIsMenuOpen((prev) => !prev);
               }}
-              className="w-8 h-8 rounded-full bg-surface/85 hover:bg-surface border border-border/60 text-text-primary flex items-center justify-center backdrop-blur-xs transition-colors shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
+              className="w-11 h-11 sm:w-9 sm:h-9 rounded-full bg-surface/85 hover:bg-surface border border-border/60 text-text-primary flex items-center justify-center backdrop-blur-xs transition-colors shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
               aria-label={`Menu opsi lainnya untuk ${spot.name}`}
               aria-expanded={isMenuOpen}
               aria-haspopup="true"

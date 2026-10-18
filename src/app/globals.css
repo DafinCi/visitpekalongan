@@ -70,6 +70,7 @@
   --color-status-closed-bg: var(--primitive-brick-subtle);
 
   /* Tipografi */
+  --font-display: var(--font-instrument-serif), Georgia, serif;
   --font-serif: var(--font-instrument-serif), Georgia, serif;
   --font-sans:
     var(--font-plus-jakarta-sans), -apple-system, BlinkMacSystemFont,

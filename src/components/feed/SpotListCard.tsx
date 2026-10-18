@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { SpotListItemDTO } from "@/types/spot";
 import { formatDistrict, formatPriceRange, formatRegency } from "@/lib/utils/formatters";
+import { formatOpenStatus } from "@/lib/utils/opening-hours";
+import { useOpenStatus } from "@/lib/hooks/useOpenStatus";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -41,6 +43,14 @@ interface SpotListCardProps {
 
 export function SpotListCard({ spot }: SpotListCardProps) {
   const { isBookmarked, toggleBookmark } = useBookmarks();
+  const openStatus = useOpenStatus(
+    spot.openingHours,
+    spot.lifecycleStatus,
+    spot.hasFridayPrayerBreak
+  );
+  const statusCopy = openStatus ? formatOpenStatus(openStatus) : null;
+  const isOpen = openStatus?.isOpenNow ?? false;
+  const isTemporarilyClosed = spot.lifecycleStatus === "temporarily_closed";
   const saved = isBookmarked(spot.slug);
   const [copied, setCopied] = useState(false);
   const [addressCopied, setAddressCopied] = useState(false);
@@ -137,19 +147,6 @@ export function SpotListCard({ spot }: SpotListCardProps) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
 
-          {/* Dot Status Operasional Mini pada Thumbnail */}
-          <div className="absolute top-1.5 left-1.5 sm:hidden">
-            <span
-              className={`block w-2.5 h-2.5 rounded-full border border-canvas shadow-xs ${
-                spot.lifecycleStatus === "temporarily_closed"
-                  ? "bg-text-muted"
-                  : spot.isOpenNow
-                  ? "bg-status-open-text"
-                  : "bg-status-closed-text"
-              }`}
-              title={spot.statusLabel}
-            />
-          </div>
         </div>
 
         {/* Konten Teks Informasi */}
@@ -179,28 +176,29 @@ export function SpotListCard({ spot }: SpotListCardProps) {
 
           {/* Baris Meta: Status, Kecamatan, & Rentang Harga */}
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-0.5 text-xs text-text-muted">
-            {/* Lencana Status Operasional di Desktop */}
-            <div
-              className={`hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold rounded-badge border ${
-                spot.lifecycleStatus === "temporarily_closed"
-                  ? "bg-surface text-text-muted border-border"
-                  : spot.isOpenNow
-                  ? "bg-status-open-bg text-status-open-text border-status-open-text/20"
-                  : "bg-status-closed-bg text-status-closed-text border-status-closed-text/20"
-              }`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  spot.lifecycleStatus === "temporarily_closed"
-                    ? "bg-text-muted"
-                    : spot.isOpenNow
-                    ? "bg-status-open-text"
-                    : "bg-status-closed-text"
+            {statusCopy && (
+              <div
+                className={`inline-flex max-w-full items-center gap-1.5 px-2 py-0.5 text-[11px] font-semibold rounded-badge border ${
+                  isTemporarilyClosed
+                    ? "bg-surface text-text-muted border-border"
+                    : isOpen
+                      ? "bg-status-open-bg text-status-open-text border-status-open-text/20"
+                      : "bg-status-closed-bg text-status-closed-text border-status-closed-text/20"
                 }`}
-                aria-hidden="true"
-              />
-              <span>{spot.statusLabel}</span>
-            </div>
+              >
+                <span
+                  className={`w-1.5 h-1.5 shrink-0 rounded-full ${
+                    isTemporarilyClosed
+                      ? "bg-text-muted"
+                      : isOpen
+                        ? "bg-status-open-text"
+                        : "bg-status-closed-text"
+                  }`}
+                  aria-hidden="true"
+                />
+                <span className="whitespace-nowrap">{statusCopy.cardLabel}</span>
+              </div>
+            )}
 
             {/* Kecamatan */}
             <div className="flex items-center gap-1 text-[11px] text-text-muted">
@@ -227,7 +225,7 @@ export function SpotListCard({ spot }: SpotListCardProps) {
               e.stopPropagation();
               setIsMenuOpen((prev) => !prev);
             }}
-            className="w-8 h-8 rounded-button text-text-muted hover:text-text-primary hover:bg-canvas border border-transparent hover:border-border flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
+            className="w-11 h-11 sm:w-9 sm:h-9 rounded-button text-text-muted hover:text-text-primary hover:bg-canvas border border-transparent hover:border-border flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
             aria-label={`Menu opsi lainnya untuk ${spot.name}`}
             aria-expanded={isMenuOpen}
             aria-haspopup="true"
@@ -356,7 +354,7 @@ export function SpotListCard({ spot }: SpotListCardProps) {
             e.stopPropagation();
             toggleBookmark(spot.slug);
           }}
-          className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border rounded-button transition-colors sm:min-h-[44px] sm:min-w-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+          className={`w-11 h-11 sm:w-10 sm:h-10 flex items-center justify-center border rounded-button transition-colors sm:min-h-[44px] sm:min-w-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
             saved
               ? "bg-accent-terracotta/10 border-accent-terracotta/40 text-accent-terracotta"
               : "bg-surface-pure hover:bg-canvas border-border text-text-muted hover:text-text-primary"

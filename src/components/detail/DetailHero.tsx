@@ -28,12 +28,12 @@ export function DetailHero({ spot }: DetailHeroProps) {
         />
 
         {/* Lencana Kategori & Teritori di atas Foto */}
-        <div className="absolute top-4 left-4 flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-canvas/90 backdrop-blur-xs text-text-primary border border-border rounded-button shadow-xs">
+        <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2 sm:top-4 sm:left-4">
+          <span className="inline-flex items-center px-3 py-1 text-[11px] font-semibold bg-canvas/90 backdrop-blur-xs text-text-primary border border-border rounded-button shadow-xs">
             <span>{spot.categoryName}</span>
           </span>
 
-          <span className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium bg-canvas/90 backdrop-blur-xs text-text-muted border border-border rounded-button shadow-xs">
+          <span className="hidden items-center gap-1 px-3 py-1 text-xs font-medium bg-canvas/90 backdrop-blur-xs text-text-muted border border-border rounded-button shadow-xs sm:inline-flex">
             <MapPin className="w-3 h-3 text-text-muted" aria-hidden="true" />
             <span>{formatDistrict(spot.district)}, {formatRegency(spot.regency)}</span>
           </span>

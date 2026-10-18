@@ -351,12 +351,9 @@ export function getRecommendedSpots(
       score += Math.round((sharedFacilities.length / unionSize) * 25);
     }
 
-    // 4. Kesamaan Rentang Harga & Jam Buka (Maks +15 poin)
+    // 4. Kesamaan Rentang Harga (Maks +10 poin)
     if (candidate.priceRange === currentSpot.priceRange) {
       score += 10;
-    }
-    if (candidate.isOpenNow) {
-      score += 5;
     }
 
     // Susun Alasan Rekomendasi yang Jelas & Informatif bagi Pengguna

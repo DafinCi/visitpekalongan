@@ -1,19 +1,17 @@
 export function DetailSkeleton() {
   return (
-    <main className="flex-1 pb-16 animate-pulse">
+    <main className="flex-1 pb-28 sm:pb-16 animate-pulse">
       {/* Hero Image Skeleton */}
       <div className="w-full h-[360px] sm:h-[440px] md:h-[500px] bg-border-subtle" />
 
       {/* Konten Detail Skeleton */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-20 relative z-10">
         <div className="bg-canvas border border-border rounded-card p-6 sm:p-8 space-y-6 shadow-sm">
-          {/* Badge & Title */}
+          {/* Judul, status, alamat */}
           <div className="space-y-3">
-            <div className="flex gap-2">
-              <div className="h-6 w-28 bg-border-subtle rounded-button" />
-              <div className="h-6 w-20 bg-border-subtle rounded-button" />
-            </div>
-            <div className="h-9 sm:h-11 w-3/4 bg-border-subtle rounded-sm" />
+            <div className="h-8 sm:h-11 w-4/5 bg-border-subtle rounded-sm" />
+            <div className="h-16 w-full sm:w-72 bg-border-subtle rounded-card" />
+            <div className="h-4 w-3/4 bg-border-subtle rounded-sm" />
             <div className="h-4 w-1/2 bg-border-subtle rounded-sm" />
           </div>
 

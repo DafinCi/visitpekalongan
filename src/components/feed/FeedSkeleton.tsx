@@ -6,8 +6,8 @@ export function FeedSkeleton() {
         <div className="font-serif text-lg sm:text-2xl text-text-primary shrink-0">
           VisitPekalongan
         </div>
-        <div className="flex-1 max-w-sm sm:max-w-md mx-1 sm:mx-3 h-9 sm:h-10 bg-surface-pure border border-border rounded-button animate-pulse" />
-        <div className="w-10 sm:w-28 h-9 bg-surface border border-border rounded-button animate-pulse shrink-0" />
+        <div className="flex-1 max-w-sm sm:max-w-md mx-1 sm:mx-3 h-11 sm:h-10 bg-surface-pure border border-border rounded-button animate-pulse" />
+        <div className="w-10 sm:w-28 h-11 bg-surface border border-border rounded-button animate-pulse shrink-0" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

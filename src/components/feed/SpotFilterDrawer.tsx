@@ -109,7 +109,7 @@ export function SpotFilterDrawer({
             <button
               type="button"
               onClick={onClose}
-              className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
+              className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-11 min-w-11 flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
               aria-label="Tutup jendela filter"
             >
               <X className="w-5 h-5" />
@@ -224,7 +224,7 @@ export function SpotFilterDrawer({
               <div className="flex items-center gap-2.5 text-left">
                 <span
                   className={`w-2.5 h-2.5 rounded-full ${
-                    openNowOnly ? "bg-accent-sage animate-pulse" : "bg-text-subtle"
+                    openNowOnly ? "bg-accent-sage" : "bg-text-subtle"
                   }`}
                   aria-hidden="true"
                 />

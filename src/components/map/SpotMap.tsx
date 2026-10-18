@@ -13,6 +13,8 @@ import Image from "next/image";
 import { Navigation, ArrowRight, X, MapPin, LocateFixed, Loader2 } from "lucide-react";
 import { SpotListItemDTO } from "@/types/spot";
 import { formatDistrict, formatPriceRange, formatRegency } from "@/lib/utils/formatters";
+import { formatOpenStatus } from "@/lib/utils/opening-hours";
+import { useOpenStatus } from "@/lib/hooks/useOpenStatus";
 import {
   calculateDistanceKm,
   formatDistance,
@@ -35,9 +37,21 @@ export function SpotMap({
   const markersRef = useRef<Marker[]>([]);
   const userMarkerRef = useRef<Marker | null>(null);
 
-  const [activeSpot, setActiveSpot] = useState<SpotListItemDTO | null>(null);
+  const [clickedSpot, setClickedSpot] = useState<SpotListItemDTO | null>(null);
+  const externalSpot = selectedSpotId
+    ? (spots.find((spot) => spot.id === selectedSpotId) ?? null)
+    : null;
+  const activeSpot = selectedSpotId === undefined ? clickedSpot : externalSpot;
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [geoStatus, setGeoStatus] = useState<"idle" | "loading" | "active" | "error">("idle");
+  const activeSpotStatus = useOpenStatus(
+    activeSpot?.openingHours,
+    activeSpot?.lifecycleStatus,
+    activeSpot?.hasFridayPrayerBreak
+  );
+  const activeSpotStatusCopy = activeSpotStatus
+    ? formatOpenStatus(activeSpotStatus)
+    : null;
   const [geoMessage, setGeoMessage] = useState<string | null>(null);
 
   // Inisialisasi Peta MapLibre GL
@@ -88,8 +102,11 @@ export function SpotMap({
       // Buat elemen penanda kustom (Custom HTML Marker)
       const el = document.createElement("button");
       el.type = "button";
-      el.className = "group relative flex items-center justify-center cursor-pointer focus:outline-none";
+      el.className =
+        "group relative flex h-11 w-11 items-center justify-center rounded-full cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus";
       el.setAttribute("aria-label", `Pilih spot ${spot.name}`);
+      el.setAttribute("role", "button");
+      el.setAttribute("tabindex", "0");
 
       // Styling Pin Terakota
       el.innerHTML = `
@@ -102,13 +119,20 @@ export function SpotMap({
       `;
 
       el.addEventListener("click", () => {
-        setActiveSpot(spot);
+        setClickedSpot(spot);
         if (onSelectSpot) onSelectSpot(spot);
         map.flyTo({
           center: [spot.longitude, spot.latitude],
           zoom: Math.max(map.getZoom(), 13),
           duration: 800,
         });
+      });
+
+      el.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          el.click();
+        }
       });
 
       const marker = new Marker({ element: el })
@@ -131,21 +155,15 @@ export function SpotMap({
 
   // Sinkronisasi spotId yang dipilih dari luar
   useEffect(() => {
-    if (!selectedSpotId) {
-      setActiveSpot(null);
-      return;
-    }
+    if (!selectedSpotId) return;
 
     const found = spots.find((s) => s.id === selectedSpotId);
-    if (found) {
-      setActiveSpot(found);
-      if (mapRef.current) {
-        mapRef.current.flyTo({
-          center: [found.longitude, found.latitude],
-          zoom: 14,
-          duration: 800,
-        });
-      }
+    if (found && mapRef.current) {
+      mapRef.current.flyTo({
+        center: [found.longitude, found.latitude],
+        zoom: 14,
+        duration: 800,
+      });
     }
   }, [selectedSpotId, spots]);
 
@@ -237,7 +255,7 @@ export function SpotMap({
           type="button"
           onClick={handleLocateUser}
           disabled={geoStatus === "loading"}
-          className={`pointer-events-auto inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-button border shadow-xs backdrop-blur-xs transition-colors min-h-[40px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
+          className={`pointer-events-auto inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-button border shadow-xs backdrop-blur-xs transition-colors min-h-11 cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
             geoStatus === "active"
               ? "bg-accent-terracotta text-canvas border-accent-terracotta"
               : "bg-canvas/95 text-text-primary border-border hover:bg-surface-pure"
@@ -258,7 +276,7 @@ export function SpotMap({
             <button
               type="button"
               onClick={() => setGeoMessage(null)}
-              className="text-text-muted hover:text-text-primary p-0.5 cursor-pointer"
+              className="flex min-h-11 min-w-11 items-center justify-center text-text-muted hover:text-text-primary cursor-pointer"
               aria-label="Tutup pesan lokasi"
             >
               <X className="w-3 h-3" />
@@ -285,10 +303,10 @@ export function SpotMap({
             <button
               type="button"
               onClick={() => {
-                setActiveSpot(null);
+                setClickedSpot(null);
                 if (onSelectSpot) onSelectSpot(null);
               }}
-              className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
+              className="p-1 text-text-muted hover:text-text-primary rounded-button hover:bg-surface-pure min-h-11 min-w-11 flex items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus cursor-pointer"
               aria-label="Tutup pratinjau tempat"
             >
               <X className="w-4 h-4" />
@@ -310,10 +328,16 @@ export function SpotMap({
               <div className="flex items-center gap-1.5">
                 <span
                   className={`w-2 h-2 rounded-full ${
-                    activeSpot.isOpenNow ? "bg-status-open-text" : "bg-status-closed-text"
+                    activeSpotStatus?.isOpenNow
+                      ? "bg-status-open-text"
+                      : activeSpotStatus
+                        ? "bg-status-closed-text"
+                        : "bg-text-subtle"
                   }`}
                 />
-                <span className="font-medium text-text-primary">{activeSpot.statusLabel}</span>
+                <span className="font-medium text-text-primary">
+                  {activeSpotStatusCopy?.cardLabel ?? "Memeriksa status"}
+                </span>
               </div>
               <p className="text-text-muted">{formatPriceRange(activeSpot.priceRange)}</p>
               <div className="flex items-center gap-1.5 text-text-muted">
