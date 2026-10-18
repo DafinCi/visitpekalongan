@@ -109,9 +109,11 @@ export function Header({
             <Link
               href="/"
               aria-label="VisitPekalongan, kembali ke beranda"
-              className="flex min-h-11 items-center gap-2 group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
+              className={`flex min-h-11 items-center ${
+                showSearch ? "sm:gap-2" : "gap-2"
+              } group focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1`}
             >
-              <BrandLogo className="w-6 h-6 sm:w-7 sm:h-7 text-accent-terracotta shrink-0 group-hover:rotate-45 transition-transform duration-300" />
+              <BrandLogo className="w-7 h-7 sm:w-8 sm:h-8 text-accent-terracotta shrink-0 group-hover:rotate-45 transition-transform duration-300" />
               <span
                 className={`${
                   showSearch ? "hidden sm:inline" : "inline"
@@ -119,11 +121,6 @@ export function Header({
               >
                 VisitPekalongan
               </span>
-              {showSearch && (
-                <span className="sm:hidden font-serif text-base tracking-tight text-text-primary group-hover:text-accent-terracotta transition-colors">
-                  Visit
-                </span>
-              )}
             </Link>
           </div>
 
