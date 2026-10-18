@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/logo.svg" alt="VisitPekalongan logo" width="96" height="96" />
+</p>
+
 # VisitPekalongan
 
 VisitPekalongan is a platform for exploring curated food, coffee, nature, and heritage places in Pekalongan, Indonesia. The repository is a working prototype. It renders 28 sample spot records from a local TypeScript dataset.
