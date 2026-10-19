@@ -100,7 +100,7 @@ async function SpotDetailContent({ params }: SpotPageProps) {
   };
 
   return (
-    <main className="flex-1 pb-28 sm:pb-16">
+    <main id="main-content" className="flex-1 pb-28 sm:pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

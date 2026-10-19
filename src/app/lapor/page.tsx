@@ -16,7 +16,7 @@ export default function LaporPage() {
       <Header showSearch={false} backUrl="/" backLabel="Katalog" />
 
       <div className="app-scroll-container flex-1 md:overflow-y-auto md:overflow-x-hidden md:min-h-0">
-        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 w-full">
+        <main id="main-content" className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 w-full">
           {/* Header Editorial */}
           <div className="space-y-3 mb-10 pb-6 border-b border-border">
             <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-text-primary tracking-tight leading-tight">

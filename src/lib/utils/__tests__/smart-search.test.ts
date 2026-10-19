@@ -4,7 +4,11 @@ import {
   getRecommendedSpots,
   searchSpotsSmart,
 } from "../smart-search.ts";
-import type { SpotDetailDTO, SpotListItemDTO } from "../../../types/spot.ts";
+import type {
+  SpotDetailDTO,
+  SpotListItemDTO,
+  WeeklyOpeningHours,
+} from "../../../types/spot.ts";
 
 const mockSpots: SpotListItemDTO[] = [
   {
@@ -166,7 +170,7 @@ describe("smart-search utility", () => {
       description: "Kafe tenang untuk nugas.",
       address: "Jl. Hayam Wuruk No. 12, Pekalongan",
       galleryImages: [],
-      weeklySchedule: {} as any,
+      weeklySchedule: {} as unknown as WeeklyOpeningHours,
     };
 
     it("excludes the current spot itself from recommendations", () => {

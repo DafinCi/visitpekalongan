@@ -195,8 +195,7 @@ export function Header({
 
               {/* Panel Dropdown Riwayat Pencarian Terakhir */}
               {isSearchFocused && recentSearches.length > 0 && (
-                <div
-                  role="listbox"
+                <section
                   aria-label="Riwayat pencarian terakhir"
                   className="absolute left-0 right-0 top-full mt-1.5 bg-canvas border border-border rounded-card shadow-lg z-50 py-2 overflow-hidden animate-in fade-in duration-150"
                 >
@@ -208,16 +207,16 @@ export function Header({
                       type="button"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => clearRecentSearches()}
-                      className="inline-flex min-h-11 items-center gap-1 text-[11px] text-text-muted hover:text-accent-terracotta cursor-pointer transition-colors"
+                      className="inline-flex min-h-11 items-center gap-1 text-[11px] text-text-muted hover:text-accent-terracotta cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm px-1"
                     >
                       <Trash2 className="w-3 h-3" aria-hidden="true" />
                       <span>Hapus Semua</span>
                     </button>
                   </div>
 
-                  <div className="divide-y divide-border/40">
+                  <ul className="divide-y divide-border/40">
                     {recentSearches.map((item) => (
-                      <div
+                      <li
                         key={item}
                         className="flex items-center justify-between px-3 py-2 hover:bg-surface-pure transition-colors"
                       >
@@ -229,10 +228,10 @@ export function Header({
                             addRecentSearch(item);
                             setIsSearchFocused(false);
                           }}
-                          className="flex-1 flex items-center gap-2 text-left text-xs sm:text-sm text-text-primary cursor-pointer min-w-0"
+                          className="flex-1 flex items-center gap-2 text-left text-xs sm:text-sm text-text-primary cursor-pointer min-w-0 focus-visible:outline-2 focus-visible:outline-border-focus rounded-sm py-1"
                         >
                           <History
-                            className="w-3.5 h-3.5 text-text-subtle shrink-0"
+                            className="w-3.5 h-3.5 text-text-muted shrink-0"
                             aria-hidden="true"
                           />
                           <span className="truncate">{item}</span>
@@ -241,15 +240,15 @@ export function Header({
                           type="button"
                           onMouseDown={(e) => e.preventDefault()}
                           onClick={() => removeRecentSearch(item)}
-                          className="ml-2 flex min-h-11 min-w-11 items-center justify-center text-text-muted hover:text-text-primary rounded-sm cursor-pointer shrink-0"
+                          className="ml-2 flex min-h-11 min-w-11 items-center justify-center text-text-muted hover:text-text-primary rounded-sm cursor-pointer shrink-0 focus-visible:outline-2 focus-visible:outline-border-focus"
                           aria-label={`Hapus riwayat pencarian ${item}`}
                         >
                           <X className="w-3 h-3" />
                         </button>
-                      </div>
+                      </li>
                     ))}
-                  </div>
-                </div>
+                  </ul>
+                </section>
               )}
             </div>
           )}

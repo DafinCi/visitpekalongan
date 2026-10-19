@@ -38,6 +38,12 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${plusJakartaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-canvas text-text-primary selection:bg-accent-terracotta selection:text-white">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-accent-terracotta focus:text-canvas focus:rounded-button focus:shadow-md focus:font-semibold text-xs focus-visible:outline-2 focus-visible:outline-border-focus"
+        >
+          Lewati ke konten utama
+        </a>
         <noscript>
           <style>{`.portal-intro-overlay{display:none!important}`}</style>
         </noscript>

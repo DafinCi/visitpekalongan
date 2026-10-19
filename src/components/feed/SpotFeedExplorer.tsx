@@ -158,11 +158,14 @@ export function SpotFeedExplorer({
 
       {/* Konten Utama: di desktop scrollbar dimulai di bawah header, di mobile native document scroll */}
       <div className="app-scroll-container flex-1 md:overflow-y-auto md:overflow-x-hidden md:min-h-0">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-4">
+        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 pt-4">
+          {/* Judul Halaman Level 1 Tersembunyi Khusus Screen Reader */}
+          <h1 className="sr-only">Katalog Kurasi Tempat &amp; Hidden Gems Pekalongan</h1>
+
           {/* Toolbar Kontrol Feed: Info Hasil Kurasi & Switch Tampilan [Daftar | Peta] */}
           <div className="flex items-center justify-between gap-3 pb-3 mb-4 border-b border-border/70">
             <div className="flex items-center gap-2">
-              <p className="text-xs sm:text-sm font-medium text-text-muted">
+              <p className="text-xs sm:text-sm font-medium text-text-muted" aria-live="polite" role="status">
                 {/* Teks lengkap di desktop */}
                 <span className="hidden sm:inline">
                   Menampilkan{" "}
@@ -199,6 +202,8 @@ export function SpotFeedExplorer({
               <button
                 type="button"
                 role="tab"
+                id="tab-view-grid"
+                aria-controls="catalog-view-panel"
                 aria-selected={view === "grid"}
                 onClick={() => setView("grid")}
                 className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-11 cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
@@ -214,6 +219,8 @@ export function SpotFeedExplorer({
               <button
                 type="button"
                 role="tab"
+                id="tab-view-list"
+                aria-controls="catalog-view-panel"
                 aria-selected={view === "list"}
                 onClick={() => setView("list")}
                 className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-11 cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
@@ -229,6 +236,8 @@ export function SpotFeedExplorer({
               <button
                 type="button"
                 role="tab"
+                id="tab-view-map"
+                aria-controls="catalog-view-panel"
                 aria-selected={view === "map"}
                 onClick={() => setView("map")}
                 className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-badge transition-all min-h-11 cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
@@ -243,80 +252,86 @@ export function SpotFeedExplorer({
             </div>
           </div>
 
-          {statusPending ? (
-            <div className="py-12 text-center" role="status">
-              <p className="text-sm font-medium text-text-primary">
-                Memeriksa tempat yang buka sekarang...
-              </p>
-              <p className="mt-1 text-xs text-text-muted">
-                Status mengikuti jam WIB.
-              </p>
-            </div>
-          ) : view === "map" ? (
-            /* Tampilan Peta Interaktif MapLibre GL */
-            <div className="py-2">
-              <SpotMapLazy spots={filteredSpots} />
-            </div>
-          ) : filteredSpots.length > 0 ? (
-            <>
-              {view === "grid" ? (
-                <SpotGrid spots={paginatedSpots} />
-              ) : (
-                <SpotList spots={paginatedSpots} />
-              )}
+          <div
+            id="catalog-view-panel"
+            role="tabpanel"
+            aria-labelledby={`tab-view-${view}`}
+          >
+            {statusPending ? (
+              <div className="py-12 text-center" role="status">
+                <p className="text-sm font-medium text-text-primary">
+                  Memeriksa tempat yang buka sekarang...
+                </p>
+                <p className="mt-1 text-xs text-text-muted">
+                  Status mengikuti jam WIB.
+                </p>
+              </div>
+            ) : view === "map" ? (
+              /* Tampilan Peta Interaktif MapLibre GL */
+              <div className="py-2">
+                <SpotMapLazy spots={filteredSpots} />
+              </div>
+            ) : filteredSpots.length > 0 ? (
+              <>
+                {view === "grid" ? (
+                  <SpotGrid spots={paginatedSpots} />
+                ) : (
+                  <SpotList spots={paginatedSpots} />
+                )}
 
-              {/* Tombol Muat Lebih Banyak */}
-              {visibleCount < filteredSpots.length && (
-                <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPagination({
-                        key: filterKey,
-                        count: visibleCount + PAGE_SIZE,
-                      })
-                    }
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-text-primary bg-surface hover:bg-canvas border border-border hover:border-accent-terracotta rounded-button transition-colors shadow-xs min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
-                    aria-label={`Muat ${Math.min(PAGE_SIZE, filteredSpots.length - visibleCount)} tempat lagi`}
-                  >
-                    <span>Muat Lebih Banyak Tempat</span>
-                    <ChevronDown
-                      className="w-4 h-4 text-text-muted"
-                      aria-hidden="true"
-                    />
-                  </button>
-                  <p className="text-[11px] sm:text-xs text-text-muted">
-                    Menampilkan {paginatedSpots.length} dari{" "}
-                    {filteredSpots.length} tempat kurasi
-                  </p>
-                </div>
-              )}
-
-              {/* Status Akhir Kurasi jika semua sudah termuat */}
-              {visibleCount >= filteredSpots.length &&
-                filteredSpots.length > PAGE_SIZE && (
-                  <div className="mt-8 sm:mt-12 text-center py-4 border-t border-border/50">
-                    <p className="text-xs text-text-muted">
-                      Seluruh {filteredSpots.length} tempat kurasi telah
-                      ditampilkan.
+                {/* Tombol Muat Lebih Banyak */}
+                {visibleCount < filteredSpots.length && (
+                  <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPagination({
+                          key: filterKey,
+                          count: visibleCount + PAGE_SIZE,
+                        })
+                      }
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-xs sm:text-sm font-semibold text-text-primary bg-surface hover:bg-canvas border border-border hover:border-accent-terracotta rounded-button transition-colors shadow-xs min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus"
+                      aria-label={`Muat ${Math.min(PAGE_SIZE, filteredSpots.length - visibleCount)} tempat lagi`}
+                    >
+                      <span>Muat Lebih Banyak Tempat</span>
+                      <ChevronDown
+                        className="w-4 h-4 text-text-muted"
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <p className="text-[11px] sm:text-xs text-text-muted">
+                      Menampilkan {paginatedSpots.length} dari{" "}
+                      {filteredSpots.length} tempat kurasi
                     </p>
                   </div>
                 )}
-            </>
-          ) : (
-            <EmptyState
-              hasOpenNowFilter={openNow}
-              onDisableOpenNow={() => setOpenNow(false)}
-              hasRegencyFilter={regency !== null}
-              onResetRegency={() => setRegency(null)}
-              hasSearchQuery={q !== ""}
-              onClearSearch={() => setQ("")}
-              hasSavedFilter={savedOnly}
-              onDisableSaved={() => setSavedOnly(false)}
-              onResetAll={resetAllFilters}
-            />
-          )}
-        </section>
+
+                {/* Status Akhir Kurasi jika semua sudah termuat */}
+                {visibleCount >= filteredSpots.length &&
+                  filteredSpots.length > PAGE_SIZE && (
+                    <div className="mt-8 sm:mt-12 text-center py-4 border-t border-border/50">
+                      <p className="text-xs text-text-muted">
+                        Seluruh {filteredSpots.length} tempat kurasi telah
+                        ditampilkan.
+                      </p>
+                    </div>
+                  )}
+              </>
+            ) : (
+              <EmptyState
+                hasOpenNowFilter={openNow}
+                onDisableOpenNow={() => setOpenNow(false)}
+                hasRegencyFilter={regency !== null}
+                onResetRegency={() => setRegency(null)}
+                hasSearchQuery={q !== ""}
+                onClearSearch={() => setQ("")}
+                hasSavedFilter={savedOnly}
+                onDisableSaved={() => setSavedOnly(false)}
+                onResetAll={resetAllFilters}
+              />
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );

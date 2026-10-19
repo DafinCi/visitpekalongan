@@ -146,19 +146,25 @@ export function SubmitSpotForm() {
       </div>
 
       {/* 2. Kategori Kurasi */}
-      <div className="space-y-2">
-        <label className="block text-xs sm:text-sm font-semibold text-text-primary">
+      <fieldset className="space-y-2">
+        <legend className="block text-xs sm:text-sm font-semibold text-text-primary">
           Kategori Kurasi <span className="text-accent-terracotta">*</span>
-        </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        </legend>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+          role="radiogroup"
+          aria-label="Pilihan Kategori Kurasi"
+        >
           {CATEGORY_OPTIONS.map((cat) => {
             const isSelected = formData.category === cat.id;
             return (
               <button
                 key={cat.id}
                 type="button"
+                role="radio"
+                aria-checked={isSelected}
                 onClick={() => setFormData({ ...formData, category: cat.id })}
-                className={`p-3 rounded-button border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                className={`p-3 rounded-button border text-left transition-all cursor-pointer flex flex-col justify-between focus-visible:outline-2 focus-visible:outline-border-focus ${
                   isSelected
                     ? "bg-accent-terracotta/10 border-accent-terracotta shadow-xs"
                     : "bg-canvas border-border hover:border-border-focus/50"
@@ -176,7 +182,7 @@ export function SubmitSpotForm() {
             );
           })}
         </div>
-      </div>
+      </fieldset>
 
       {/* 3. Wilayah & Patokan Lokasi */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

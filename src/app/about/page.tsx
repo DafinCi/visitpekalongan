@@ -22,7 +22,7 @@ export default function AboutPage() {
       <Header backUrl="/" backLabel="Katalog" />
 
       <div className="app-scroll-container flex-1 md:overflow-y-auto md:overflow-x-hidden md:min-h-0">
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
           {/* Judul & Pengantar */}
           <div className="space-y-4 mb-12 pb-8 border-b border-border">
             <h1 className="font-serif text-3xl sm:text-5xl text-text-primary tracking-tight leading-tight">

@@ -8,7 +8,7 @@ export default function NotFound() {
       <Header showSearch={false} backUrl="/" backLabel="Katalog" />
 
       <div className="app-scroll-container flex-1 md:overflow-y-auto md:overflow-x-hidden md:min-h-0 flex flex-col">
-        <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
+        <main id="main-content" className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20">
           <div className="max-w-lg w-full text-center space-y-6 bg-surface-pure border border-border rounded-card p-8 sm:p-12 shadow-xs">
             {/* Ikon Kompas Aksen Terakota */}
             <div className="w-16 h-16 rounded-full bg-accent-terracotta/10 border border-accent-terracotta/25 mx-auto flex items-center justify-center">

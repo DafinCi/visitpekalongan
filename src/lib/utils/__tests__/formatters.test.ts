@@ -5,7 +5,7 @@ import {
   formatPriceRange,
   formatRegency,
 } from "../formatters.ts";
-import type { PriceRange, Regency } from "../../../types/spot.ts";
+import type { PriceRange } from "../../../types/spot.ts";
 
 describe("formatters utility", () => {
   describe("formatPriceRange", () => {

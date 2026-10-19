@@ -115,11 +115,17 @@ export function SpotFilterDrawer({
             <div className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">
               <span>Kategori Kurasi</span>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div
+              className="grid grid-cols-2 gap-2"
+              role="radiogroup"
+              aria-label="Pilihan Kategori Kurasi"
+            >
               <button
                 type="button"
+                role="radio"
+                aria-checked={activeCategory === "all"}
                 onClick={() => onSelectCategory("all")}
-                className={`flex items-center justify-between p-3 text-xs font-medium rounded-button border text-left transition-colors min-h-[44px] cursor-pointer ${
+                className={`flex items-center justify-between p-3 text-xs font-medium rounded-button border text-left transition-colors min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                   activeCategory === "all"
                     ? "bg-accent-terracotta/10 text-accent-terracotta border-accent-terracotta font-semibold"
                     : "bg-surface-pure text-text-secondary border-border hover:bg-canvas"
@@ -135,8 +141,10 @@ export function SpotFilterDrawer({
                   <button
                     key={cat.id}
                     type="button"
+                    role="radio"
+                    aria-checked={isSelected}
                     onClick={() => onSelectCategory(cat.slug)}
-                    className={`flex items-center justify-between p-3 text-xs font-medium rounded-button border text-left transition-colors min-h-[44px] cursor-pointer ${
+                    className={`flex items-center justify-between p-3 text-xs font-medium rounded-button border text-left transition-colors min-h-[44px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                       isSelected
                         ? "bg-accent-terracotta/10 text-accent-terracotta border-accent-terracotta font-semibold"
                         : "bg-surface-pure text-text-secondary border-border hover:bg-canvas"
@@ -154,13 +162,19 @@ export function SpotFilterDrawer({
           <div>
             <div className="flex items-center gap-1.5 text-xs font-semibold text-text-primary uppercase tracking-wider mb-3">
               <MapPin className="w-3.5 h-3.5 text-accent-terracotta" aria-hidden="true" />
-              <span>Wilayah & Geografis</span>
+              <span>Wilayah &amp; Geografis</span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div
+              className="grid grid-cols-3 gap-2"
+              role="radiogroup"
+              aria-label="Pilihan Wilayah Administrasi"
+            >
               <button
                 type="button"
+                role="radio"
+                aria-checked={selectedRegency === null}
                 onClick={() => onSelectRegency(null)}
-                className={`p-2.5 text-center text-xs font-medium rounded-button border transition-colors min-h-[44px] cursor-pointer flex flex-col items-center justify-center ${
+                className={`p-2.5 text-center text-xs font-medium rounded-button border transition-colors min-h-[44px] cursor-pointer flex flex-col items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus ${
                   selectedRegency === null
                     ? "bg-accent-terracotta/10 text-accent-terracotta border-accent-terracotta font-semibold"
                     : "bg-surface-pure text-text-secondary border-border hover:bg-canvas"
@@ -171,8 +185,10 @@ export function SpotFilterDrawer({
 
               <button
                 type="button"
+                role="radio"
+                aria-checked={selectedRegency === "kota"}
                 onClick={() => onSelectRegency("kota")}
-                className={`p-2.5 text-center text-xs font-medium rounded-button border transition-colors min-h-[44px] cursor-pointer flex flex-col items-center justify-center ${
+                className={`p-2.5 text-center text-xs font-medium rounded-button border transition-colors min-h-[44px] cursor-pointer flex flex-col items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus ${
                   selectedRegency === "kota"
                     ? "bg-accent-terracotta/10 text-accent-terracotta border-accent-terracotta font-semibold"
                     : "bg-surface-pure text-text-secondary border-border hover:bg-canvas"
@@ -184,8 +200,10 @@ export function SpotFilterDrawer({
 
               <button
                 type="button"
+                role="radio"
+                aria-checked={selectedRegency === "kabupaten"}
                 onClick={() => onSelectRegency("kabupaten")}
-                className={`p-2.5 text-center text-xs font-medium rounded-button border transition-colors min-h-[44px] cursor-pointer flex flex-col items-center justify-center ${
+                className={`p-2.5 text-center text-xs font-medium rounded-button border transition-colors min-h-[44px] cursor-pointer flex flex-col items-center justify-center focus-visible:outline-2 focus-visible:outline-border-focus ${
                   selectedRegency === "kabupaten"
                     ? "bg-accent-terracotta/10 text-accent-terracotta border-accent-terracotta font-semibold"
                     : "bg-surface-pure text-text-secondary border-border hover:bg-canvas"
@@ -205,8 +223,10 @@ export function SpotFilterDrawer({
             </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={openNowOnly}
               onClick={() => onToggleOpenNow(!openNowOnly)}
-              className={`w-full flex items-center justify-between p-3.5 rounded-button border transition-colors min-h-[48px] cursor-pointer ${
+              className={`w-full flex items-center justify-between p-3.5 rounded-button border transition-colors min-h-[48px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                 openNowOnly
                   ? "bg-status-open-bg/50 border-accent-sage text-text-primary font-semibold"
                   : "bg-surface-pure border-border text-text-secondary hover:bg-canvas"
@@ -215,7 +235,7 @@ export function SpotFilterDrawer({
               <div className="flex items-center gap-2.5 text-left">
                 <span
                   className={`w-2.5 h-2.5 rounded-full ${
-                    openNowOnly ? "bg-accent-sage" : "bg-text-subtle"
+                    openNowOnly ? "bg-accent-sage" : "bg-text-muted"
                   }`}
                   aria-hidden="true"
                 />
@@ -233,6 +253,7 @@ export function SpotFilterDrawer({
                 className={`w-10 h-6 rounded-full p-1 transition-colors ${
                   openNowOnly ? "bg-accent-sage" : "bg-border"
                 }`}
+                aria-hidden="true"
               >
                 <div
                   className={`w-4 h-4 rounded-full bg-canvas transition-transform transform ${
@@ -251,8 +272,10 @@ export function SpotFilterDrawer({
             </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={savedOnly}
               onClick={() => onToggleSaved(!savedOnly)}
-              className={`w-full flex items-center justify-between p-3.5 rounded-button border transition-colors min-h-[48px] cursor-pointer ${
+              className={`w-full flex items-center justify-between p-3.5 rounded-button border transition-colors min-h-[48px] cursor-pointer focus-visible:outline-2 focus-visible:outline-border-focus ${
                 savedOnly
                   ? "bg-accent-terracotta/10 border-accent-terracotta text-text-primary font-semibold"
                   : "bg-surface-pure border-border text-text-secondary hover:bg-canvas"
@@ -261,7 +284,7 @@ export function SpotFilterDrawer({
               <div className="flex items-center gap-2.5 text-left">
                 <Bookmark
                   className={`w-4 h-4 shrink-0 ${
-                    savedOnly ? "fill-accent-terracotta text-accent-terracotta" : "text-text-subtle"
+                    savedOnly ? "fill-accent-terracotta text-accent-terracotta" : "text-text-muted"
                   }`}
                   aria-hidden="true"
                 />
@@ -279,6 +302,7 @@ export function SpotFilterDrawer({
                 className={`w-10 h-6 rounded-full p-1 transition-colors ${
                   savedOnly ? "bg-accent-terracotta" : "bg-border"
                 }`}
+                aria-hidden="true"
               >
                 <div
                   className={`w-4 h-4 rounded-full bg-canvas transition-transform transform ${

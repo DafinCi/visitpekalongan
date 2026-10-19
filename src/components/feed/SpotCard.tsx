@@ -206,7 +206,7 @@ export function SpotCard({ spot, eager = false }: SpotCardProps) {
                 role="menu"
                 aria-label={`Opsi untuk ${spot.name}`}
               >
-                <div className="py-1">
+                <div className="py-1" role="group">
                   {/* Opsi 1: Bagikan */}
                   <button
                     type="button"
@@ -214,7 +214,7 @@ export function SpotCard({ spot, eager = false }: SpotCardProps) {
                       handleShare(e);
                       setIsMenuOpen(false);
                     }}
-                    className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 cursor-pointer transition-colors"
+                    className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-border-focus"
                     role="menuitem"
                   >
                     {copied ? (
@@ -232,7 +232,7 @@ export function SpotCard({ spot, eager = false }: SpotCardProps) {
                       handleCopyAddress(e);
                       setIsMenuOpen(false);
                     }}
-                    className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 cursor-pointer transition-colors"
+                    className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-border-focus"
                     role="menuitem"
                   >
                     {addressCopied ? (
@@ -246,13 +246,13 @@ export function SpotCard({ spot, eager = false }: SpotCardProps) {
 
                 {/* Opsi 3: Instagram (jika ada) */}
                 {spot.instagramAccount && (
-                  <div className="py-1">
+                  <div className="py-1" role="group">
                     <a
                       href={`https://instagram.com/${spot.instagramAccount}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 transition-colors"
+                      className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-border-focus"
                       role="menuitem"
                     >
                       <InstagramIcon className="w-3.5 h-3.5 text-text-muted shrink-0" />
@@ -262,13 +262,13 @@ export function SpotCard({ spot, eager = false }: SpotCardProps) {
                 )}
 
                 {/* Opsi 4: Buka Google Maps langsung */}
-                <div className="py-1">
+                <div className="py-1" role="group">
                   <a
                     href={spot.googleMapsIntentUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 transition-colors text-accent-terracotta font-medium"
+                    className="w-full px-3 py-2 text-left hover:bg-canvas flex items-center gap-2.5 transition-colors text-accent-terracotta font-medium focus-visible:outline-2 focus-visible:outline-border-focus"
                     role="menuitem"
                   >
                     <ExternalLink className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
@@ -288,7 +288,7 @@ export function SpotCard({ spot, eager = false }: SpotCardProps) {
               <span className="font-semibold text-accent-terracotta uppercase tracking-wider">
                 {spot.categoryName}
               </span>
-              <span className="text-text-subtle">
+              <span className="text-text-muted">
                 {formatRegency(spot.regency)}
               </span>
             </div>
