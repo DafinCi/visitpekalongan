@@ -55,11 +55,12 @@ The JSON-LD is generated from the same local record used by the page.
 
 `src/app/sitemap.ts` returns:
 
-- the home page;
-- the about page;
-- every visible spot detail page.
+- the home page (`/`);
+- the about page (`/about`);
+- the community recommendation page (`/lapor`);
+- every visible spot detail page (`/spot/[slug]`).
 
-The sitemap does not include `/lapor`. Each entry uses the current date as `lastModified`, not the record's `updatedAt` date.
+Each entry uses the current date as `lastModified`, not the record's `updatedAt` date.
 
 ## Robots
 
@@ -73,7 +74,7 @@ The sitemap does not include `/lapor`. Each entry uses the current date as `last
 - the start URL;
 - standalone display mode;
 - the background and theme colors;
-- the favicon entry.
+- application icon entries pointing to `/icon.svg` and `/logo.svg` (`image/svg+xml`).
 
 The manifest alone does not make the application work offline. There is no service worker in the repository.
 

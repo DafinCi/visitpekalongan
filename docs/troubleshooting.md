@@ -11,15 +11,11 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-## The lint command reports files outside src
+## Linting vendor or agent scripts
 
-`npm run lint` currently scans `.agents` and `public/maplibre-gl-worker.mjs` because the repository ignore list only covers generated build folders. Run the source-only check while this issue remains:
+`eslint.config.mjs` defines `globalIgnores` for `.agents/**` and `public/**` (which contains the MapLibre GL worker bundle). Both `npm run lint` and `npm.cmd run lint` now run cleanly repository-wide across all source files.
 
-```powershell
-node_modules\.bin\eslint.cmd src
-```
-
-The source-only check passed on 18 October 2026. The repository-wide command did not.
+If you add new vendor worker bundles to `public/` or agent helper scripts to `.agents/`, ensure they remain covered under `globalIgnores` in `eslint.config.mjs`.
 
 ## The map is blank
 

@@ -53,7 +53,7 @@ Do not commit secrets to the repository.
 | `npm run build` | Builds the application for production.              |
 | `npm start`     | Starts the production server after a build.         |
 | `npm run lint`  | Runs ESLint with the repository configuration.      |
-| `npm test`      | Runs the intro state machine and scroll-lock tests. |
+| `npm test`      | Runs all Node test suites for core business logic, intro state machine, and scroll lock. |
 
 The build may need network access because the root layout uses `next/font/google` and the catalog uses remote images.
 

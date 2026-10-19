@@ -52,8 +52,8 @@ Database and media-storage variables in `.env.example` are placeholders for futu
 | `npm run dev`   | Starts the Next.js development server.                                                 |
 | `npm run build` | Creates a production build.                                                            |
 | `npm start`     | Starts the production server after a build.                                            |
-| `npm run lint`  | Runs the repository ESLint command. See the known issue in [Testing](docs/testing.md). |
-| `npm test`      | Runs the two Node test files for the intro state machine and scroll lock.              |
+| `npm run lint`  | Runs ESLint repository-wide (ignores `.agents/**` and `public/**`).                     |
+| `npm test`      | Runs the 6 Node test suites for core business logic, intro state machine, and scroll lock. |
 
 ## Documentation
 
@@ -79,4 +79,3 @@ Start with the [documentation index](docs/README.md). It separates product expla
 - Saved spots store slugs, not a full offline copy of a spot.
 - There is no user account or cross-device sync.
 - The map needs network access for CARTO tiles.
-- `npm run lint` currently scans `.agents` and the generated MapLibre worker in `public`, so it can fail even when `src` has no lint errors.

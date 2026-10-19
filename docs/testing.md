@@ -22,54 +22,58 @@ node_modules\.bin\eslint.cmd src
 
 | Check | Result | Notes |
 | --- | --- | --- |
-| `npm.cmd test` | Pass | 12 tests passed, 0 failed. |
+| `npm.cmd test` | Pass | 54 tests passed across 6 test suites, 0 failed. |
 | TypeScript | Pass | `tsc --noEmit --incremental false` exited with code 0. |
 | Source lint | Pass | `eslint src` exited with code 0. |
-| Repository lint | Fails | `npm.cmd run lint` scans `.agents` and `public/maplibre-gl-worker.mjs` and reports errors outside `src`. |
-| Production build | Not run in this pass | The documentation task did not write build artifacts. |
+| Repository lint | Pass | `npm.cmd run lint` exited with code 0 (global ignores cover `.agents/**` and `public/**`). |
+| Production build | Pass | `next build` compiled cleanly with Turbopack (67/67 static and dynamic pages generated). |
 
 ## Test coverage
 
-The test script covers:
+The test suites run via `node --experimental-strip-types --test` and cover:
 
-- the portal intro state machine;
-- intro completion and watchdog behavior;
-- reduced-motion behavior;
-- scroll-lock counting and restoration;
-- the logo geometry constants.
+- **Opening-hours calculations** (`src/lib/utils/__tests__/opening-hours.test.ts`):
+  - WIB (UTC+7) timezone conversion;
+  - lifecycle status overrides (`temporarily_closed` and `permanently_closed`);
+  - standard daytime business windows (before open, open, after close);
+  - cross-midnight / sliding window logic for night spots (e.g. Kopi Tahlil);
+  - Friday prayer break logic (`friday_break` kind on Friday 11:15–13:00 WIB);
+  - user-facing status copy and Google Maps navigation intent URLs.
+- **Smart search & recommendations** (`src/lib/utils/__tests__/smart-search.test.ts`):
+  - exact name and signature dish matches;
+  - intent token expansion (e.g. "nugas/wfc", "curug/alam");
+  - Indonesian conversational stopword filtering;
+  - fuzzy Levenshtein distance matching;
+  - multi-factor spot recommendations (category, distance, shared facilities, price).
+- **Geolocation calculations** (`src/lib/utils/__tests__/geolocation.test.ts`):
+  - Great-Circle Haversine distance and symmetry;
+  - user-friendly distance formatting (meters `< 1 km` with 50m floor, decimals, whole kilometers);
+  - Pekalongan 60 km bounding buffer verification.
+- **Formatters** (`src/lib/utils/__tests__/formatters.test.ts`):
+  - price range formatting;
+  - regency naming (Kota vs Kabupaten Pekalongan);
+  - district name formatting and dictionary mapping.
+- **Portal intro state machine** (`src/lib/intro/__tests__/portal-intro-machine.test.ts`):
+  - lifecycle transitions and watchdog timer;
+  - reduced-motion mode;
+  - logo geometry constants.
+- **Scroll lock** (`src/lib/utils/__tests__/scroll-lock.test.ts`):
+  - nested lock counting and restoration of original document overflow values.
 
 The repository does not contain automated tests for:
 
-- opening-hours calculations;
-- smart search;
-- repository filtering;
-- catalog state;
-- MapLibre rendering;
-- localStorage hooks.
+- catalog UI components and React rendering;
+- MapLibre GL map interactions;
+- client-side `localStorage` hooks.
 
-## Manual check
+## Lint configuration
 
-The `calculateOpenStatus` utility was checked manually on 18 October 2026 with:
+`eslint.config.mjs` defines global ignores for build output as well as:
 
-- a Monday evening shift that closes after midnight;
-- a Wednesday early-morning access during the previous shift;
-- the exact close time;
-- a Friday schedule with a prayer break.
+- `public/**` (vendor worker bundle `maplibre-gl-worker.mjs`);
+- `.agents/**` (agent skill scripts).
 
-The function returned open, open, closed, and Friday-break states in the expected cases. These checks were not added to the test suite.
-
-## Known lint issue
-
-`eslint.config.mjs` defines global ignores for build output but not for:
-
-- `.agents/**`;
-- `public/maplibre-gl-worker.mjs`.
-
-As a result, `npm run lint` examines skill scripts and a generated worker file. Use `eslint src` while the configuration remains unchanged.
-
-## Before changing behavior
-
-Add focused tests for any changed opening-hours, search, filter, or repository behavior. The current tests do not protect those paths.
+Repository-wide `npm run lint` executes cleanly with zero errors and zero warnings.
 
 ## Related documents
 
