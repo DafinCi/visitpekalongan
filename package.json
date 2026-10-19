@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test src/lib/intro/__tests__/portal-intro-machine.test.ts src/lib/utils/__tests__/scroll-lock.test.ts"
+    "test": "node --experimental-strip-types --test \"src/lib/intro/__tests__/*.test.ts\" \"src/lib/utils/__tests__/*.test.ts\""
   },
   "dependencies": {
     "lucide-react": "^1.58.0",
