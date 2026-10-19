@@ -1,4 +1,4 @@
-import { PriceRange, Regency } from "@/types/spot";
+import type { PriceRange, Regency } from "../../types/spot.ts";
 
 export function formatPriceRange(priceRange: PriceRange): string {
   switch (priceRange) {

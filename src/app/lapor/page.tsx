@@ -1,4 +1,4 @@
-import { ShieldCheck, CheckCircle2, BookOpen } from "lucide-react";
+import { CheckCircle2, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { SubmitSpotForm } from "@/components/community/SubmitSpotForm";
@@ -40,11 +40,7 @@ export default function LaporPage() {
             {/* Kolom Panduan & Prinsip Kurasi (Mobile: Urutan 2, Desktop: Kolom Kiri) */}
             <div className="lg:col-span-5 space-y-6 order-2 lg:order-1">
               <div className="p-6 rounded-card bg-surface border border-border space-y-4">
-                <div className="flex items-center gap-2.5 text-text-primary font-semibold text-sm">
-                  <ShieldCheck
-                    className="w-4 h-4 text-accent-terracotta"
-                    aria-hidden="true"
-                  />
+                <div className="flex items-center text-text-primary font-semibold text-sm">
                   <span>Prinsip Kurasi Independen</span>
                 </div>
                 <ul className="space-y-3 text-xs sm:text-sm text-text-secondary leading-relaxed">

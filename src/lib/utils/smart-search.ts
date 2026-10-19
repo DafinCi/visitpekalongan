@@ -1,12 +1,12 @@
-import {
+import type {
   Facility,
   PriceRange,
   Regency,
   SpotDetailDTO,
   SpotListItemDTO,
-} from "@/types/spot";
-import { calculateDistanceKm, formatDistance } from "./geolocation";
-import { formatDistrict } from "./formatters";
+} from "../../types/spot.ts";
+import { calculateDistanceKm, formatDistance } from "./geolocation.ts";
+import { formatDistrict } from "./formatters.ts";
 
 const STOPWORDS = new Set([
   "tempat",
